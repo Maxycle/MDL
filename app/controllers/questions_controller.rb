@@ -3,8 +3,8 @@ class QuestionsController < ApplicationController
 
   # GET /questions
   def index
-    @questions = Question.all
-    render json: @questions
+    @questions = Question.includes(:answers).all
+    render json: @questions.as_json(include: :answers)
   end
 
   # GET /questions/:id
