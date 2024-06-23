@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.anarcap-border {
+  @apply border-t-anarcapYellow border-l-anarcapYellow border-b-black border-r-black;
+}
