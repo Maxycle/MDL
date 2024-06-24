@@ -1,5 +1,5 @@
 <template>
-	<div class="bg-neutral-500 h-full text-white pt-12">
+	<div class="relative bg-neutral-500 h-full text-white pt-12">
 		<div class="flex flex-col items-center">
 			<button>
 				<div v-if="!questionnaireStarted"
@@ -15,8 +15,9 @@
 					loggues gros bêta !!</div>
 			</button>
 			<div v-if="questionnaireStarted">
-				<QuestionAnswerBlock :questionsList="questionsList"/>
+				<QuestionAnswerBlock :questionsList="questionsList" class="shadow-xl"/>
 			</div>
+			<StopWatch v-if="questionnaireStarted" class="absolute bottom-4" :class="stopWatchClasses" @jump="changeStopWatchClasses"/>
 		</div>
 	</div>
 </template>
@@ -27,12 +28,19 @@ import { useRouter } from "vue-router"
 import { useSessionStore } from "@/stores/modules/sessionStore"
 import axios from 'axios'
 import QuestionAnswerBlock from "@/components/QuestionAnswerBlock.vue"
+import StopWatch from "@/components/StopWatch.vue"
 
 const router = useRouter()
 const sessionStore = useSessionStore();
 const questionsList = ref([])
 const showNotLoggedInMessage = ref(false)
 const questionnaireStarted = ref(false)
+const stopWatchClasses = ref('left-4')
+
+const changeStopWatchClasses = () => {
+	console.log('GRUUUUUUKaaaaaaah')
+	stopWatchClasses.value = stopWatchClasses.value === 'left-4' ? 'right-4' : 'left-4' 
+}
 
 async function startQuestionnaire() {
 	showNotLoggedInMessage.value = !sessionStore.isLoggedIn
@@ -48,6 +56,8 @@ async function startQuestionnaire() {
 	} catch (error) {
 		console.error('Error fetching questions:', error.message);
 	}
-	if (questionsList.value.length) { questionnaireStarted.value = true }
+	if (questionsList.value.length) {
+		questionnaireStarted.value = true
+	}
 }
 </script>
