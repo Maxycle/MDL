@@ -1,49 +1,48 @@
 <template>
-	<div class="flex flex-col items-center mb-6" v-for="(question, indexQuestion) in questionsListt" :key="indexQuestion">
-		<Question :text="question.content" class="my-2" />
-		<div class="border-4 rounded-lg text-black anarcap-border">
+	<div class="flex flex-col items-center mb-6">
+		<Question :text="question.content" class="my-8 shadow-lg shadow-neutral-700" />
+		<div class="border-4 rounded-lg text-black anarcap-border shadow-md shadow-neutral-700">
 			<div v-for="(answer, indexAnswer) in question.answers" :key="indexAnswer">
-				<Answer :text="answer.content" :value="answer.value" />
+				<Answer	:data="answer" @click="selectAnswer(answer)" />
 			</div>
 		</div>
-		<!-- <div class="anarcap-border border-4 bg-blue-500 p-2 rounded mt-2">Envoyer</div> -->
 	</div>
-	<v-pagination v-model="page" :length="20" :total-visible="5" prev-icon="mdi-menu-left" next-icon="mdi-menu-right"></v-pagination>
+	<v-pagination v-model="page" :length="20" :total-visible="5" prev-icon="mdi-menu-left" next-icon="mdi-menu-right"
+		@page="onPageChange"></v-pagination>
 </template>
 
-<script>
-import Question from './Question.vue';
+<script setup>
+import { ref, computed } from 'vue'
+import { useAnswerStore } from '@/stores/modules/answerStore';
+import Question from './Question.vue'
 import Answer from './Answer.vue'
 
-export default {
-	components: {
-		Question,
-		Answer
-	},
-
-	props: {
-		questionsList: {
-			type: Array,
-			required: true
-		}
-	},
-
-	data: () => ({
-		page: 1
-	}),
-
-	methods: {
-		onPageChange(event) {
-			console.log(event)
-		},
-	},
-	computed: {
-		questionsListt() {
-			var clone = JSON.parse(JSON.stringify(this.questionsList));
-			var startFrom = this.page - 1;
-			console.log('clone.splice(startFrom, 1)', clone.splice(startFrom, 1))
-			return clone.splice(startFrom, 1);
-		}
+const props = defineProps({
+	questionsList: {
+		type: Array,
+		required: true
 	}
+})
+
+const answerStore = useAnswerStore();
+const page = ref(1)
+
+const result = ref({})
+
+const question = computed(() => {
+	const clone = JSON.parse(JSON.stringify(props.questionsList))
+	const startFrom = page.value - 1 // Adjusting for zero-indexing and possible pagination size
+	return clone.splice(startFrom, 1)[0]
+})
+
+const onPageChange = (event) => {
+	console.log('Page changed:', event)
+	page.value = event
+}
+
+const selectAnswer = (answer) => {
+	const obj = { [answer.question_id]: answer.id }
+	answerStore.addAnswer(obj)
 }
 </script>
+ 
