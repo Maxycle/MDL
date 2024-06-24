@@ -1,6 +1,6 @@
 <template>
-	<div class="flex justify-between px-4 items-center bg-gradient-to-r from-neutral-400 to-neutral-300 shadow-md shadow-gray-700">
-		<div>Salut {{ loggedInUser.username }}, devient un vrai libertarien avec des couilles en fer !!</div>
+	<div class="flex justify-between px-4 items-center bg-gradient-to-r from-neutral-400 to-neutral-300 shadow-lg shadow-neutral-700">
+		<div class="font-sus">Salut {{ loggedInUser.username }}, devient un vrai libertarien avec des couilles en fer !!</div>
 		<div class="flex justify-end space-x-2">
 			<NavBarButton :isActive="isRouteActive('/')">
 				<span class="relative"><router-link to="/">Home</router-link></span>

@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col h-screen">
-    <div class="flex flex-col sticky top-0 h-1/4">
+    <div class="flex flex-col h-1/4">
       <Hero class="grow"/>
-			<NavBar />
+			<NavBar class="z-10"/>
     </div>
     <div class="grow overflow-hidden">
       <router-view></router-view>
