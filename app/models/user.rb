@@ -7,9 +7,6 @@ class User < ApplicationRecord
 	:validatable,
 	:jwt_authenticatable,
 	jwt_revocation_strategy: self
-
-	has_many :tracks, dependent: :destroy
-	has_many :messages, dependent: :destroy
 	
 	validates :first_name, presence: true
   validates :last_name, presence: true
