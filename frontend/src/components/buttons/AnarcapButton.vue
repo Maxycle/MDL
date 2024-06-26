@@ -1,5 +1,5 @@
 <template>
-	<button class="relative bg-black text-white hover:text-red-500  hover:font-extrabold rounded-lg shadow-lg 
+	<button class="relative bg-black text-white hover:text-red-400  hover:font-extrabold rounded-lg shadow-lg 
 			shadow-stone-400 p-4 shadow-lg shadow-zinc-600"
 		@mouseover="showImage" @mouseout="hideImage">
 		<img ref="imageRef" src="/img/Flag_of_Anarcho-capitalism.png" alt="yellow and black triangles"
@@ -9,7 +9,6 @@
 </template>
 
 <script>
-
 export default {
 	methods: {
 		showImage() {

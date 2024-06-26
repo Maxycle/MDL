@@ -1,5 +1,5 @@
 <template>
-	<div class="relative bg-neutral-500 h-full text-white pt-12">
+	<div class="relative bg-neutral-500 h-full text-white pt-12 px-8">
 		<div class="flex flex-col items-center">
 			<button>
 				<div v-if="!questionnaireStarted"
