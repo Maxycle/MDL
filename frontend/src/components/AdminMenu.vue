@@ -1,18 +1,12 @@
 <template>
 	<div
-		class="bg-orange-100 text-black flex flex-col divide-y divide-orange-700 border border-8 border-orange-700 divide-solid rounded-lg w-max">
-		<div>
-			<NavBarButton :isActive="isRouteActive('/nouvelle-question')" :class="{'bg-orange-800':isRouteActive('/nouvelle-question')}"><span
-					class="relative"><router-link to="/nouvelle-question">Créer une nouvelle
-						question<br>
-						<p class="text-xs">(avec les ptites réponses)</p>
-					</router-link></span></NavBarButton>
-		</div>
-		<div>
-			<NavBarButton class="w-full">02</NavBarButton>
-		</div>
-		<div>
-			<NavBarButton class="w-full">03</NavBarButton>
+		class="bg-orange-100 text-black flex flex-col divide-y divide-orange-700 border-4 border-orange-700 divide-solid rounded-lg w-max">
+		<div v-for="(item, index) in items" class="first:rounded-t-lg last:rounded-b-lg">
+			<NavBarButton :isActive="isRouteActive(item.route)"
+				:class="[{ 'bg-orange-800': isRouteActive(item.route) }, { 'rounded-t': index === 0 }, { 'rounded-b': index === 1 }]">
+				<span class="relative"><router-link :to=item.route>{{ item.text }}
+					</router-link></span>
+			</NavBarButton>
 		</div>
 	</div>
 </template>
@@ -27,7 +21,7 @@ const router = useRouter()
 const route = useRoute();
 
 const sessionStore = useSessionStore();
-
+const items = ref([{ route: '/nouvelle-question', text: 'Créer une nouvelle question' }, { route: '/modifier-question', text: 'Modifier une question' }])
 const isRouteActive = (path) => {
 	return route.path === path;
 }

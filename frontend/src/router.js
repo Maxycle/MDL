@@ -2,12 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/pages/Home.vue'
 import Login from '@/pages/Login.vue'
 import NewQuestion from '@/pages/NewQuestion.vue'
+import ModifyQuestion from '@/pages/ModifyQuestion.vue'
 import { useSessionStore } from '@/stores/modules/sessionStore'
 
 const routes = [
 	{ path: '/Login', name: 'Login', component: Login, meta: { requiresAuth: false } },
 	{ path: '/', name: 'Home', component: Home, meta: { requiresAuth: false } },
-	{ path: '/nouvelle-question', name: 'NewQuestion', component: NewQuestion, meta: { requiresAuth: false } }
+	{ path: '/nouvelle-question', name: 'NewQuestion', component: NewQuestion, meta: { requiresAuth: false } },
+	{ path: '/modifier-question', name: 'ModifyQuestion', component: ModifyQuestion, meta: { requiresAuth: false } }
 ]
 
 const router = createRouter({
