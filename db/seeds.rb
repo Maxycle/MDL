@@ -4,7 +4,7 @@ require 'faker'
 5.times do
   Question.create(
     content: Faker::Quote.famous_last_words,
-    domain: "droit naturel",
+    domain: "DN",
     level: "BA"
   )
 end
@@ -12,7 +12,7 @@ end
 5.times do
   Question.create(
     content: Faker::Quote.jack_handey,
-    domain: "droit naturel",
+    domain: "DN",
     level: "SA"
   )
 end
@@ -20,7 +20,7 @@ end
 5.times do
   Question.create(
     content: Faker::Quote.mitch_hedberg,
-    domain: "école autrichienne",
+    domain: "EA",
     level: "BA"
   )
 end
@@ -28,7 +28,7 @@ end
 5.times do
   Question.create(
     content: Faker::Quote.matz,
-    domain: "école autrichienne",
+    domain: "EA",
     level: "SA"
   )
 end
