@@ -1,7 +1,7 @@
 <template>
 	<div class="bg-neutral-500 h-full text-black flex flex-col items-center justify-center space-y-4 px-12">
-		<div class="w-full flex space-x-2">
-			<div class="border-2 anarcap-border rounded-lg grow">
+		<div class="grid grid-cols-12 gap-4 w-full">
+			<div class="border-2 anarcap-border rounded-lg col-span-10">
 				<input v-model="question"
 					class="rounded-lg placeholder:italic placeholder:text-slate-400 w-full bg-orange-100 p-2 focus:bg-orange-300 hover:bg-orange-200"
 					placeholder="Ecrit ta question avec un point d'intérogation à la fin (sinon c'est pas une question, tu comprends ?)" />
@@ -9,14 +9,13 @@
 			<div v-for="(menuOptions, index) in menuData" :key="index">
 				<div class="relative" @mouseover="showMenu(menuOptions.target)" @mouseout="hideMenu(menuOptions.target)">
 					<div class="border-2 anarcap-border rounded-lg bg-green-700 text-white p-2">{{ menuOptions.target }}</div>
-					<Menu v-show="hovered === menuOptions.target" class="absolute -bottom-13 left-0 z-10"
+					<Menu v-show="hovered === menuOptions.target" class="absolute -bottom-13 -left-10 z-10"
 						:options="menuOptions.content"
 						@optionSelected="(optionSelected) => add(menuOptions.target, optionSelected)" />
 				</div>
 			</div>
-		</div>
-		<div class="flex space-x-2 w-full ">
-			<div class="border-2 anarcap-border rounded-lg bg-green-100 flex flex-col divide-y divide-orange-700 divide-solid grow">
+			<div
+				class="col-span-10 border-2 anarcap-border rounded-lg bg-green-100 flex flex-col divide-y divide-orange-700 divide-solid grow">
 				<div v-for="(answer, index) in answers" :key="index">
 					<div class="w-full flex space-x-2 first:rounded-t-lg last:rounded-b-lg">
 						<input v-model="answers[index]"
@@ -25,7 +24,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="border-2 anarcap-border bg-green-100 rounded-lg flex flex-col divide-y divide-orange-700 divide-solid">
+			<div
+				class="col-span-2 border-2 anarcap-border bg-green-100 rounded-lg flex flex-col divide-y divide-orange-700 divide-solid">
 				<div v-for="(answerValue, index) in answerValues" :key="index">
 					<div class="w-full flex space-x-2 first:rounded-t-lg last:rounded-b-lg">
 						<input v-model="answerValues[index]"
@@ -38,7 +38,8 @@
 		<div
 			class="border-2 w-1/3 anarcap-border rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer p-2 flex justify-center"
 			@click="createQuestion">
-			Envoyer</div>
+			Envoyer
+		</div>
 	</div>
 </template>
 
