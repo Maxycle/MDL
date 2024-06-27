@@ -55,7 +55,7 @@ const sessionStore = useSessionStore();
 const answerClasses = ref('placeholder:italic placeholder:text-slate-400 w-full p-2 focus:bg-green-300 hover:bg-green-200')
 const answerCount = ref(5)
 const answers = ref(Array(answerCount.value).fill(''))
-const answerValues = ref(Array(answerCount.value).fill(''))
+const answerValues = ref(Array(answerCount.value).fill(undefined))
 const question = ref('')
 const level = ref('')
 const domain = ref('')
@@ -88,7 +88,11 @@ const createQuestion = async () => {
 			question: {
 				content: question.value,
 				level: level.value,
-				domain: domain.value
+				domain: domain.value,
+        answers_attributes: answers.value.map((content, index) => ({
+          content,
+          value: answerValues.value[index]
+        }))
 			}
 		},
 			{
@@ -97,6 +101,14 @@ const createQuestion = async () => {
 				}
 			}
 		);
+		if (response.status === 201) {
+      console.log("Question and answers in the database")
+			answers.value = Array(answerCount.value).fill('')
+			answerValues.value = Array(answerCount.value).fill('')
+			question.value = ''
+			level.value = undefined
+			domain.value = ''
+    }
 	} catch (error) {
 		console.error(`Error creating:`, error);
 	}
