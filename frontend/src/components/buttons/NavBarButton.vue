@@ -1,7 +1,7 @@
 <template>
-	<button class="relative rounded-lg p-4 text-nowrap hover:z-10" :class="{
+	<button class="relative p-4 text-nowrap hover:w-full" :class="{
 		'transition hover:text-orange-500 hover:font-extrabold hover:scale-110 duration-300': !isActive,
-		'text-white font-bold bg-orange-700 scale-110': isActive
+		'text-white font-bold bg-orange-700 w-full': isActive
 	}" @mouseover="showImage" @mouseout="hideImage">
 		<img ref="imageRef" src="/img/Flag_of_Anarcho-capitalism.png"
 		alt="yellow and black triangles"
