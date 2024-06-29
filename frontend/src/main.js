@@ -13,12 +13,12 @@ import { aliases, mdi } from 'vuetify/iconsets/mdi'
 
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
-import { faEyeSlash, faEye, faPaperPlane, faEnvelope, faPenFancy, faMusic } from "@fortawesome/free-solid-svg-icons"
+import { faEyeSlash, faEye, faPaperPlane, faEnvelope, faPenFancy, faMusic, faArrowLeft } from "@fortawesome/free-solid-svg-icons"
 
 const app = createApp(App)
 const pinia = createPinia()
 
-library.add(faEyeSlash, faEye, faPaperPlane, faEnvelope, faPenFancy, faMusic)
+library.add(faEyeSlash, faEye, faPaperPlane, faEnvelope, faPenFancy, faMusic, faArrowLeft)
 
 app.use(pinia)
 // Load JWT from local storage on refresh
