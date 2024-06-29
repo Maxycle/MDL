@@ -44,3 +44,14 @@ Question.all.each do |question|
     )
   end
 end
+
+# Create and attach only 3 answers for Question with id = 5
+specific_values = [0, 50, 100]
+question = Question.find(5)
+specific_values.each do |value|
+  Answer.create(
+    content: Faker::Lorem.sentence,
+    question: question,
+    value: value
+  )
+end
