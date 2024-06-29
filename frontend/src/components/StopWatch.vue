@@ -1,6 +1,8 @@
 <template>
-  <div class="bg-red-600 border-2 border-black font-extrabold text-xl rounded-lg flex items-center p-4 shadow-lg shadow-neutral-700 hover:animate-spin">
-    <div class="">{{ formattedTime }}</div>
+  <div class="relative font-extrabold text-xl text-red-500 rounded-lg flex items-center p-4 shadow-lg shadow-neutral-700 hover:animate-spin">
+    <div class="z-10">{{ formattedTime }}</div>
+		<img ref="imageRef" src="/img/Flag_of_Anarcho-capitalism.png" alt="yellow and black triangles"
+			class="absolute inset-0 h-full w-full object-fill md:object-center rounded-lg" />
     <!-- <div class="buttons">
       <button @click="start">Start</button>
       <button @click="stop">Stop</button>
