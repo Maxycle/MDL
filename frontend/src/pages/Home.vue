@@ -17,7 +17,9 @@
 			<div v-if="questionnaireStarted">
 				<QuestionAnswerBlock :questionsList="questionsList" class="shadow-xl"/>
 			</div>
-			<StopWatch v-if="questionnaireStarted" class="absolute bottom-4" :class="stopWatchClasses" @jump="changeStopWatchClasses"/>
+			<div class="absolute bottom-4" :class="stopWatchClasses">
+				<StopWatch v-if="questionnaireStarted" @jump="changeStopWatchClasses"/>
+			</div>
 		</div>
 	</div>
 </template>
@@ -38,7 +40,6 @@ const questionnaireStarted = ref(false)
 const stopWatchClasses = ref('left-4')
 
 const changeStopWatchClasses = () => {
-	console.log('GRUUUUUUKaaaaaaah')
 	stopWatchClasses.value = stopWatchClasses.value === 'left-4' ? 'right-4' : 'left-4' 
 }
 
