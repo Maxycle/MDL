@@ -8,9 +8,8 @@
 			</div>
 			<div v-for="(menuOptions, index) in menuData" :key="index">
 				<div class="relative" @mouseover="showMenu(menuOptions.target)" @mouseout="hideMenu(menuOptions.target)">
-					<div class="border-4 anarcap-border rounded-lg bg-green-700 text-white p-2">{{ menuOptions.target }}</div>
-					<Menu v-show="hovered === menuOptions.target" class="absolute -bottom-13 -left-10 z-10"
-						:options="menuOptions"
+					<div class="border-4 anarcap-border rounded-lg bg-green-700 text-white p-2">{{ menuOptions.text }}</div>
+					<Menu v-show="hovered === menuOptions.target" class="absolute -bottom-13 -left-10 z-10" :options="menuOptions"
 						@optionSelected="(optionSelected) => add(menuOptions.target, optionSelected)" />
 				</div>
 			</div>
@@ -58,14 +57,21 @@
 <script setup>
 import axios from 'axios'
 import Menu from '../components/Menu.vue'
-import { ref } from "vue"
+import { computed, ref, watch } from "vue"
 import { useRouter } from "vue-router"
 import { useSessionStore } from "@/stores/modules/sessionStore"
+
+const props = defineProps({
+	questionToBeEdited: {
+		type: Object,
+		default: () => ({ answers: Array(5).fill('') })
+	}
+})
 
 const router = useRouter()
 const sessionStore = useSessionStore();
 const answerClasses = ref('placeholder:italic placeholder:text-slate-400 w-full p-2 focus:bg-green-300 hover:bg-green-200')
-const answerCount = ref(5)
+const answerCount = ref(props.questionToBeEdited.answers.length)
 const answers = ref(Array(answerCount.value).fill(''))
 const answerValues = ref(Array(answerCount.value).fill(undefined))
 const question = ref('')
@@ -74,8 +80,8 @@ const domain = ref('')
 const hovered = ref('')
 
 const menuData = [
-	{ target: 'domain', content: [{text: 'Ecole Autrichienne', symbol: 'EA'}, {text: 'Droit Naturel', symbol: 'DN'}] },
-	{ target: 'level', content: [{text: 'Base Acquises', symbol: 'BA'}, {text: 'Sait Anal-yser', symbol: 'SA'}] }
+	{ target: 'domain', text: 'domaine', content: [{ text: 'Ecole Autrichienne', symbol: 'EA' }, { text: 'Droit Naturel', symbol: 'DN' }] },
+	{ target: 'level', text: 'niveau', content: [{ text: 'Base Acquises', symbol: 'BA' }, { text: 'Sait Anal-yser', symbol: 'SA' }] }
 ]
 
 const showMenu = (option) => {
@@ -138,4 +144,15 @@ const createQuestion = async () => {
 	}
 }
 
+watch(() => props.questionToBeEdited, (newValue) => {
+	question.value = newValue.content || ''
+	answers.value = newValue.answers.map(answer => answer.content)
+	answerValues.value = newValue.answers.map(answer => answer.value)
+	answerCount.value = newValue.answers.length
+	level.value = newValue.level || ''
+	domain.value = newValue.domain || ''
+}, {
+	deep: true,
+	immediate: true
+})
 </script>
