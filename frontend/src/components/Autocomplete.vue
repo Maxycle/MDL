@@ -1,11 +1,11 @@
 <template>
 	<div>
 		<div class="relative">
-			<input type="text" id="autocomplete" :placeholder="placeholder" v-model="selectedItem" @input="onInput"
+			<input type="text" id="autocomplete" :placeholder="placeholder" v-model="inputData" @input="onInput"
 				class="py-2 px-4 flex justify-between items-center rounded w-full shadow-md shadow-black bg-neutral-300 focus:bg-green-200" />
 			<ul v-if="filteredItems.length" class="absolute z-10 mt-2 bg-white border rounded shadow-md w-full">
-				<li v-for="(item, itemIndex) in filteredItems" :key="itemIndex" @click="selectItem(item.content)"
-					class="p-4 rounded hover:bg-blue-500">
+				<li v-for="(item, itemIndex) in filteredItems" :key="itemIndex" @click="selectItem(item)"
+					class="p-4 rounded hover:bg-blue-500 cursor-pointer">
 					<div>{{ item.content }}</div>
 				</li>
 			</ul>
@@ -15,7 +15,7 @@
 
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useSessionStore } from '@/stores/modules/sessionStore'
 
 const props = defineProps({
@@ -25,7 +25,8 @@ const props = defineProps({
 	}
 })
 
-const selectedItem = ref('')
+const emit = defineEmits(['questiton-selected']);
+const inputData = ref('')
 const filteredItems = ref([])
 
 const placeholder = ref('ta gueule')
@@ -35,18 +36,20 @@ const sessionStore = useSessionStore()
 
 const filterItems = () => {
 	selectionMade.value = false
-	const query = selectedItem.value.toLowerCase()
+	const query = inputData.value.toLowerCase()
 	filteredItems.value = query === ''
 		? []
 		: props.options.filter(item => item.content.toLowerCase().includes(query))
 }
 
 const selectItem = (item) => {
-	selectedItem.value = item
+	emit('questiton-selected', item)
+	filteredItems.value = []
+	inputData.value = ''
 }
 
 const onInput = () => {
-	if (selectedItem.value === '') {
+	if (inputData.value === '') {
 		filteredItems.value = []
 	} else {
 		filterItems()
