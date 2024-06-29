@@ -11,12 +11,27 @@
 						</div>
 					</div>
 				</div>
-				<Autocomplete :options="filteredQuestions" class="pb-4"/>
-				<div v-for="question in filteredQuestions" class="justify-start cursor-pointer">
+				<Autocomplete :options="filteredQuestions" class="pb-4" @questiton-selected="selectQuestion" />
+				<div v-for="(question, index) in filteredQuestions"
+					class="relative justify-start cursor-pointer text-blue-900 underline" @click="selectQuestion(question)"
+					@mouseover="showQuestion(index)" @mouseout="hideQuestion(index)">
 					{{ truncateQuestion(question.content) }}
+					<div v-if="questionToShow === index" @click="selectQuestion(question)"
+						class="border-2 border-orange-500 rounded p-1 absolute top-2 left-6 text-nowrap bg-orange-100 z-10">{{
+							question.content }}</div>
 				</div>
 			</div>
-			<div class="bg-red-300 grow h-full">ze question</div>
+			<QuestionEdit v-if="questionSelected.answers" :questionToBeEdited="questionSelected" />
+			<div v-else class="w-full flex justify-center mt-12">
+				<div class="flex items-center h-fit">
+					<font-awesome-icon icon="fa-solid fa-arrow-left" class="h-12 mr-4" />
+					<font-awesome-icon icon="fa-solid fa-arrow-left" class="h-12 mr-4" />
+					<font-awesome-icon icon="fa-solid fa-arrow-left" class="h-12 mr-4" />
+					<div class="border-4 anarcap-border rounded-lg bg-green-700 p-4 w-fit h-fit text-white">Choisis une question
+						(à gauche)</div>
+				</div>
+
+			</div>
 		</div>
 	</div>
 </template>
@@ -35,10 +50,17 @@ const menuData = [
 	{ target: 'level', content: [{ text: 'Base Acquises', symbol: 'BA' }, { text: 'Sait Anal-yser', symbol: 'SA' }] }
 ]
 const hovered = ref('')
+const questionToShow = ref(undefined)
 const level = ref('')
 const domain = ref('')
 const questions = ref([])
 const sessionStore = useSessionStore()
+const questionSelected = ref({});
+
+const selectQuestion = (question) => {
+	console.log('selectQuestion', question)
+	questionSelected.value = question;
+}
 
 onMounted(() => {
 	fetchQuestions();
@@ -77,6 +99,15 @@ const showMenu = (option) => {
 const hideMenu = () => {
 	hovered.value = ''
 }
+
+const showQuestion = (index) => {
+	questionToShow.value = index
+}
+
+const hideQuestion = () => {
+	questionToShow.value = undefined
+}
+
 
 const add = (target, optionSelected) => {
 	if (target === 'domain') { domain.value = optionSelected }
