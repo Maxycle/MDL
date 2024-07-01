@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  # get 'csv_uploads/create'
+	resources :csv_uploads, only: [:create]
 
 	devise_for :users, path: '', path_names: {
     sign_in: 'login',
@@ -11,6 +13,9 @@ Rails.application.routes.draw do
   }
 
   resources :questions do
+		collection do
+      delete 'destroy_all'
+    end
     resources :answers, only: [:index, :create]
   end
   
