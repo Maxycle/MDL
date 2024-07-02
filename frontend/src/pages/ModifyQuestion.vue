@@ -7,7 +7,7 @@
 						<div class="relative" @mouseover="showMenu(menuOptions.target)" @mouseout="hideMenu(menuOptions.target)">
 							<div class="border-4 anarcap-border rounded-lg bg-green-700 text-white p-2">{{ menuOptions.target }}</div>
 							<Menu v-show="hovered === menuOptions.target" class="absolute -bottom-13 -left-10 z-10"
-								:options="menuOptions" @optionSelected="(optionSelected) => add(menuOptions.target, optionSelected)" />
+								:options="menuOptions" @optionSelected="(optionSelected) => addFilter(menuOptions.target, optionSelected)" />
 						</div>
 					</div>
 				</div>
@@ -44,19 +44,7 @@ import { ref, onMounted, computed } from "vue"
 import Menu from '../components/Menu.vue'
 import { useSessionStore } from '@/stores/modules/sessionStore'
 import truncate from 'lodash/truncate'
-
-const menuData = [
-	{ target: 'domain', text: 'domaine', content: [{ text: 'Ecole Autrichienne', symbol: 'EA' }, { text: 'Droit Naturel', symbol: 'DN' }] },
-	{ target: 'level', text: 'niveau', content: [{ text: 'Base Acquises', symbol: 'BA' }, { text: 'Sait Anal-yser', symbol: 'SA' }] },
-	{
-		target: 'difficulty', text: 'difficulté', content: [
-			{ text: 'Pseudo', symbol: 'E' },
-			{ text: 'Démo', symbol: 'D' },
-			{ text: 'Minar', symbol: 'C' },
-			{ text: 'Anar', symbol: 'B' },
-			{ text: 'Austro', symbol: 'A' }]
-	}
-]
+import { menuData } from '@/helpers/constants.js'
 
 const hovered = ref('')
 const questionToShow = ref(undefined)
@@ -118,7 +106,7 @@ const hideQuestion = () => {
 	questionToShow.value = undefined
 }
 
-const add = (target, optionSelected) => {
+const addFilter = (target, optionSelected) => {
 	if (target === 'domain') { domain.value = optionSelected }
 	else if (target === 'level') { level.value = optionSelected }
 	else { difficulty.value = optionSelected }

@@ -5,3 +5,11 @@
 .anarcap-border {
   @apply border-t-anarcapYellow border-l-anarcapYellow border-b-black border-r-black;
 }
+
+.big-edit-button {
+	@apply edit-button w-1/3;
+}
+
+.edit-button {
+	@apply border-4 anarcap-border rounded-lg text-white hover:font-extrabold cursor-pointer p-2 flex;
+}

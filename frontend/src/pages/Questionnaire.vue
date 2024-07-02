@@ -3,7 +3,7 @@
 		<div class="flex flex-col items-center">
 			<div v-if="!questionnaireStarted" class="flex space-x-4 mb-4">
 				<div v-for="domain in questionnaireDomain" :key="domain"
-					class="border-4 anarcap-border rounded-lg bg-neutral-400 p-4 flex flex-col items-center shadow-xl shadow-neutral-700">
+					class="border-8 anarcap-border rounded-lg bg-neutral-400 p-4 flex flex-col items-center shadow-xl shadow-neutral-700">
 					<div class="border-4 border-orange-700 bg-orange-100 rounded-md p-2 mb-4 text-black text-xl font-extrabold shadow-lg shadow-neutral-700 hover:animate-spin">{{
 						domain }}</div>
 					<div class="flex space-x-2">

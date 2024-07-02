@@ -11,45 +11,31 @@
 					<div class="border-4 anarcap-border rounded-lg bg-green-700 text-white p-2">{{ menuOptions.text }}</div>
 					<Menu v-show="hovered === menuOptions.target" class="absolute -bottom-13 -left-10 z-10" :options="menuOptions"
 						:selectedOption="optionSelected(menuOptions.target)"
-						@optionSelected="(optionSelected) => add(menuOptions.target, optionSelected)" />
+						@optionSelected="(optionSelected) => addAttribute(menuOptions.target, optionSelected)" />
 				</div>
 			</div>
-			<div
-				class="col-span-9 border-4 anarcap-border rounded-lg bg-green-100 flex flex-col divide-y divide-orange-700 divide-solid grow">
-				<div v-for="(answer, index) in answers" :key="index">
-					<div class="w-full first:rounded-t-lg last:rounded-b-lg">
-						<input v-model="answers[index]"
-							:class="[answerClasses, { 'rounded-t-lg': index === 0 }, { 'rounded-b-lg': index === answerCount - 1 }]"
-							placeholder="Ecris ta réponse sans fotes d'ortograff" />
-					</div>
+			<div class="col-span-9">
+				<div v-for="(answer, index) in answers" :key="index" :class="answerClasses">
+					<input v-model="answers[index]" placeholder="Ecris ta réponse sans fotes d'ortograff"
+						class="w-full placeholder:italic" />
 				</div>
 			</div>
-			<div
-				class="border-4 anarcap-border bg-green-100 rounded-lg flex flex-col divide-y divide-orange-700 divide-solid">
-				<div v-for="(answerValue, index) in answerValues" :key="index">
-					<div class="w-full first:rounded-t-lg last:rounded-b-lg">
-						<input v-model="answerValues[index]"
-							:class="[answerClasses, { 'rounded-t-lg': index === 0 }, { 'rounded-b-lg': index === answerCount - 1 }]"
-							placeholder="Valeur" />
-					</div>
+			<div>
+				<div v-for="(answerValue, index) in answerValues" :key="index" :class="answerClasses">
+					<input v-model="answerValues[index]" placeholder="Valeur" class="w-full placeholder:italic" />
 				</div>
 			</div>
-			<div class="h-full col-span-2 flex flex-col">
-				<div v-for="index in answerCount" :key="index"
-					class="border-4 anarcap-border bg-red-500 rounded-lg h-full flex items-center pl-2 cursor-pointer hover:bg-red-600 hover:font-extrabold hover:text-white"
+			<div class="col-span-2">
+				<div v-for="index in answerCount" :key="index" class="bg-red-600 edit-button justify-center hover:bg-red-700 mb-1"
 					@click="deleteItem(index - 1)">
 					Supprimer
 				</div>
 			</div>
 		</div>
-		<div
-			class="border-4 w-1/3 anarcap-border rounded-lg bg-green-600 text-white hover:bg-green-700 hover:font-extrabold cursor-pointer p-2 flex justify-center"
-			@click="addItem">
+		<div class="bg-green-600 hover:bg-green-700 big-edit-button justify-center" @click="addItem">
 			Rajouter une réponse
 		</div>
-		<div
-			class="border-4 w-1/3 anarcap-border rounded-lg bg-blue-600 text-white hover:bg-blue-700 hover:font-extrabold cursor-pointer p-2 flex justify-center"
-			@click="createQuestion">
+		<div class="bg-blue-600 hover:bg-blue-700 big-edit-button justify-center" @click="createQuestion">
 			Envoyer
 		</div>
 	</div>
@@ -58,8 +44,9 @@
 <script setup>
 import axios from 'axios'
 import Menu from '../components/Menu.vue'
-import { ref, watch, computed } from "vue"
+import { ref, watch, onMounted } from "vue"
 import { useSessionStore } from "@/stores/modules/sessionStore"
+import { menuData } from '@/helpers/constants.js'
 
 const props = defineProps({
 	questionToBeEdited: {
@@ -74,10 +61,10 @@ const props = defineProps({
 
 const emit = defineEmits(['questions-updated']);
 const sessionStore = useSessionStore();
-const answerClasses = ref('placeholder:italic placeholder:text-slate-400 w-full p-2 focus:bg-green-300 hover:bg-green-200')
 const answerCount = ref(props.questionToBeEdited.answers.length)
 const answers = ref(Array(answerCount.value).fill(''))
-const answerValues = ref(Array(answerCount.value).fill(undefined))
+const answerValues = ref(Array(answerCount.value).fill('666'))
+const answerClasses = ref('edit-button text-black bg-orange-100 hover:bg-orange-200 mb-1')
 const question = ref('')
 const questionId = ref(undefined)
 const level = ref('')
@@ -85,18 +72,9 @@ const domain = ref('')
 const difficulty = ref('')
 const hovered = ref('')
 
-const menuData = [
-	{ target: 'domain', text: 'domaine', content: [{ text: 'Ecole Autrichienne', symbol: 'EA' }, { text: 'Droit Naturel', symbol: 'DN' }] },
-	{ target: 'level', text: 'niveau', content: [{ text: 'Base Acquises', symbol: 'BA' }, { text: 'Sait Anal-yser', symbol: 'SA' }] },
-	{
-		target: 'difficulty', text: 'difficulté', content: [
-			{ text: 'Pseudo', symbol: 'E' },
-			{ text: 'Démo', symbol: 'D' },
-			{ text: 'Minar', symbol: 'C' },
-			{ text: 'Anar', symbol: 'B' },
-			{ text: 'Austro', symbol: 'A' }]
-	}
-]
+onMounted(() => {
+	if (!props.isUpdating) { answerValues.value = [0, 25, 50, 75, 100] }
+})
 
 const optionSelected = (target) => {
 	const option = target === 'domain' ? domain.value : target === 'level' ? level.value : difficulty.value
@@ -111,7 +89,7 @@ const hideMenu = () => {
 	hovered.value = ''
 }
 
-const add = (target, optionSelected) => {
+const addAttribute = (target, optionSelected) => {
 	if (target === 'domain') { domain.value = optionSelected }
 	else if (target === 'level') { level.value = optionSelected }
 	else { difficulty.value = optionSelected }

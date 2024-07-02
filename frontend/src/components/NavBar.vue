@@ -10,12 +10,10 @@
 			<NavBarButton :isActive="isRouteActive('/questionnaire')">
 				<span class="relative"><router-link to="/questionnaire">Questionnaire</router-link></span>
 			</NavBarButton>
-			<NavBarButton v-if="loggedInUser.admin" :isActive="isRouteActive('/nouvelle-question')" @mouseover="showMenu" @mouseout="hideMenu" class="relative">
+			<NavBarButton v-if="loggedInUser.admin" :isActive="isRouteActive('/nouvelle-question')" @mouseover="showMenu"
+				@mouseout="hideMenu" class="relative">
 				<span>Admin</span>
 				<AdminMenu v-show="showAdminMenu" class="absolute top-12 -left-14 w-fit" />
-			</NavBarButton>
-			<NavBarButton v-else>
-				<span>Dashboard</span>
 			</NavBarButton>
 			<NavBarButton @click="redirectToEditProfile">
 				<span class="relative">Edit profile</span>
