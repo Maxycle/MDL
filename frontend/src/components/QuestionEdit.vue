@@ -1,7 +1,7 @@
 <template>
 	<div class="bg-neutral-600 h-full text-black flex flex-col items-center justify-center space-y-4 px-12">
 		<div class="grid grid-cols-12 gap-4 w-full">
-			<div class="border-4 anarcap-border rounded-lg col-span-10">
+			<div class="border-4 anarcap-border rounded-lg col-span-9">
 				<input v-model="question"
 					class="placeholder:italic placeholder:text-slate-400 w-full bg-orange-100 p-2 focus:bg-orange-300 hover:bg-orange-200 rounded"
 					placeholder="Ecrit ta question avec un point d'intérogation à la fin (sinon c'est pas une question, tu comprends ?)" />
@@ -15,7 +15,7 @@
 				</div>
 			</div>
 			<div
-				class="col-span-10 border-4 anarcap-border rounded-lg bg-green-100 flex flex-col divide-y divide-orange-700 divide-solid grow">
+				class="col-span-9 border-4 anarcap-border rounded-lg bg-green-100 flex flex-col divide-y divide-orange-700 divide-solid grow">
 				<div v-for="(answer, index) in answers" :key="index">
 					<div class="w-full first:rounded-t-lg last:rounded-b-lg">
 						<input v-model="answers[index]"
@@ -34,7 +34,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="h-full flex flex-col">
+			<div class="h-full col-span-2 flex flex-col">
 				<div v-for="index in answerCount" :key="index"
 					class="border-4 anarcap-border bg-red-500 rounded-lg h-full flex items-center pl-2 cursor-pointer hover:bg-red-600 hover:font-extrabold hover:text-white"
 					@click="deleteItem(index - 1)">
@@ -82,16 +82,25 @@ const question = ref('')
 const questionId = ref(undefined)
 const level = ref('')
 const domain = ref('')
+const difficulty = ref('')
 const hovered = ref('')
 
 const menuData = [
 	{ target: 'domain', text: 'domaine', content: [{ text: 'Ecole Autrichienne', symbol: 'EA' }, { text: 'Droit Naturel', symbol: 'DN' }] },
-	{ target: 'level', text: 'niveau', content: [{ text: 'Base Acquises', symbol: 'BA' }, { text: 'Sait Anal-yser', symbol: 'SA' }] }
+	{ target: 'level', text: 'niveau', content: [{ text: 'Base Acquises', symbol: 'BA' }, { text: 'Sait Anal-yser', symbol: 'SA' }] },
+	{
+		target: 'difficulty', text: 'difficulté', content: [
+			{ text: 'Pseudo', symbol: 'E' },
+			{ text: 'Démo', symbol: 'D' },
+			{ text: 'Minar', symbol: 'C' },
+			{ text: 'Anar', symbol: 'B' },
+			{ text: 'Austro', symbol: 'A' }]
+	}
 ]
 
 const optionSelected = (target) => {
-	const fff = target === 'domain' ? domain.value : level.value
-	return fff
+	const option = target === 'domain' ? domain.value : target === 'level' ? level.value : difficulty.value
+	return option
 }
 
 const showMenu = (option) => {
@@ -104,7 +113,8 @@ const hideMenu = () => {
 
 const add = (target, optionSelected) => {
 	if (target === 'domain') { domain.value = optionSelected }
-	else { level.value = optionSelected }
+	else if (target === 'level') { level.value = optionSelected }
+	else { difficulty.value = optionSelected }
 }
 
 const deleteItem = (index) => {
@@ -139,6 +149,7 @@ const createQuestion = async () => {
 				content: question.value,
 				level: level.value,
 				domain: domain.value,
+				difficulty: difficulty.value,
 				answers_attributes: answers.value.map((content, index) => ({
 					content,
 					value: answerValues.value[index]
@@ -172,6 +183,7 @@ watch(() => props.questionToBeEdited, (newValue) => {
 	answerCount.value = newValue.answers.length
 	level.value = newValue.level || ''
 	domain.value = newValue.domain || ''
+	difficulty.value = newValue.difficulty || ''
 	questionId.value = newValue.id
 }, {
 	deep: true,

@@ -8,7 +8,8 @@ class CsvUploadsController < ApplicationController
         question_attributes = {
           content: row['question_content'],
           level: row['question_level'],
-          domain: row['question_domain']
+          domain: row['question_domain'],
+					difficulty: row['question_difficulty']
         }
 
         answer_attributes = []

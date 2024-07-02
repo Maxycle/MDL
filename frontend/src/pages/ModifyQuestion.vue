@@ -21,7 +21,8 @@
 							question.content }}</div>
 				</div>
 			</div>
-			<QuestionEdit v-if="questionSelected.answers" :questionToBeEdited="questionSelected" isUpdating class="bg-transparent" @questions-updated="fetchQuestions"/>
+			<QuestionEdit v-if="questionSelected.answers" :questionToBeEdited="questionSelected" isUpdating
+				class="bg-transparent" @questions-updated="fetchQuestions" />
 			<div v-else class="w-full flex justify-center mt-12">
 				<div class="flex items-center h-fit">
 					<font-awesome-icon icon="fa-solid fa-arrow-left" class="h-12 mr-4" />
@@ -45,13 +46,23 @@ import { useSessionStore } from '@/stores/modules/sessionStore'
 import truncate from 'lodash/truncate'
 
 const menuData = [
-	{ target: 'domain', content: [{ text: 'Ecole Autrichienne', symbol: 'EA' }, { text: 'Droit Naturel', symbol: 'DN' }] },
-	{ target: 'level', content: [{ text: 'Base Acquises', symbol: 'BA' }, { text: 'Sait Anal-yser', symbol: 'SA' }] }
+	{ target: 'domain', text: 'domaine', content: [{ text: 'Ecole Autrichienne', symbol: 'EA' }, { text: 'Droit Naturel', symbol: 'DN' }] },
+	{ target: 'level', text: 'niveau', content: [{ text: 'Base Acquises', symbol: 'BA' }, { text: 'Sait Anal-yser', symbol: 'SA' }] },
+	{
+		target: 'difficulty', text: 'difficulté', content: [
+			{ text: 'Pseudo', symbol: 'E' },
+			{ text: 'Démo', symbol: 'D' },
+			{ text: 'Minar', symbol: 'C' },
+			{ text: 'Anar', symbol: 'B' },
+			{ text: 'Austro', symbol: 'A' }]
+	}
 ]
+
 const hovered = ref('')
 const questionToShow = ref(undefined)
 const level = ref('')
 const domain = ref('')
+const difficulty = ref('')
 const questions = ref([])
 const sessionStore = useSessionStore()
 const questionSelected = ref({});
@@ -67,7 +78,7 @@ onMounted(() => {
 
 const filteredQuestions = computed(() => {
 	return questions.value.filter((question) => {
-		return (!domain.value || question.domain === domain.value) && (!level.value || question.level === level.value)
+		return (!domain.value || question.domain === domain.value) && (!level.value || question.level === level.value) && (!difficulty.value || question.difficulty === difficulty.value)
 	})
 })
 
@@ -107,9 +118,9 @@ const hideQuestion = () => {
 	questionToShow.value = undefined
 }
 
-
 const add = (target, optionSelected) => {
 	if (target === 'domain') { domain.value = optionSelected }
-	else { level.value = optionSelected }
+	else if (target === 'level') { level.value = optionSelected }
+	else { difficulty.value = optionSelected }
 }
 </script>

@@ -53,6 +53,6 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:content, :level, :domain, answers_attributes: [:content, :value])
+    params.require(:question).permit(:content, :level, :domain, :difficulty, answers_attributes: [:content, :value])
   end
 end
