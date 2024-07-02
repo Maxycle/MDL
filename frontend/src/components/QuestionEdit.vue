@@ -1,5 +1,5 @@
 <template>
-	<div class="bg-neutral-500 h-full text-black flex flex-col items-center justify-center space-y-4 px-12">
+	<div class="bg-neutral-600 h-full text-black flex flex-col items-center justify-center space-y-4 px-12">
 		<div class="grid grid-cols-12 gap-4 w-full">
 			<div class="border-4 anarcap-border rounded-lg col-span-10">
 				<input v-model="question"
@@ -10,6 +10,7 @@
 				<div class="relative" @mouseover="showMenu(menuOptions.target)" @mouseout="hideMenu(menuOptions.target)">
 					<div class="border-4 anarcap-border rounded-lg bg-green-700 text-white p-2">{{ menuOptions.text }}</div>
 					<Menu v-show="hovered === menuOptions.target" class="absolute -bottom-13 -left-10 z-10" :options="menuOptions"
+						:selectedOption="optionSelected(menuOptions.target)"
 						@optionSelected="(optionSelected) => add(menuOptions.target, optionSelected)" />
 				</div>
 			</div>
@@ -57,24 +58,28 @@
 <script setup>
 import axios from 'axios'
 import Menu from '../components/Menu.vue'
-import { computed, ref, watch } from "vue"
-import { useRouter } from "vue-router"
+import { ref, watch, computed } from "vue"
 import { useSessionStore } from "@/stores/modules/sessionStore"
 
 const props = defineProps({
 	questionToBeEdited: {
 		type: Object,
 		default: () => ({ answers: Array(5).fill('') })
+	},
+	isUpdating: {
+		type: Boolean,
+		default: false
 	}
 })
 
-const router = useRouter()
+const emit = defineEmits(['questions-updated']);
 const sessionStore = useSessionStore();
 const answerClasses = ref('placeholder:italic placeholder:text-slate-400 w-full p-2 focus:bg-green-300 hover:bg-green-200')
 const answerCount = ref(props.questionToBeEdited.answers.length)
 const answers = ref(Array(answerCount.value).fill(''))
 const answerValues = ref(Array(answerCount.value).fill(undefined))
 const question = ref('')
+const questionId = ref(undefined)
 const level = ref('')
 const domain = ref('')
 const hovered = ref('')
@@ -83,6 +88,11 @@ const menuData = [
 	{ target: 'domain', text: 'domaine', content: [{ text: 'Ecole Autrichienne', symbol: 'EA' }, { text: 'Droit Naturel', symbol: 'DN' }] },
 	{ target: 'level', text: 'niveau', content: [{ text: 'Base Acquises', symbol: 'BA' }, { text: 'Sait Anal-yser', symbol: 'SA' }] }
 ]
+
+const optionSelected = (target) => {
+	const fff = target === 'domain' ? domain.value : level.value
+	return fff
+}
 
 const showMenu = (option) => {
 	hovered.value = option
@@ -93,9 +103,6 @@ const hideMenu = () => {
 }
 
 const add = (target, optionSelected) => {
-	console.log('selected1 !!!!!!', target)
-	console.log('selected2 !!!!!!', optionSelected)
-
 	if (target === 'domain') { domain.value = optionSelected }
 	else { level.value = optionSelected }
 }
@@ -113,6 +120,19 @@ const addItem = () => {
 }
 
 const createQuestion = async () => {
+	if (props.isUpdating) {
+		console.log('is updating', props.isUpdating)
+		try {
+			const responseDelete = await axios.delete(`/questions/${questionId.value}`, {
+				headers: {
+					Authorization: `${sessionStore.getAuthToken}`
+				}
+			})
+		} catch (error) {
+			console.error(`Error creating:`, error);
+		}
+	}
+
 	try {
 		const response = await axios.post('/questions', {
 			question: {
@@ -142,6 +162,7 @@ const createQuestion = async () => {
 	} catch (error) {
 		console.error(`Error creating:`, error);
 	}
+	emit('questions-updated')
 }
 
 watch(() => props.questionToBeEdited, (newValue) => {
@@ -151,6 +172,7 @@ watch(() => props.questionToBeEdited, (newValue) => {
 	answerCount.value = newValue.answers.length
 	level.value = newValue.level || ''
 	domain.value = newValue.domain || ''
+	questionId.value = newValue.id
 }, {
 	deep: true,
 	immediate: true

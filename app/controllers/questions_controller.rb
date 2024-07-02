@@ -1,12 +1,17 @@
 class QuestionsController < ApplicationController
   before_action :set_question, only: [:show, :update, :destroy]
 
-  # GET /questions
-  def index
-    @questions = Question.includes(:answers).all
-    render json: @questions.as_json(include: :answers)
-  end
+	def index
+		@questions = Question.includes(:answers)
+		@questions = @questions.where(domain: params[:domain]) if params[:domain].present?
+		@questions = @questions.where(level: params[:level]) if params[:level].present?
+	
+		# Select 5 random questions from the filtered result
+		@questions = @questions.shuffle
 
+		render json: @questions.as_json(include: :answers)
+	end
+	
   # GET /questions/:id
   def show
     render json: @question
@@ -37,6 +42,10 @@ class QuestionsController < ApplicationController
     @question.destroy
   end
 
+	def destroy_all
+    Question.destroy_all
+		head :no_content
+  end
   private
 
   def set_question

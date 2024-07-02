@@ -7,7 +7,7 @@
 			</div>
 		</div>
 	</div>
-	<v-pagination v-model="page" :length="20" :total-visible="5" prev-icon="mdi-menu-left" next-icon="mdi-menu-right"
+	<v-pagination v-model="page" :length="25" :total-visible="5" prev-icon="mdi-menu-left" next-icon="mdi-menu-right"
 		@page="onPageChange"></v-pagination>
 </template>
 

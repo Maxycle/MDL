@@ -1,5 +1,5 @@
 <template>
-	<div class="bg-neutral-500 h-full text-black px-12 pt-12">
+	<div class="h-full text-black px-12 pt-12 bg-gradient-to-r from-neutral-300 to-neutral-600">
 		<div class="flex justify-start">
 			<div class="grid">
 				<div class="flex space-x-4 justify-center pb-4">
@@ -21,7 +21,7 @@
 							question.content }}</div>
 				</div>
 			</div>
-			<QuestionEdit v-if="questionSelected.answers" :questionToBeEdited="questionSelected" />
+			<QuestionEdit v-if="questionSelected.answers" :questionToBeEdited="questionSelected" isUpdating class="bg-transparent" @questions-updated="fetchQuestions"/>
 			<div v-else class="w-full flex justify-center mt-12">
 				<div class="flex items-center h-fit">
 					<font-awesome-icon icon="fa-solid fa-arrow-left" class="h-12 mr-4" />
@@ -30,7 +30,6 @@
 					<div class="border-4 anarcap-border rounded-lg bg-green-700 p-4 w-fit h-fit text-white">Choisis une question
 						(à gauche)</div>
 				</div>
-
 			</div>
 		</div>
 	</div>

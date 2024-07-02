@@ -47,7 +47,7 @@ function updateStopwatch() {
 function start() {
   if (!intervalId) {
     intervalId = setInterval(updateStopwatch, 10);
-		setInterval(() => emit('jump'), 2000)
+		setInterval(() => emit('jump'), 4000)
   }
 }
 
