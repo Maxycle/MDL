@@ -7,8 +7,11 @@
 			n'est
 			plus très loin du bout du tunnel, un austrolapithèque qui brille même quand il dort.
 		</p>
-		<p v-if="!sessionStore.isLoggedIn" class="border-2 anarcap-border p-4 bg-red-500 rounded mt-16 cursor-pointer"
-			@click="router.push('/Login')">Il va falloir commencer par vous identifier</p>
+		<div class="border-2 anarcap-border p-4 bg-red-500 rounded mt-16 cursor-pointer shadow-lg shadow-neutral-700">
+			<div v-if="!sessionStore.isLoggedIn" @click="router.push('/Login')">Il va falloir commencer par vous identifier
+			</div>
+			<div v-else @click="router.push('/questionnaire')">Aller au questionnaire</div>
+		</div>
 	</div>
 
 </template>
