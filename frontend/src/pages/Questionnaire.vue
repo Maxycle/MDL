@@ -3,15 +3,15 @@
 		<div class="flex flex-col items-center">
 			<div v-if="!questionnaireStarted" class="flex space-x-4 mb-4">
 				<div v-for="domain in questionnaireDomain" :key="domain"
-					class="border-4 anarcap-border rounded-lg bg-neutral-400 p-4 flex flex-col items-center">
-					<div class="border-4 border-orange-700 bg-orange-100 rounded-md p-2 mb-4 text-black text-xl font-extrabold">{{
+					class="border-4 anarcap-border rounded-lg bg-neutral-400 p-4 flex flex-col items-center shadow-xl shadow-neutral-700">
+					<div class="border-4 border-orange-700 bg-orange-100 rounded-md p-2 mb-4 text-black text-xl font-extrabold shadow-lg shadow-neutral-700 hover:animate-spin">{{
 						domain }}</div>
 					<div class="flex space-x-2">
 						<button v-for="button in buttonsQuestionaires" :key="button" class="bg-green-400 text-black mb-2"
 							@click="startQuestionnaire(domain, button)"
 							:class="{ 'bg-red-500': buttonTextAndApiUrl(domain, button).text === 'valider \'Bases Acquises\' d\'abord' }"
 							:disabled="buttonTextAndApiUrl(domain, button).text === 'valider \'Bases Acquises\' d\'abord'">
-							<div class="border-2 anarcap-border p-2 rounded">
+							<div class="border-2 anarcap-border p-2 rounded shadow-lg shadow-neutral-700">
 								<div class="font-extrabold">{{ button }}</div>
 								<div class="italic">{{ buttonTextAndApiUrl(domain, button).text }}</div>
 							</div>
