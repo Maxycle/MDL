@@ -1,64 +1,24 @@
 <template>
-	<div class="relative bg-neutral-500 h-full text-white pt-12 px-8">
-		<div class="flex flex-col items-center">
-			<button>
-				<div v-if="!questionnaireStarted"
-					class="border-8 anarcap-border bg-blue-500 rounded-xl text-white text-5xl p-4 mb-8"
-					@click="startQuestionnaire">Commencer le questionnaire
-				</div>
-			</button>
-			<button>
-				<div v-if="showNotLoggedInMessage" @click="router.push('/Login')"
-					class="text-lg border-4 anarcap-border rounded-lg bg-red-600 w-fit p-2">
-					Il faut
-					que tu te
-					loggues gros bêta !!</div>
-			</button>
-			<div v-if="questionnaireStarted">
-				<QuestionAnswerBlock :questionsList="questionsList" class="shadow-xl"/>
-			</div>
-			<div class="absolute bottom-4" :class="stopWatchClasses">
-				<StopWatch v-if="questionnaireStarted" @jump="changeStopWatchClasses"/>
-			</div>
-		</div>
+	<div class="flex flex-col items-center w-full bg-neutral-500 h-full">
+		<p class=" w-2/3 text-white pt-12 px-8">
+			Salut les gars, ici on vérifie si vous êtes un communiste de mes deux, un pseudo-communiste à la mord moi le
+			noeud,
+			un démocrate mielleux et sans intérêt, un minarchiste qui comprends des trucs mais pas tout, un anarchiste qui
+			n'est
+			plus très loin du bout du tunnel, un austrolapithèque qui brille même quand il dort.
+		</p>
+		<p v-if="!sessionStore.isLoggedIn" class="border-2 anarcap-border p-4 bg-red-500 rounded mt-16 cursor-pointer"
+			@click="router.push('/Login')">Il va falloir commencer par vous identifier</p>
 	</div>
+
 </template>
 
 <script setup>
 import { ref } from "vue"
 import { useRouter } from "vue-router"
 import { useSessionStore } from "@/stores/modules/sessionStore"
-import axios from 'axios'
-import QuestionAnswerBlock from "@/components/QuestionAnswerBlock.vue"
-import StopWatch from "@/components/StopWatch.vue"
 
-const router = useRouter()
 const sessionStore = useSessionStore();
-const questionsList = ref([])
-const showNotLoggedInMessage = ref(false)
-const questionnaireStarted = ref(false)
-const stopWatchClasses = ref('left-4')
+const router = useRouter();
 
-const changeStopWatchClasses = () => {
-	stopWatchClasses.value = stopWatchClasses.value === 'left-4' ? 'right-4' : 'left-4' 
-}
-
-async function startQuestionnaire() {
-	showNotLoggedInMessage.value = !sessionStore.isLoggedIn
-	try {
-		const response = await axios.get('/questions',
-			{
-				headers: {
-					Authorization: `${sessionStore.getAuthToken}`
-				}
-			});
-		questionsList.value = response.data;
-		console.log('questions =>', response)
-	} catch (error) {
-		console.error('Error fetching questions:', error.message);
-	}
-	if (questionsList.value.length) {
-		questionnaireStarted.value = true
-	}
-}
 </script>
