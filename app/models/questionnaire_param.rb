@@ -1,0 +1,2 @@
+class QuestionnaireParam < ApplicationRecord
+end

@@ -14,8 +14,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 
-const emit = defineEmits(['jump']);
-const initialTime = 30 * 60 * 1000; // 30 minutes in milliseconds
+const emit = defineEmits(['jump', 'time-is-up']);
+const initialTime = 10 * 1000; // 30 minutes in milliseconds
 const remainingTime = ref(initialTime);
 let intervalId = null;
 let intervalId2 = null;
@@ -41,6 +41,7 @@ function updateStopwatch() {
     clearInterval(intervalId);
     intervalId = null;
     remainingTime.value = 0;
+		emit('time-is-up')
   }
 }
 
@@ -51,16 +52,16 @@ function start() {
   }
 }
 
-function stop() {
-  if (intervalId) {
-    clearInterval(intervalId);
-    intervalId = null;
-  }
-}
+// function stop() {
+//   if (intervalId) {
+//     clearInterval(intervalId);
+//     intervalId = null;
+//   }
+// }
 
-function reset() {
-  clearInterval(intervalId);
-  intervalId = null;
-	remainingTime.value = initialTime;
-}
+// function reset() {
+//   clearInterval(intervalId);
+//   intervalId = null;
+// 	remainingTime.value = initialTime;
+// }
 </script>

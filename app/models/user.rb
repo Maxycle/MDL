@@ -8,6 +8,8 @@ class User < ApplicationRecord
 	:jwt_authenticatable,
 	jwt_revocation_strategy: self
 	
+	has_many :scores, dependent: :destroy
+
 	validates :first_name, presence: true
   validates :last_name, presence: true
   validates :username, presence: true, uniqueness: true

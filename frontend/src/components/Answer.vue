@@ -20,6 +20,6 @@ const props = defineProps({
 
 const answerStore = useAnswerStore();
 const showTick = computed(() => {
-	return answerStore.getAnswers[props.data.question_id] === props.data.id
+	return answerStore.getAnswers[props.data.question_id] ? answerStore.getAnswers[props.data.question_id].answer_id === props.data.id : false
 })
 </script>

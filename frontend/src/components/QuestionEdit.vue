@@ -1,7 +1,7 @@
 <template>
 	<div class="bg-neutral-600 h-full text-black flex flex-col items-center justify-center space-y-4 px-12">
-		<div class="grid grid-cols-12 gap-4 w-full">
-			<div class="border-4 anarcap-border rounded-lg col-span-9">
+		<div class="grid grid-cols-12 gap-6 w-full">
+			<div class="border-4 anarcap-border rounded-lg col-span-10">
 				<input v-model="question"
 					class="placeholder:italic placeholder:text-slate-400 w-full bg-orange-100 p-2 focus:bg-orange-300 hover:bg-orange-200 rounded"
 					placeholder="Ecrit ta question avec un point d'intérogation à la fin (sinon c'est pas une question, tu comprends ?)" />
@@ -14,7 +14,7 @@
 						@optionSelected="(optionSelected) => addAttribute(menuOptions.target, optionSelected)" />
 				</div>
 			</div>
-			<div class="col-span-9">
+			<div class="col-span-10">
 				<div v-for="(answer, index) in answers" :key="index" :class="answerClasses">
 					<input v-model="answers[index]" placeholder="Ecris ta réponse sans fotes d'ortograff"
 						class="w-full placeholder:italic" />
@@ -25,7 +25,7 @@
 					<input v-model="answerValues[index]" placeholder="Valeur" class="w-full placeholder:italic" />
 				</div>
 			</div>
-			<div class="col-span-2">
+			<div class="">
 				<div v-for="index in answerCount" :key="index" class="bg-red-600 edit-button justify-center hover:bg-red-700 mb-1"
 					@click="deleteItem(index - 1)">
 					Supprimer
@@ -62,8 +62,8 @@ const props = defineProps({
 const emit = defineEmits(['questions-updated']);
 const sessionStore = useSessionStore();
 const answerCount = ref(props.questionToBeEdited.answers.length)
-const answers = ref(Array(answerCount.value).fill(''))
-const answerValues = ref(Array(answerCount.value).fill('666'))
+const answers = ref(Array(answerCount.value))
+const answerValues = ref(Array(answerCount.value))
 const answerClasses = ref('edit-button text-black bg-orange-100 hover:bg-orange-200 mb-1')
 const question = ref('')
 const questionId = ref(undefined)
@@ -109,7 +109,6 @@ const addItem = () => {
 
 const createQuestion = async () => {
 	if (props.isUpdating) {
-		console.log('is updating', props.isUpdating)
 		try {
 			const responseDelete = await axios.delete(`/questions/${questionId.value}`, {
 				headers: {

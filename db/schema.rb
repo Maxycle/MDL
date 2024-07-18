@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_01_134028) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_17_174348) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -59,13 +59,32 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_01_134028) do
     t.index ["jti"], name: "index_jwt_denylists_on_jti", unique: true
   end
 
+  create_table "questionnaire_params", force: :cascade do |t|
+    t.integer "tries_permitted", default: 2
+    t.integer "try_length", default: 7
+    t.integer "cycle_length", default: 30
+    t.integer "threshold", default: 200
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "questions", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "domain"
     t.text "level"
-    t.string "difficulty"
+  end
+
+  create_table "scores", force: :cascade do |t|
+    t.string "domain"
+    t.string "level", default: "beginner"
+    t.integer "step", default: 0
+    t.datetime "try_date"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_scores_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -81,8 +100,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_01_134028) do
     t.string "username"
     t.string "jti", null: false
     t.boolean "admin", default: false
-    t.string "EA"
-    t.string "DN"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -91,4 +108,5 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_01_134028) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "answers", "questions"
+  add_foreign_key "scores", "users"
 end

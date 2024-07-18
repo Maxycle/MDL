@@ -62,8 +62,8 @@ export const useSessionStore = defineStore({
 				this.authToken = res.headers.get("Authorization")
 				localStorage.setItem("authToken", this.authToken)
 				const data = await res.json()
+				console.log("dataaa logged in", data)
 				this.user = data.user
-
 				return true
 			} catch (error) {
 				console.log(`An error occured: ${error}`)
@@ -82,6 +82,7 @@ export const useSessionStore = defineStore({
 					this.reset()
 				} else {
 					const data = await res.json()
+					console.log("dataaa logged in w token", data)
 					this.user = data.user
 					this.authToken = localStorage.getItem("authToken")
 				}

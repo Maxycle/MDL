@@ -1,13 +1,13 @@
 <template>
 	<div class="flex flex-col items-center mb-6">
 		<Question :text="question.content" class="my-8 shadow-lg shadow-neutral-700" />
-		<div class="border-4 rounded-lg text-black anarcap-border shadow-md shadow-neutral-700">
+		<div class="border-4 rounded-lg text-black anarcap-border shadow-lg shadow-neutral-700">
 			<div v-for="(answer, indexAnswer) in question.answers" :key="indexAnswer">
 				<Answer	:data="answer" @click="selectAnswer(answer)" />
 			</div>
 		</div>
 	</div>
-	<v-pagination v-model="page" :length="25" :total-visible="5" prev-icon="mdi-menu-left" next-icon="mdi-menu-right"
+	<v-pagination v-model="page" :length="questionsList.length" :total-visible="5" prev-icon="mdi-menu-left" next-icon="mdi-menu-right"
 		@page="onPageChange"></v-pagination>
 </template>
 
@@ -41,7 +41,8 @@ const onPageChange = (event) => {
 }
 
 const selectAnswer = (answer) => {
-	const obj = { [answer.question_id]: answer.id }
+	// const obj = { [answer.question_id]: answer.id, value: answer.value }
+	const obj = { [answer.question_id]: { answer_id: answer.id, value: answer.value }}
 	answerStore.addAnswer(obj)
 }
 </script>

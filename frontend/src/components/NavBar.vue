@@ -13,7 +13,7 @@
 			<NavBarButton v-if="loggedInUser.admin" :isActive="isRouteActive('/nouvelle-question')" @mouseover="showMenu"
 				@mouseout="hideMenu" class="relative">
 				<span>Admin</span>
-				<AdminMenu v-show="showAdminMenu" class="absolute top-12 -left-14 w-fit" />
+				<AdminMenu v-show="showAdminMenu" class="absolute top-12 -left-44 w-fit" />
 			</NavBarButton>
 			<NavBarButton @click="redirectToEditProfile">
 				<span class="relative">Edit profile</span>
