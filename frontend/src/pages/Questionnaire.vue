@@ -1,5 +1,5 @@
 <template>
-	<div class="relative bg-neutral-500 h-full text-white pt-12 px-8">
+	<div class="relative bg-neutral-500 h-full text-white pt-12 px-8" v-cloak>
 		<div class="flex flex-col items-center">
 			<div v-if="!questionnaireStarted" class="flex space-x-4 mb-4">
 				<div v-for="domain in questionnaireDomain" :key="domain"
@@ -17,7 +17,7 @@
 									<div class="font-extrabold">{{ button }}</div>
 									<div class="italic">{{ buttonTextAndApiUrl(domain, button).text }}</div>
 									<div v-if="showNextAvailability(domain, button)" class="text-xs italic">Disponible le
-									 {{ buttonTextAndApiUrl(domain, button).availabilityDate }}</div>
+										{{ buttonTextAndApiUrl(domain, button).availabilityDate }}</div>
 								</div>
 							</div>
 						</button>
@@ -45,7 +45,8 @@
 import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
 import { useSessionStore } from "@/stores/modules/sessionStore"
-import { useAnswerStore } from '@/stores/modules/answerStore';
+import { useAnswerStore } from '@/stores/modules/answerStore'
+import { useScoreStore } from '@/stores/modules/scoreStore'
 import axios from 'axios'
 import QuestionAnswerBlock from "@/components/QuestionAnswerBlock.vue"
 import StopWatch from "@/components/StopWatch.vue"
@@ -53,6 +54,7 @@ import StopWatch from "@/components/StopWatch.vue"
 const router = useRouter()
 const sessionStore = useSessionStore()
 const answerStore = useAnswerStore()
+const scoreStore = useScoreStore()
 
 const questionsList = ref([])
 const showNotLoggedInMessage = ref(false)
@@ -60,9 +62,6 @@ const questionnaireStarted = ref(false)
 const stopWatchClasses = ref('left-4')
 const buttonsQuestionaires = ['Bases Acquises', 'Sait Analyser']
 const questionnaireDomain = ['Droit Naturel', 'Ecole Autrichienne']
-const scores = ref([])
-const scoreDroitNaturel = ref({})
-const scoreEcoleAutrichienne = ref({})
 const scoreBeingUpdated = ref({})
 const cycleLength = ref(0)
 const tryLength = ref(0)
@@ -88,33 +87,19 @@ onMounted(async () => {
 		console.error('Error fetching questionnaire params:', error.message);
 	}
 
-	await fetchScores()
+	await scoreStore.fetchScores()
 })
 
 const changeStopWatchClasses = () => {
 	stopWatchClasses.value = stopWatchClasses.value === 'left-4' ? 'right-4 top-4' : 'left-4'
 }
 
-const fetchScores = async () => {
-	try {
-		const response = await axios.get(`/uzer-scores?user_id=${sessionStore.getUserId}`,
-			{
-				headers: {
-					Authorization: `${sessionStore.getAuthToken}`
-				}
-			});
-		scores.value = response.data;
-		console.log('fetchScores =>', response)
-	} catch (error) {
-		console.error('Error fetching scores:', error.message);
-	}
-	scoreDroitNaturel.value = scores.value.find(obj => obj.domain === 'Droit Naturel') || {}
-	scoreEcoleAutrichienne.value = scores.value.find(obj => obj.domain === 'Ecole Autrichienne') || {}
-}
-
 const buttonTextAndApiUrl = (domain, button) => {
 	let domainParam = domain === 'Droit Naturel' ? 'DN' : 'EA'
-	let score = domain === 'Droit Naturel' ? scoreDroitNaturel.value : scoreEcoleAutrichienne.value
+	let score = selectScore(domain)
+	if (!score) {
+		return { text: 'Non disponible', apiUrl: '', availabilityDate: '' }
+	}
 	let text = ''
 	let apiUrl = ''
 	let lastTryDate = new Date(score.try_date)
@@ -127,7 +112,9 @@ const buttonTextAndApiUrl = (domain, button) => {
 		text = score.level === 'SA' ? 'Validé' : score.level === 'BA' ? 'Non validé' : "valider 'Bases Acquises' d'abord"
 		apiUrl = `/questions?domain=${domainParam}&level=SA`
 	}
+	console.log('text, apiUrl, availabilityDate', text, apiUrl, availabilityDate)
 	return { text, apiUrl, availabilityDate }
+
 }
 
 const showNextAvailability = (domain, button) => {
@@ -139,9 +126,8 @@ const isDisabled = (domain, button) => {
 }
 
 const isDisabledByTiming = (domain) => {
-	const score = scores.value.find(obj => obj.domain === domain)
-
-	if (score && score.step > 0) {
+	const score = selectScore(domain)
+	if (score && score.step) {
 		const lastTryDate = new Date(score.try_date)
 
 		const isMoreThanCycleLength = (currentDate - lastTryDate) > cycleLength.value;
@@ -160,6 +146,7 @@ const isDisabledByTiming = (domain) => {
 }
 
 async function startQuestionnaire(domain, button) {
+	questionsList.value = []
 	showNotLoggedInMessage.value = !sessionStore.isLoggedIn
 	answerStore.reset()
 	try {
@@ -169,14 +156,15 @@ async function startQuestionnaire(domain, button) {
 					Authorization: `${sessionStore.getAuthToken}`
 				}
 			});
-		questionsList.value = response.data;
+		questionsList.value = response.data
 		console.log('questions =>', response)
 	} catch (error) {
 		console.error('Error fetching questions:', error.message);
 	}
 	if (questionsList.value.length) {
 		questionnaireStarted.value = true
-		scoreBeingUpdated.value = domain === 'Droit Naturel' ? scoreDroitNaturel.value : scoreEcoleAutrichienne.value
+		scoreBeingUpdated.value = selectScore(domain)
+
 		if (!scoreBeingUpdated.value.id) {
 			await createScore(domain)
 		} else {
@@ -191,7 +179,7 @@ const createScore = async (domain) => {
 			{
 				score: {
 					user_id: sessionStore.getUserId,
-					domain: domain
+					domain: domain === 'Droit Naturel' ? 'DN' : 'EA'
 				}
 			},
 			{
@@ -199,18 +187,15 @@ const createScore = async (domain) => {
 					Authorization: `${sessionStore.getAuthToken}`
 				}
 			});
-		console.log('score =>', response)
+			scoreBeingUpdated.value = response.data
 	} catch (error) {
 		console.error('Error creating score:', error.message);
 	}
-	await fetchScores()
-	scoreBeingUpdated.value = domain === 'Droit Naturel' ? scoreDroitNaturel.value : scoreEcoleAutrichienne.value
 }
 
 const updateScoreAtStart = async (score) => {
 	const lastTryDate = new Date(score.try_date)
 	const isMoreThanCycleLength = (currentDate - lastTryDate) > cycleLength.value;
-	console.log('ze steps', score.step >= numberOfTriesPermitted.value ? 0 : score.step + 1)
 	try {
 		const response = await axios.patch(`/scores/${score.id}`,
 			{
@@ -224,12 +209,12 @@ const updateScoreAtStart = async (score) => {
 					Authorization: `${sessionStore.getAuthToken}`
 				}
 			});
-		console.log('update ze score =>', response)
+		scoreBeingUpdated.value = response.data
+		console.log('response', response)
 	} catch (error) {
 		console.error('Error creating score:', error.message);
 	}
-	await fetchScores()
-	scoreBeingUpdated.value = score.domain === 'Droit Naturel' ? scoreDroitNaturel.value : scoreEcoleAutrichienne.value
+	console.log('scoreBeingUpdated.value', scoreBeingUpdated.value)
 }
 
 const updateScoreAtFinish = async (score) => {
@@ -243,7 +228,6 @@ const updateScoreAtFinish = async (score) => {
 			nextLevel = 'SA'
 			break
 	}
-
 	try {
 		const response = await axios.patch(`/scores/${score.id}`,
 			{
@@ -258,16 +242,16 @@ const updateScoreAtFinish = async (score) => {
 					Authorization: `${sessionStore.getAuthToken}`
 				}
 			});
-		console.log('update ze score =>', response)
 	} catch (error) {
 		console.error('Error creating score:', error.message);
 	}
-	await fetchScores()
+	await scoreStore.fetchScores()
 }
-
 
 const stopQuestionnaire = () => {
-	console.log('questionnaire time up !!!!')
 	updateScoreAtFinish(scoreBeingUpdated.value)
+	router.push({ name: "Home" })
 }
+
+const selectScore = (domain) => { return domain === 'Droit Naturel' ? scoreStore.getScore.droitNaturel : scoreStore.getScore.ecoleAutrichienne }
 </script>

@@ -24,6 +24,7 @@ const sessionStore = useSessionStore();
 const items = ref([{ route: '/nouvelle-question', text: 'Créer une nouvelle question' },
 { route: '/modifier-question', text: 'Modifier une question' }, 
 { route: '/upload-nouvelles-questions', text: 'Upload nouvelle liste de questions' },
+{ route: '/utilisateurs', text: 'Scores des utilisateurs' },
 { route: '/questionnaire-paramètres', text: 'Changer les paramèetres de questionnaire ' }
 ])
 const isRouteActive = (path) => {

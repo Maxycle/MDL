@@ -126,7 +126,6 @@ const createQuestion = async () => {
 				content: question.value,
 				level: level.value,
 				domain: domain.value,
-				difficulty: difficulty.value,
 				answers_attributes: answers.value.map((content, index) => ({
 					content,
 					value: answerValues.value[index]

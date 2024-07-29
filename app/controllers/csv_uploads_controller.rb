@@ -35,4 +35,23 @@ class CsvUploadsController < ApplicationController
   rescue StandardError => e
     render json: { error: e.message }, status: :unprocessable_entity
   end
+
+	def export
+    questions = Question.includes(:answers)
+    csv_string = CSV.generate(headers: true) do |csv|
+      csv << ['question_content', 'question_level', 'question_domain', 'answer1_content', 'answer1_value', 'answer2_content', 'answer2_value', 'answer3_content', 'answer3_value', 'answer4_content', 'answer4_value', 'answer5_content', 'answer5_value']
+
+      questions.each do |question|
+        answer_data = question.answers.map { |a| [a.content, a.value] }.flatten
+        csv << [
+          question.content,
+          question.level,
+          question.domain,
+          *answer_data
+        ]
+      end
+    end
+
+    send_data csv_string, filename: "questions-#{Date.today}.csv"
+  end
 end

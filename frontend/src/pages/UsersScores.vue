@@ -7,28 +7,27 @@
 						<div class="relative" @mouseover="showMenu(menuOptions.target)" @mouseout="hideMenu(menuOptions.target)">
 							<div class="border-4 anarcap-border rounded-lg bg-green-700 text-white p-2">{{ menuOptions.text }}</div>
 							<Menu v-show="hovered === menuOptions.target" class="absolute -bottom-13 -left-10 z-10"
-								:options="menuOptions" @optionSelected="(optionSelected) => addFilter(menuOptions.target, optionSelected)" />
+								:options="menuOptions"
+								@optionSelected="(optionSelected) => addFilter(menuOptions.target, optionSelected)" />
 						</div>
 					</div>
 				</div>
-				<Autocomplete :options="filteredQuestions" class="pb-4" @questiton-selected="selectQuestion" />
-				<div v-for="(question, index) in filteredQuestions"
-					class="relative justify-start cursor-pointer text-blue-900 underline" @click="selectQuestion(question)"
-					@mouseover="showQuestion(index)" @mouseout="hideQuestion(index)">
-					{{ truncateQuestion(question.content) }}
-					<div v-if="questionToShow === index" @click="selectQuestion(question)"
+				<AutocompleteUsers :options="users" class="pb-4" @questiton-selected="selectUser" />
+				<div v-for="(user, index) in filteredUsers" class="relative justify-start cursor-pointer text-blue-900 underline"
+					@click="selectUser(user)" @mouseover="showUser(index)" @mouseout="hideUser(index)">
+					{{ user.username }}
+					<div v-if="userToShow === index" @click="selectUser(user)"
 						class="border-2 border-orange-500 rounded p-1 absolute top-2 left-6 text-nowrap bg-orange-100 z-10">{{
-							question.content }}</div>
+							user.username }} ({{ user.first_name }} {{ user.last_name }})</div>
 				</div>
 			</div>
-			<QuestionEdit v-if="questionSelected.answers" :questionToBeEdited="questionSelected" isUpdating
-				class="bg-transparent" @questions-updated="fetchQuestions" />
+			<UserInfo v-if="Object.entries(userSelected).length" :data="userSelected" />
 			<div v-else class="w-full flex justify-center mt-12">
 				<div class="flex items-center h-fit">
 					<font-awesome-icon icon="fa-solid fa-arrow-left" class="h-12 mr-4" />
 					<font-awesome-icon icon="fa-solid fa-arrow-left" class="h-12 mr-4" />
 					<font-awesome-icon icon="fa-solid fa-arrow-left" class="h-12 mr-4" />
-					<div class="border-4 anarcap-border rounded-lg bg-green-700 p-4 w-fit h-fit text-white">Choisis une question
+					<div class="border-4 anarcap-border rounded-lg bg-green-700 p-4 w-fit h-fit text-white">Choisis un utilisateur
 						(à gauche)</div>
 				</div>
 			</div>
@@ -38,8 +37,8 @@
 
 <script setup>
 import axios from 'axios'
-import QuestionEdit from '@/components/QuestionEdit.vue'
-import Autocomplete from '@/components/Autocomplete.vue';
+import UserInfo from '@/components/UserInfo.vue'
+import AutocompleteUsers from '@/components/AutocompleteUsers.vue';
 import { ref, onMounted, computed } from "vue"
 import Menu from '../components/Menu.vue'
 import { useSessionStore } from '@/stores/modules/sessionStore'
@@ -47,44 +46,37 @@ import truncate from 'lodash/truncate'
 import { menuData } from '@/helpers/constants.js'
 
 const hovered = ref('')
-const questionToShow = ref(undefined)
+const userToShow = ref(undefined)
 const level = ref('')
 const domain = ref('')
-const difficulty = ref('')
-const questions = ref([])
+const users = ref([])
 const sessionStore = useSessionStore()
-const questionSelected = ref({});
-
-const selectQuestion = (question) => {
-	console.log('selectQuestion', question)
-	questionSelected.value = question;
-}
+const userSelected = ref({});
 
 onMounted(() => {
-	fetchQuestions();
+	fetchUsers();
 });
 
-const filteredQuestions = computed(() => {
-	return questions.value.filter((question) => {
-		return (!domain.value || question.domain === domain.value) && (!level.value || question.level === level.value)
+const selectUser = (user) => {
+	console.log('selectUser', user)
+	userSelected.value = user;
+}
+
+const filteredUsers = computed(() => {
+	return users.value.filter((user) => {
+		return ((!domain.value || user.scores[0]?.domain === domain.value || user.scores[1]?.domain === domain.value)
+			&& (!level.value || user.scores[0]?.level === level.value || user.scores[1]?.level === level.value))
 	})
 })
 
-const truncateQuestion = (string) => {
-	return truncate(string, {
-		'length': 28,
-		'omission': '...'
-	})
-}
-
-const fetchQuestions = async () => {
+const fetchUsers = async () => {
 	try {
-		const response = await axios.get('/questions', {
+		const response = await axios.get('/users', {
 			headers: {
 				Authorization: `${sessionStore.getAuthToken}`
 			}
 		})
-		questions.value = response.data
+		users.value = response.data
 	} catch (error) {
 		console.error('Error fetching options:', error)
 	}
@@ -98,17 +90,16 @@ const hideMenu = () => {
 	hovered.value = ''
 }
 
-const showQuestion = (index) => {
-	questionToShow.value = index
+const showUser = (index) => {
+	userToShow.value = index
 }
 
-const hideQuestion = () => {
-	questionToShow.value = undefined
+const hideUser = () => {
+	userToShow.value = undefined
 }
 
 const addFilter = (target, optionSelected) => {
 	if (target === 'domain') { domain.value = optionSelected }
 	else if (target === 'level') { level.value = optionSelected }
-	else { difficulty.value = optionSelected }
 }
 </script>

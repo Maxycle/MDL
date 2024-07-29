@@ -1,13 +1,17 @@
 <template>
-  <div class="flex flex-col h-screen">
-    <div class="flex flex-col h-1/4">
-      <Hero class="grow"/>
-			<NavBar v-if="sessionStore.isLoggedIn" class="z-10"/>
-    </div>
-    <div class="grow overflow-hidden">
-      <router-view></router-view>
-    </div>
-  </div>
+	<div class="flex flex-col h-screen" v-cloak>
+		<div class="flex flex-col h-1/4">
+			<Hero class="grow" />
+			<NavBar v-if="sessionStore.isLoggedIn" class="z-10" />
+		</div>
+		<div class="grow overflow-hidden">
+			<router-view v-slot="{ Component }">
+				<transition name="fade-to-black" mode="out-in">
+					<component :is="Component" />
+				</transition>
+			</router-view>
+		</div>
+	</div>
 </template>
 
 <script setup>

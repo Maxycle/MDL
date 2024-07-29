@@ -13,6 +13,8 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
+	get 'questions/export', to: 'csv_uploads#export'
+
   resources :questions do
 		collection do
       delete 'destroy_all'
@@ -22,7 +24,8 @@ Rails.application.routes.draw do
   
   resources :answers, only: [:show, :update, :destroy]
 	resources :scores
-	
+	resources :users, only: [:index]
+
 	get "/questionnaire-params", to: 'questionnaire_params#index'
 	get "/uzer-scores", to: 'scores#user_scores'
 	get "/member-data", to: "members#show"

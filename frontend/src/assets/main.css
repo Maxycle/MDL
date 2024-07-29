@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .anarcap-border {
-  @apply border-t-anarcapYellow border-l-anarcapYellow border-b-black border-r-black;
+	@apply border-t-anarcapYellow border-l-anarcapYellow border-b-black border-r-black;
 }
 
 .big-edit-button {
@@ -12,4 +12,38 @@
 
 .edit-button {
 	@apply border-4 anarcap-border rounded-lg text-white hover:font-extrabold cursor-pointer p-2 flex;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+	@apply transition-all duration-300;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+	@apply opacity-0 translate-y-full;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+	@apply opacity-100 translate-y-0;
+}
+
+.fade-to-black-enter-active,
+.fade-to-black-leave-active {
+  @apply transition-all duration-300;
+}
+
+.fade-to-black-enter-from,
+.fade-to-black-leave-to {
+  @apply opacity-0 bg-green-500;
+}
+
+.fade-to-black-enter-to,
+.fade-to-black-leave-from {
+  @apply opacity-100;
+}
+
+[v-cloak] {
+  display: none;
 }

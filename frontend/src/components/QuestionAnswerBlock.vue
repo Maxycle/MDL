@@ -2,13 +2,13 @@
 	<div class="flex flex-col items-center mb-6">
 		<Question :text="question.content" class="my-8 shadow-lg shadow-neutral-700" />
 		<div class="border-4 rounded-lg text-black anarcap-border shadow-lg shadow-neutral-700">
-			<div v-for="(answer, indexAnswer) in question.answers" :key="indexAnswer">
-				<Answer	:data="answer" @click="selectAnswer(answer)" />
+			<div v-for="(answer, indexAnswer) in answers" :key="indexAnswer">
+				<Answer :data="answer" @click="selectAnswer(answer)" />
 			</div>
 		</div>
 	</div>
-	<v-pagination v-model="page" :length="questionsList.length" :total-visible="5" prev-icon="mdi-menu-left" next-icon="mdi-menu-right"
-		@page="onPageChange"></v-pagination>
+	<v-pagination v-model="page" :length="questionsList.length" :total-visible="5" prev-icon="mdi-menu-left"
+		next-icon="mdi-menu-right" @page="onPageChange"></v-pagination>
 </template>
 
 <script setup>
@@ -35,15 +35,19 @@ const question = computed(() => {
 	return clone.splice(startFrom, 1)[0]
 })
 
+const answers = computed(() => {
+	return question.value.answers.sort(function (a, b) {
+		return Math.random() - 0.5;
+	})
+})
+
 const onPageChange = (event) => {
 	console.log('Page changed:', event)
 	page.value = event
 }
 
 const selectAnswer = (answer) => {
-	// const obj = { [answer.question_id]: answer.id, value: answer.value }
-	const obj = { [answer.question_id]: { answer_id: answer.id, value: answer.value }}
+	const obj = { [answer.question_id]: { answer_id: answer.id, value: answer.value } }
 	answerStore.addAnswer(obj)
 }
 </script>
- 

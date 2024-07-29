@@ -5,11 +5,14 @@
 				<div class="border-2 anarcap-border bg-orange-100 p-2 w-fit rounded">{{ param.text }}: {{ param.value }}</div>
 				<div class="flex gap-x-4">
 					<div class="border-2 anarcap-border bg-orange-100 p-2 w-fit rounded">
-						Nouvelle valeur: <input :placeholder="existingValues[index]" v-model="newValue[index]" class="cursor-pointer placeholder:italic"></input>
+						Nouvelle valeur: <input :placeholder="existingValues[index]" v-model="newValue[index]"
+							class="cursor-pointer placeholder:italic"></input>
 					</div>
 				</div>
 			</div>
-			<div class="flex bg-red-500 p-2 border-2 anarcap-border rounded items-center justify-center w-full cursor-pointer" @click="updateParams">
+			<div
+				class="flex bg-orange-300 font-bold hover:bg-orange-400 p-2 border-2 anarcap-border rounded items-center justify-center w-full cursor-pointer"
+				@click="updateParams">
 				modifier
 			</div>
 		</div>
@@ -20,13 +23,11 @@
 import axios from 'axios'
 import { useSessionStore } from "@/stores/modules/sessionStore"
 import { ref, onMounted, computed } from "vue"
+import AnarcapButton from '../components/buttons/AnarcapButton.vue';
+import NavBarButton from '../components/buttons/AnarcapButton.vue';
 
 const sessionStore = useSessionStore();
 
-const cycleLength = ref(0)
-const tryLength = ref(0)
-const succeedThreshold = ref(0)
-const numberOfTriesPermitted = ref(0)
 const parameters = ref([])
 const newValue = ref(Array(4).fill(''))
 const existingValues = ref(Array(4).fill(''))

@@ -6,6 +6,7 @@ import NewQuestion from '@/pages/NewQuestion.vue'
 import ModifyQuestion from '@/pages/ModifyQuestion.vue'
 import QuestionnaireParams from '@/pages/QuestionnaireParams.vue'
 import UploadNewQuestions from '@/pages/UploadNewQuestions.vue'
+import UsersScores from '@/pages/UsersScores.vue'
 import { useSessionStore } from '@/stores/modules/sessionStore'
 
 const routes = [
@@ -15,6 +16,7 @@ const routes = [
 	{ path: '/nouvelle-question', name: 'NewQuestion', component: NewQuestion, meta: { requiresAuth: false } },
 	{ path: '/modifier-question', name: 'ModifyQuestion', component: ModifyQuestion, meta: { requiresAuth: false } },
 	{ path: '/questionnaire-paramètres', name: 'QuestionnaireParams', component: QuestionnaireParams, meta: { requiresAuth: false } },
+	{ path: '/utilisateurs', name: 'UsersScores', component: UsersScores, meta: { requiresAuth: false } },
 	{ path: '/upload-nouvelles-questions', name: 'UploadNewQuestions', component: UploadNewQuestions, meta: { requiresAuth: false } }
 ]
 
