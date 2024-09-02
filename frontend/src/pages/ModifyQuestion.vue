@@ -1,24 +1,30 @@
 <template>
-	<div class="h-full text-black px-12 pt-12 bg-gradient-to-r from-neutral-300 to-neutral-600">
-		<div class="flex justify-start">
-			<div class="grid">
+	<div class="text-black px-12 pt-12 bg-gradient-to-r from-neutral-300 to-neutral-600 h-full">
+		<div class="flex justify-start h-full">
+			<div :class="{ 'w-1/3': questionSelected.answers }" class="h-full flex flex-col z-40">
 				<div class="flex space-x-4 justify-center pb-4">
 					<div v-for="(menuOptions, index) in menuData" :key="index" class="">
 						<div class="relative" @mouseover="showMenu(menuOptions.target)" @mouseout="hideMenu(menuOptions.target)">
 							<div class="border-4 anarcap-border rounded-lg bg-green-700 text-white p-2">{{ menuOptions.text }}</div>
 							<Menu v-show="hovered === menuOptions.target" class="absolute -bottom-13 -left-10 z-10"
-								:options="menuOptions" @optionSelected="(optionSelected) => addFilter(menuOptions.target, optionSelected)" />
+								:options="menuOptions"
+								@optionSelected="(optionSelected) => addFilter(menuOptions.target, optionSelected)" />
 						</div>
 					</div>
 				</div>
 				<Autocomplete :options="filteredQuestions" class="pb-4" @questiton-selected="selectQuestion" />
-				<div v-for="(question, index) in filteredQuestions"
-					class="relative justify-start cursor-pointer text-blue-900 underline" @click="selectQuestion(question)"
-					@mouseover="showQuestion(index)" @mouseout="hideQuestion(index)">
-					{{ truncateQuestion(question.content) }}
-					<div v-if="questionToShow === index" @click="selectQuestion(question)"
-						class="border-2 border-orange-500 rounded p-1 absolute top-2 left-6 text-nowrap bg-orange-100 z-10">{{
-							question.content }}</div>
+				<div class="h-full mb-6 overflow-y-auto">
+					<div v-for="(question, index) in filteredQuestions" :key="question.id" :ref="setQuestionRef(index)"
+						class="relative justify-start cursor-pointer text-blue-900 underline" @click="selectQuestion(question)"
+						@mouseover="showQuestion(index)" @mouseleave="hideQuestion(index)">
+						{{ truncateQuestion(question.content) }}
+						<!-- Hover Element Moved Outside of Overflow Container v-if="questionToShow === index" -->
+						<div v-if="questionToShow === index" @click="selectQuestion(question)"
+							:style="getFixedPositionStyles(index)"
+							class="border-2 border-orange-500 rounded p-1 text-nowrap bg-green-100 z-10">
+							{{ question.content }}
+						</div>
+					</div>
 				</div>
 			</div>
 			<QuestionEdit v-if="questionSelected.answers" :questionToBeEdited="questionSelected" isUpdating
@@ -50,10 +56,10 @@ const hovered = ref('')
 const questionToShow = ref(undefined)
 const level = ref('')
 const domain = ref('')
-const difficulty = ref('')
 const questions = ref([])
 const sessionStore = useSessionStore()
 const questionSelected = ref({});
+const questionRefs = ref([]);
 
 const selectQuestion = (question) => {
 	console.log('selectQuestion', question)
@@ -79,7 +85,7 @@ const truncateQuestion = (string) => {
 
 const fetchQuestions = async () => {
 	try {
-		const response = await axios.get('/questions', {
+		const response = await axios.get('/questions/index_admin', {
 			headers: {
 				Authorization: `${sessionStore.getAuthToken}`
 			}
@@ -109,6 +115,29 @@ const hideQuestion = () => {
 const addFilter = (target, optionSelected) => {
 	if (target === 'domain') { domain.value = optionSelected }
 	else if (target === 'level') { level.value = optionSelected }
-	else { difficulty.value = optionSelected }
 }
+
+const setQuestionRef = (index) => (el) => {
+	// Only set the ref if it's not already set or the element has changed
+	if (el && el !== questionRefs.value[index]) {
+		questionRefs.value[index] = el;
+	}
+};
+
+
+const getFixedPositionStyles = (index) => {
+	const questionElement = questionRefs.value[index];
+
+	if (questionElement) {
+		const rect = questionElement.getBoundingClientRect();
+		return {
+			position: 'fixed',
+			top: `${rect.top + window.scrollY}px`,
+			left: `${rect.left + window.scrollX}px`,
+		};
+	}
+
+	return {};
+};
+
 </script>

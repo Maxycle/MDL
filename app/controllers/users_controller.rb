@@ -3,8 +3,6 @@ class UsersController < ApplicationController
 	before_action :set_user, only: [:show, :destroy]
 
   def index
-    # @users = User.all
-		# render json: @questions.as_json(include: :scores)
 		@users = User.includes(:scores)
 		render json: @users.as_json(include: :scores)
   end

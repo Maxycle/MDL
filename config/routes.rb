@@ -1,23 +1,26 @@
 Rails.application.routes.draw do
   get 'questionnaire_params/show'
   get 'questionnaire_params/update'
-	resources :csv_uploads, only: [:create]
+	resources :xlsx_uploads, only: [:create]
 
 	devise_for :users, path: '', path_names: {
     sign_in: 'login',
     sign_out: 'logout',
     registration: 'signup'
+		# edit: 'profile/edit'
   },
   controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations'
   }
 
-	get 'questions/export', to: 'csv_uploads#export'
+	get 'questions/export', to: 'xlsx_uploads#export_questions'
+	get 'users/export', to: 'xlsx_uploads#export_users'
 
   resources :questions do
 		collection do
       delete 'destroy_all'
+			get 'index_admin', to: 'questions#index_admin'
     end
     resources :answers, only: [:index, :create]
   end

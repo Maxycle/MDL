@@ -4,6 +4,7 @@ export const useAnswerStore = defineStore({
 	id: 'answerStore',
 	state: () => ({
 		answers: {},
+		details: {},
 		score: 0
 	}),
 
@@ -14,6 +15,10 @@ export const useAnswerStore = defineStore({
 
 		getScore() {
 			return this.score
+		},
+
+		getQuestionnaireDetails() {
+			return this.details
 		}
 	},
 
@@ -27,6 +32,10 @@ export const useAnswerStore = defineStore({
 		reset() {
 			this.answers = {}
 			this.score = 0
+		},
+
+		addDetails(details) {
+			this.details = details
 		}
 	}
 })

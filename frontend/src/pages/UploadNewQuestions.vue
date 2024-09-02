@@ -35,16 +35,16 @@ const downloadQuestions = async () => {
 			},
 			responseType: 'blob'
 		})
-		console.log('ze CSV !!', response.data)
+		console.log('ze Excdel !!', response.data)
 
 		// Create a new Blob object using the response data
-		const blob = new Blob([response.data], { type: 'text/csv' })
+		const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
 		const url = URL.createObjectURL(blob)
 
 		// Create a link element
 		const link = document.createElement('a');
 		link.href = url;
-		link.setAttribute('download', `questions-${new Date().toISOString().split('T')[0]}.csv`);
+		link.setAttribute('download', `questions-${new Date().toISOString().split('T')[0]}.xlsx`);
 
 		// Append the link to the body
 		document.body.appendChild(link);

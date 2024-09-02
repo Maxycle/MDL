@@ -6,8 +6,15 @@ class QuestionsController < ApplicationController
 		@questions = @questions.where(domain: params[:domain]) if params[:domain].present?
 		@questions = @questions.where(level: params[:level]) if params[:level].present?
 	
+		nb_questions = QuestionnaireParam.first.nb_questions_per_questionnaire
 		# Select 5 random questions from the filtered result
-		@questions = @questions.shuffle
+		@questions = @questions.shuffle.first(nb_questions)
+
+		render json: @questions.as_json(include: :answers)
+	end
+
+	def index_admin
+		@questions = Question.includes(:answers)
 
 		render json: @questions.as_json(include: :answers)
 	end

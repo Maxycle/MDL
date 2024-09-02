@@ -1,10 +1,10 @@
 <template>
 	<div class="flex flex-col h-screen" v-cloak>
-		<div class="flex flex-col h-1/4">
+		<div class="flex flex-col h-1/6 bg-black">
 			<Hero class="grow" />
 			<NavBar v-if="sessionStore.isLoggedIn" class="z-10" />
 		</div>
-		<div class="grow overflow-hidden">
+		<div class="h-5/6">
 			<router-view v-slot="{ Component }">
 				<transition name="fade-to-black" mode="out-in">
 					<component :is="Component" />

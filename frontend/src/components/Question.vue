@@ -1,5 +1,5 @@
 <template>
-	<div class="border-4 rounded-lg text-black anarcap-border bg-orange-100 p-4">
+	<div class="text-white p-4">
 	 {{ text }}
 	</div>	
  </template>

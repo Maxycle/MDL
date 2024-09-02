@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.0.2"
+ruby "3.2.2"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.8", ">= 7.0.8.4"
@@ -25,6 +25,9 @@ gem 'devise'
 gem 'faker'
 # Adds JWT token authentication and generation to Devise [https://github.com/waiting-for-dev/devise-jwt]
 gem 'devise-jwt'
+gem 'roo', '~> 2.10.1'
+# gem 'axlsx', '~> 3.0'
+gem 'caxlsx'
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"

@@ -27,27 +27,34 @@ export const useSessionStore = defineStore({
 			return this.user.username
 		},
 
+		getUserDetails() {
+			return this.user
+		},
+
 		isLoggedIn() {
 			const loggedOut = this.authToken === null || this.authToken === JSON.stringify(null)
-
 			return !loggedOut
 		}
 	},
 
 	actions: {
 		registerUser(params) {
-			return this.handleUserForm(`${BACKEND_URL}/signup`, params)
+			return this.handleUserForm(`${BACKEND_URL}/signup`, params, "register")
 		},
 
 		loginUser(params) {
-			return this.handleUserForm(`${BACKEND_URL}/login`, params)
+			return this.handleUserForm(`${BACKEND_URL}/login`, params, "login")
 		},
 
-		async handleUserForm(url, params) {
+		updateUser(params) {
+			return this.handleUserForm(`${BACKEND_URL}/signup`, params, "update")
+		},
+
+		async handleUserForm(url, params, action) {
 			try {
 				const res = await fetch(url, {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
+					method: action === "update" ? "PATCH" : "POST",
+					headers: action === "update" ? { "Content-Type": "application/json", Authorization: this.authToken } : { "Content-Type": "application/json" },
 					body: JSON.stringify({ user: params })
 				})
 
@@ -55,18 +62,18 @@ export const useSessionStore = defineStore({
 					const error = await res.json()
 					this.errors = error.message
 
-					console.log(`An error occured: ${error.message}`)
+					console.log(`An error occured 1: ${error.message}`)
 					return false
 				}
 				console.log('handleUserForm', res)
-				this.authToken = res.headers.get("Authorization")
+				this.authToken = action === "update" ? this.authToken : res.headers.get("Authorization")
 				localStorage.setItem("authToken", this.authToken)
 				const data = await res.json()
 				console.log("dataaa logged in", data)
 				this.user = data.user
 				return true
 			} catch (error) {
-				console.log(`An error occured: ${error}`)
+				console.log(`An error occured 2: ${error}`)
 				return false
 			}
 		},

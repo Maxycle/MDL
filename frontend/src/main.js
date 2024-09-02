@@ -35,13 +35,13 @@ const loadAuthToken = async () => {
 }
 
 const vuetify = createVuetify({
-	icons: {
-    defaultSet: 'mdi',
-    aliases,
-    sets: {
-      mdi
-    }
-  },
+	// icons: {
+  //   defaultSet: 'mdi',
+  //   aliases,
+  //   sets: {
+  //     mdi
+  //   }
+  // },
 	components,
 	directives
 })

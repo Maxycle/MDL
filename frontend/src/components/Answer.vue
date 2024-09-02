@@ -1,6 +1,6 @@
 <template>
-	<div class="flex bg-green-200 p-1 items-center hover:bg-green-300 cursor-pointer transition duration-300">
-		<div v-if="!showTick" class="border-2 border-black w-4 h-4 mr-2" />
+	<div class="flex text-white text-2xl font-bold p-1 items-center hover:bg-blue-900 rounded-full cursor-pointer transition duration-300 px-4">
+		<div v-if="!showTick" class="border-2 border-white w-4 h-4 mr-2" />
 		<AnarcapTick v-else class="mr-2" />
 		{{ data.content }}
 	</div>

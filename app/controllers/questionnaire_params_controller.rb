@@ -24,6 +24,6 @@ class QuestionnaireParamsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def questionnaire_param_params
-      params.require(:questionnaire_params).permit(:tries_permitted, :try_length, :cycle_length, :threshold)
+      params.require(:questionnaire_params).permit(:tries_permitted, :try_length, :cycle_length, :threshold, :welcome_start, :welcome_end, :intro, :nb_questions_per_questionnaire, :questionnaire_time_limit)
 		end
 end

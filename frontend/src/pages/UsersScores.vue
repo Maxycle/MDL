@@ -2,6 +2,8 @@
 	<div class="h-full text-black px-12 pt-12 bg-gradient-to-r from-neutral-300 to-neutral-600">
 		<div class="flex justify-start">
 			<div class="grid">
+				<div class="border-2 anarcap-border bg-green-500 p-2 rounded mb-4 cursor-pointer" @click="downloadUsers">
+					Download utilisateurs/scores</div>
 				<div class="flex space-x-4 justify-center pb-4">
 					<div v-for="(menuOptions, index) in menuData" :key="index" class="">
 						<div class="relative" @mouseover="showMenu(menuOptions.target)" @mouseout="hideMenu(menuOptions.target)">
@@ -13,8 +15,9 @@
 					</div>
 				</div>
 				<AutocompleteUsers :options="users" class="pb-4" @questiton-selected="selectUser" />
-				<div v-for="(user, index) in filteredUsers" class="relative justify-start cursor-pointer text-blue-900 underline"
-					@click="selectUser(user)" @mouseover="showUser(index)" @mouseout="hideUser(index)">
+				<div v-for="(user, index) in filteredUsers"
+					class="relative justify-start cursor-pointer text-blue-900 underline" @click="selectUser(user)"
+					@mouseover="showUser(index)" @mouseout="hideUser(index)">
 					{{ user.username }}
 					<div v-if="userToShow === index" @click="selectUser(user)"
 						class="border-2 border-orange-500 rounded p-1 absolute top-2 left-6 text-nowrap bg-orange-100 z-10">{{
@@ -101,5 +104,38 @@ const hideUser = () => {
 const addFilter = (target, optionSelected) => {
 	if (target === 'domain') { domain.value = optionSelected }
 	else if (target === 'level') { level.value = optionSelected }
+}
+
+const downloadUsers = async () => {
+	try {
+		const response = await axios.get('/users/export', {
+			headers: {
+				Authorization: `${sessionStore.getAuthToken}`
+			},
+			responseType: 'blob'
+		})
+		console.log('ze Excdel !!', response.data)
+
+		// Create a new Blob object using the response data
+		const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+		const url = URL.createObjectURL(blob)
+
+		// Create a link element
+		const link = document.createElement('a');
+		link.href = url;
+		link.setAttribute('download', `users-${new Date().toISOString().split('T')[0]}.xlsx`);
+
+		// Append the link to the body
+		document.body.appendChild(link);
+
+		// Programmatically click the link to trigger the download
+		link.click()
+
+		// Clean up
+		document.body.removeChild(link);
+		URL.revokeObjectURL(url);
+	} catch (error) {
+		console.error(`Error creating:`, error);
+	}
 }
 </script>

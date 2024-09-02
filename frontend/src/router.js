@@ -7,6 +7,7 @@ import ModifyQuestion from '@/pages/ModifyQuestion.vue'
 import QuestionnaireParams from '@/pages/QuestionnaireParams.vue'
 import UploadNewQuestions from '@/pages/UploadNewQuestions.vue'
 import UsersScores from '@/pages/UsersScores.vue'
+import EditProfile from '@/pages/EditProfile.vue'
 import { useSessionStore } from '@/stores/modules/sessionStore'
 
 const routes = [
@@ -17,7 +18,8 @@ const routes = [
 	{ path: '/modifier-question', name: 'ModifyQuestion', component: ModifyQuestion, meta: { requiresAuth: false } },
 	{ path: '/questionnaire-paramètres', name: 'QuestionnaireParams', component: QuestionnaireParams, meta: { requiresAuth: false } },
 	{ path: '/utilisateurs', name: 'UsersScores', component: UsersScores, meta: { requiresAuth: false } },
-	{ path: '/upload-nouvelles-questions', name: 'UploadNewQuestions', component: UploadNewQuestions, meta: { requiresAuth: false } }
+	{ path: '/upload-nouvelles-questions', name: 'UploadNewQuestions', component: UploadNewQuestions, meta: { requiresAuth: false } },
+	{ path: '/edit-profile', name: 'EditProfile', component: EditProfile, meta: { requiresAuth: false } }
 ]
 
 const router = createRouter({

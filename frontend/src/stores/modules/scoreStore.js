@@ -31,7 +31,6 @@ export const useScoreStore = defineStore({
 			} catch (error) {
 				console.error('Error fetching scores:', error.message);
 			}
-
 		}
 	}
 })
