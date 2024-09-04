@@ -34,8 +34,10 @@ const router = useRouter();
 const storeParams = useParamsStore()
 
 onMounted(async () => {
+	if (sessionStore.isLoggedIn) {
+		await scoreStore.fetchScores()
+	}
 	await storeParams.fetchParams()
-	await scoreStore.fetchScores()
 })
 
 const translateInitialsIntoFullWords = (initials) => {
