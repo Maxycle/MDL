@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  tries_permitted: 1
+  try_length: 1
+  cycle_length: 1
+
+two:
+  tries_permitted: 1
+  try_length: 1
+  cycle_length: 1
