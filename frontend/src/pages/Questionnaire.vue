@@ -224,7 +224,7 @@ const updateScoreAtFinish = async (score) => {
 const stopQuestionnaire = () => {
 	updateScoreAtFinish(scoreBeingUpdated.value)
 	answerStore.addDetails({})
-	// router.push({ name: "Home" })
+	router.push({ name: "Home" })
 }
 
 const selectScore = (domain) => { return domain === 'Droit Naturel' ? scoreStore.getScore.droitNaturel : scoreStore.getScore.ecoleAutrichienne }

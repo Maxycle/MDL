@@ -20,18 +20,15 @@
 				<span>Admin</span>
 				<AdminMenu v-show="showAdminMenu" class="absolute top-12 -left-44 w-fit" />
 			</NavBarButton>
-
 			<NavBarButton :isActive="isRouteActive('/edit-profile')">
 				<span class="relative"><router-link to="/edit-profile">Modifier le compte</router-link></span>
 			</NavBarButton>
-
 			<NavBarButton v-if="store.isLoggedIn" @click="logout">
 				<span class="relative">Logout</span>
 			</NavBarButton>
 			<NavBarButton v-else :isActive="isRouteActive('/Login')" @click="router.push('/Login')">
 				<span class="relative">Login</span>
 			</NavBarButton>
-
 		</div>
 	</div>
 </template>
@@ -53,7 +50,7 @@ const router = useRouter();
 const route = useRoute();
 const showAdminMenu = ref(false)
 
-axios.defaults.baseURL = 'http://localhost:3000'
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL
 
 const loggedInUser = computed(() => {
 	return store.user;
@@ -78,9 +75,5 @@ const showMenu = () => {
 
 const hideMenu = () => {
 	showAdminMenu.value = false
-}
-
-const redirectToEditProfile = () => {
-	window.location.href = '/edit-profile';
 }
 </script>
