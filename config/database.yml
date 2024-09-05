@@ -23,6 +23,4 @@ test:
 
 production:
   <<: *default
-  database: MDL_production
-  username: MDL
-  password: <%= ENV["MDL_DATABASE_PASSWORD"] %>
+  database: mdl_production
