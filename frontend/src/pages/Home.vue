@@ -3,11 +3,11 @@
 		<p class=" w-2/3 text-white pt-12 px-8 text-center">{{ storeParams.getParams.intro }}
 		</p>
 		<div v-if="sessionStore.isLoggedIn" class="text-2xl text-green-500 pt-12">
-			<div v-if="scoreStore.getScore.droitNaturel">En <span class="font-extrabold italic">"Droit
+			<div v-if="scoreStore.getScore.droitNaturel && Object.keys(scoreStore.getScore.droitNaturel).length !== 0">En <span class="font-extrabold italic">"Droit
 					Naturel"</span> vous avez le niveau <span class="font-extrabold">"{{
 						translateInitialsIntoFullWords(scoreStore.getScore.droitNaturel.level) }}"</span></div>
 			<div v-else class="text-red-600">Vous n'avez pas encore répondu au questionnaire "Droit Naturel"</div>
-			<div v-if="scoreStore.getScore.ecoleAutrichienne">En <span class="font-extrabold italic">"Ecole
+			<div v-if="scoreStore.getScore.ecoleAutrichienne && Object.keys(scoreStore.getScore.ecoleAutrichienne).length !== 0">En <span class="font-extrabold italic">"Ecole
 					Autrichienne"</span> vous avez le niveau <span class="font-extrabold">"{{
 						translateInitialsIntoFullWords(scoreStore.getScore.ecoleAutrichienne.level)
 					}}"</span></div>

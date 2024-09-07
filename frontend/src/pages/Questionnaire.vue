@@ -7,10 +7,10 @@
 					<div class="bg-blue-100 rounded-md p-2 mb-10 z-10 text-blue-900 text-xl font-extrabold">
 						{{
 							domain }}</div>
-					<div class="flex space-x-2 h-1/2">
-						<button v-for="button in buttonsQuestionaires" :key="button"
-							class="bg-blue-900 text-white rounded-lg disabled:opacity-40" @click="startQuestionnaire(domain, button)"
-							:disabled="isDisabled(domain, button)">
+					<div class="flex h-1/2">
+						<button v-for="(button, index) in buttonsQuestionaires" :key="button"
+							class="bg-blue-900 text-white rounded-lg disabled:opacity-40" :class="{ 'mr-2': index === 0 }"
+							@click="openModal(domain, button)" :disabled="isDisabled(domain, button)">
 							<div class="p-2 rounded h-full flex items-center">
 								<div>
 									<div class="font-extrabold">{{ button }}</div>
@@ -19,6 +19,21 @@
 										{{ buttonTextAndApiUrl(domain, button).availabilityDate }}</div>
 								</div>
 							</div>
+							<StartModal :isVisible="isModalVisible" title="Le questionnaire va commencer" @close="closeModal" class="cursor-default">
+								<p>Attention les gars ça va commencer, faites pas les cons, ya un temps limite et une fois que ça a
+									commencé, ça compte pour un coup !! Et ya que 2 ou 3 coups possibles pendant une semaine alors hein,
+									déconnez pas. Une fois que le questionnaire est lancé c'est pas le moment d'aller chercher un kebab
+									(avec salade ET oignons) ou d'aller faire caca. Sauf si vous avez la diahrrrrrrée.</p>
+								<div class="flex space-x-2 justify-center">
+									<button @click="closeModal" class="mt-4 bg-red-600 text-white p-2 rounded-lg font-bold">
+										fermer
+									</button>
+									<button @click="startQuestionnaire(domain, button)"
+										class="mt-4 bg-green-600 text-white p-2 rounded-lg font-bold">
+										commencer
+									</button>
+								</div>
+							</StartModal>
 						</button>
 					</div>
 				</div>
@@ -48,6 +63,7 @@ import { useParamsStore } from '@/stores/modules/paramsStore'
 import axios from 'axios'
 import QuestionAnswerBlock from "@/components/QuestionAnswerBlock.vue"
 import StopWatch from "@/components/StopWatch.vue"
+import StartModal from "@/components/StartModal.vue"
 
 const router = useRouter()
 const sessionStore = useSessionStore()
@@ -61,6 +77,9 @@ const buttonsQuestionaires = ['Bases Acquises', 'Sait Analyser']
 const questionnaireDomain = ['Droit Naturel', 'Ecole Autrichienne']
 const scoreBeingUpdated = ref({})
 const currentDate = new Date()
+const isModalVisible = ref(false)
+const selectedDomain = ref(null)
+const selectedButton = ref(null)
 
 onMounted(async () => {
 	await scoreStore.fetchScores()
@@ -68,6 +87,7 @@ onMounted(async () => {
 
 const buttonTextAndApiUrl = (domain, button) => {
 	let domainParam = domain === 'Droit Naturel' ? 'DN' : 'EA'
+
 	let score = selectScore(domain)
 	if (!score) {
 		return { text: 'Non disponible', apiUrl: '', availabilityDate: '' }
@@ -103,7 +123,6 @@ const isDisabledByTiming = (domain) => {
 
 		const isMoreThanCycleLength = (currentDate - lastTryDate) > paramsStore.getParams.cycleLength * 24 * 60 * 60 * 1000;
 		const isMoreThanTryLength = (currentDate - lastTryDate) > paramsStore.getParams.tryLength * 24 * 60 * 60 * 1000;
-		console.log('currentDate - lastTryDate', currentDate - lastTryDate)
 		if (isMoreThanCycleLength) {
 			return false
 		} else {
@@ -117,7 +136,10 @@ const isDisabledByTiming = (domain) => {
 	return false
 }
 
-async function startQuestionnaire(domain, button) {
+async function startQuestionnaire() {
+	const domain = selectedDomain.value
+	const button = selectedButton.value
+	console.log('domain =>', domain, 'button =>', button)
 	answerStore.addDetails({ domain, button })
 	questionsList.value = []
 	showNotLoggedInMessage.value = !sessionStore.isLoggedIn
@@ -228,4 +250,38 @@ const stopQuestionnaire = () => {
 }
 
 const selectScore = (domain) => { return domain === 'Droit Naturel' ? scoreStore.getScore.droitNaturel : scoreStore.getScore.ecoleAutrichienne }
+
+const closeModal = (event) => {
+	if (event) {
+		event.stopPropagation();
+	}
+
+	try {
+		console.log('closeModal');
+		isModalVisible.value = false;
+
+		console.log('Modal visibility status after closing:', isModalVisible.value);
+	} catch (error) {
+		console.error('Error in closeModal:', error.message);
+	}
+};
+
+const openModal = (domain, button) => {
+	if (isModalVisible.value) {
+		console.log('Modal is already open, ignoring openModal call');
+		return;
+	}
+
+	try {
+		console.log('openModal');
+		selectedDomain.value = domain;
+		selectedButton.value = button;
+		isModalVisible.value = true;
+
+		console.log('Modal visibility status after opening:', isModalVisible.value);
+	} catch (error) {
+		console.error('Error in openModal:', error.message);
+	}
+};
+
 </script>
