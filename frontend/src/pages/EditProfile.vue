@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col items-center bg-gradient-to-b from-black to-blue-900 w-full h-full pt-40">
+	<div class="flex flex-col items-center bg-gradient-to-b from-black to-blue-900 w-full min-h-screen py-8">
 		<div id="user-form" class="">
 			<h2>Mouvement des Libertariens</h2>
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
