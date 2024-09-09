@@ -113,6 +113,7 @@ const showNextAvailability = (domain, button) => {
 }
 
 const isDisabled = (domain, button) => {
+	if (sessionStore.getUserDetails.admin) return false
 	return isDisabledByTiming(domain) || (buttonTextAndApiUrl(domain, button).text !== 'Non validé')
 }
 
@@ -139,7 +140,6 @@ const isDisabledByTiming = (domain) => {
 async function startQuestionnaire() {
 	const domain = selectedDomain.value
 	const button = selectedButton.value
-	console.log('domain =>', domain, 'button =>', button)
 	answerStore.addDetails({ domain, button })
 	questionsList.value = []
 	showNotLoggedInMessage.value = !sessionStore.isLoggedIn
@@ -152,7 +152,6 @@ async function startQuestionnaire() {
 				}
 			});
 		questionsList.value = response.data
-		console.log('questions =>', response)
 	} catch (error) {
 		console.error('Error fetching questions:', error.message);
 	}
