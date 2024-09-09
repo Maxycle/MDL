@@ -16,7 +16,8 @@ class XlsxUploadsController < ApplicationController
           question_attributes = {
             content: row['question_content'],
             level: row['question_level'],
-            domain: row['question_domain']
+            domain: row['question_domain'],
+						difficulty: row['LMH']
           }
 
           answer_attributes = []
