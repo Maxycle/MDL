@@ -24,6 +24,7 @@ export const useParamsStore = defineStore({
 							Authorization: `${sessionStore.getAuthToken}`
 						}
 					});
+					console.log('paramzzz', response.data[0])
 				this.params.cycleLength = response.data[0].cycle_length
 				this.params.tryLength = response.data[0].try_length
 				this.params.numberOfTriesPermitted = response.data[0].tries_permitted
@@ -33,6 +34,10 @@ export const useParamsStore = defineStore({
 				this.params.intro = response.data[0].intro
 				this.params.nb_questions_per_questionnaire = response.data[0].nb_questions_per_questionnaire
 				this.params.questionnaire_time_limit = response.data[0].questionnaire_time_limit
+				this.params.low_threshold = response.data[0].low_threshold
+				this.params.mid_threshold = response.data[0].mid_threshold
+				this.params.high_threshold = response.data[0].high_threshold
+
 			} catch (error) {
 				console.error('Error fetching questionnaire params:', error.message);
 			}

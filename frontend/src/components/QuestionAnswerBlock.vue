@@ -1,10 +1,16 @@
 <template>
 	<div class="relative">
 		<div class="flex flex-col items-center mb-6">
-			<Question :text="question.content" class="my-8 text-3xl font-bold" />
-			<div class="rounded-lg text-black">
+			<div class="flex items-center">
+				<div v-if="sessionStore.isAdmin" class="mr-4">difficulté: {{ question.difficulty }}</div>
+				<Question :text="question.content" class="my-8 text-3xl font-bold max-w-7xl text-center" />
+			</div>
+			<div class="">
 				<div v-for="(answer, indexAnswer) in answers" :key="indexAnswer">
-					<Answer :data="answer" @click="selectAnswer(answer)" />
+					<div class="flex items-center">
+						<div v-if="sessionStore.isAdmin" class="mr-4">points: {{ answer.value }}</div>
+						<Answer :data="answer" @click="selectAnswer(answer)" class="max-w-7xl"/>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -34,6 +40,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useAnswerStore } from '@/stores/modules/answerStore';
+import { useSessionStore } from "@/stores/modules/sessionStore"
 import Question from './Question.vue'
 import Answer from './Answer.vue'
 
@@ -44,10 +51,9 @@ const props = defineProps({
 	}
 })
 
-const answerStore = useAnswerStore();
+const answerStore = useAnswerStore()
+const sessionStore = useSessionStore()
 const page = ref(1)
-
-const result = ref({})
 
 const question = computed(() => {
 	const clone = JSON.parse(JSON.stringify(props.questionsList))
@@ -67,7 +73,7 @@ const onPageChange = (event) => {
 }
 
 const selectAnswer = (answer) => {
-	const obj = { [answer.question_id]: { answer_id: answer.id, value: answer.value } }
+	const obj = { [answer.question_id]: { answer_id: answer.id, value: answer.value, question_difficulty: question.value.difficulty } }
 	answerStore.addAnswer(obj)
 }
 

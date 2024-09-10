@@ -27,6 +27,10 @@ export const useSessionStore = defineStore({
 			return this.user.username
 		},
 
+		isAdmin() {
+			return this.user.admin
+		},
+
 		getUserDetails() {
 			return this.user
 		},

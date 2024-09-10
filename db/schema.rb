@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_08_104002) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_10_092905) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -71,6 +71,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_08_104002) do
     t.text "welcome_end"
     t.integer "nb_questions_per_questionnaire"
     t.integer "questionnaire_time_limit", default: 30
+    t.integer "low_threshold", default: 90
+    t.integer "mid_threshold", default: 80
+    t.integer "high_threshold", default: 70
   end
 
   create_table "questions", force: :cascade do |t|

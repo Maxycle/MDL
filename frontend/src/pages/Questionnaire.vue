@@ -1,5 +1,5 @@
 <template>
-	<div class="relative h-full text-white pt-12 px-8 bg-gradient-to-b from-black to-blue-900" v-cloak>
+	<div class="relative min-h-screen text-white pt-12 px-8 bg-gradient-to-b from-black to-blue-900" v-cloak>
 		<div class="flex flex-col items-center">
 			<div v-if="!questionnaireStarted" class="flex space-x-4 mb-4">
 				<div v-for="domain in questionnaireDomain" :key="domain"
@@ -19,7 +19,8 @@
 										{{ buttonTextAndApiUrl(domain, button).availabilityDate }}</div>
 								</div>
 							</div>
-							<StartModal :isVisible="isModalVisible" title="Le questionnaire va commencer" @close="closeModal" class="cursor-default">
+							<StartModal :isVisible="isModalVisible" title="Le questionnaire va commencer" @close="closeModal"
+								class="cursor-default">
 								<p>Attention les gars ça va commencer, faites pas les cons, ya un temps limite et une fois que ça a
 									commencé, ça compte pour un coup !! Et ya que 2 ou 3 coups possibles pendant une semaine alors hein,
 									déconnez pas. Une fois que le questionnaire est lancé c'est pas le moment d'aller chercher un kebab
@@ -80,6 +81,7 @@ const currentDate = new Date()
 const isModalVisible = ref(false)
 const selectedDomain = ref(null)
 const selectedButton = ref(null)
+const difficultyOrder = { LOW: 1, MID: 2, HIGH: 3 }
 
 onMounted(async () => {
 	await scoreStore.fetchScores()
@@ -152,6 +154,10 @@ async function startQuestionnaire() {
 				}
 			});
 		questionsList.value = response.data
+
+		questionsList.value.sort((a, b) => {
+			return difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty];
+		})
 	} catch (error) {
 		console.error('Error fetching questions:', error.message);
 	}
@@ -212,7 +218,7 @@ const updateScoreAtStart = async (score) => {
 }
 
 const updateScoreAtFinish = async (score) => {
-	const success = answerStore.getScore >= paramsStore.getParams.succeedThreshold
+	const success = answerStore.isSuccessful()
 	let nextLevel = ''
 	switch (score.level) {
 		case 'beginner':
