@@ -10,6 +10,10 @@ export const useAnswerStore = defineStore({
 	}),
 
 	getters: {
+		getAnswers() {
+			return this.answers
+		},
+		
 		isSuccessful() {
 			const paramsStore = useParamsStore()
 			this.calculateAverage()

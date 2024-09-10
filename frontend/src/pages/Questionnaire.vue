@@ -107,7 +107,6 @@ const buttonTextAndApiUrl = (domain, button) => {
 		apiUrl = `/questions?domain=${domainParam}&level=SA`
 	}
 	return { text, apiUrl, availabilityDate }
-
 }
 
 const showNextAvailability = (domain, button) => {
@@ -123,7 +122,6 @@ const isDisabledByTiming = (domain) => {
 	const score = selectScore(domain)
 	if (score && score.step) {
 		const lastTryDate = new Date(score.try_date)
-
 		const isMoreThanCycleLength = (currentDate - lastTryDate) > paramsStore.getParams.cycleLength * 24 * 60 * 60 * 1000;
 		const isMoreThanTryLength = (currentDate - lastTryDate) > paramsStore.getParams.tryLength * 24 * 60 * 60 * 1000;
 		if (isMoreThanCycleLength) {
@@ -218,7 +216,7 @@ const updateScoreAtStart = async (score) => {
 }
 
 const updateScoreAtFinish = async (score) => {
-	const success = answerStore.isSuccessful()
+	const success = answerStore.isSuccessful
 	let nextLevel = ''
 	switch (score.level) {
 		case 'beginner':
@@ -278,7 +276,6 @@ const openModal = (domain, button) => {
 	}
 
 	try {
-		console.log('openModal');
 		selectedDomain.value = domain;
 		selectedButton.value = button;
 		isModalVisible.value = true;
