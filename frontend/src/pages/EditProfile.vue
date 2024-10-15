@@ -12,34 +12,34 @@
 				<form @submit.prevent="update">
 					<div>
 						<label for="username">Username</label>
-						<input v-model="username" type="text" name="username">
+						<input v-model="username" @focus="clearErrors" type="text" name="username">
 					</div>
 
 					<div>
 						<label for="firstname">first name</label>
-						<input v-model="firstname" type="text" name="firstname">
+						<input v-model="firstname" @focus="clearErrors" type="text" name="firstname">
 					</div>
 
 					<div>
 						<label for="lastname">last name</label>
-						<input v-model="lastname" type="text" name="lastname">
+						<input v-model="lastname" @focus="clearErrors" type="text" name="lastname">
 					</div>
 
 					<div>
 						<label for="email">Email</label>
-						<input v-model="email" type="text" name="email">
+						<input v-model="email" @focus="clearErrors" type="text" name="email">
 					</div>
 
 					<div>
-						<label for="password">Password</label>
+						<label for="password">New Password</label>
 
 						<div v-if="isHidden" class="password">
-							<input v-model="password" type="password" placeholder="your new password" name="password">
+							<input v-model="password" @focus="clearErrors" type="password" placeholder="your new password" name="password">
 							<font-awesome-icon icon="fa-solid fa-eye" @click="toggleHidden" class="text-white" />
 						</div>
 
 						<div v-else class="password">
-							<input v-model="password" type="text" placeholder="your new password" name="password">
+							<input v-model="password" @focus="clearErrors" type="text" placeholder="your new password" name="password">
 							<font-awesome-icon icon="fa-solid fa-eye-slash" @click="toggleHidden" class="text-white" />
 						</div>
 					</div>
@@ -48,13 +48,13 @@
 						<label for="password">Password confirmation</label>
 
 						<div v-if="isHidden" class="password">
-							<input v-model="passwordConfirmation" type="password" placeholder="confirm your new password"
+							<input v-model="passwordConfirmation" @focus="clearErrors" type="password" placeholder="confirm your new password"
 								name="password">
 							<font-awesome-icon icon="fa-solid fa-eye" @click="toggleHidden" class="text-white" />
 						</div>
 
 						<div v-else class="password">
-							<input v-model="passwordConfirmation" type="text" placeholder="confirm your new password" name="password">
+							<input v-model="passwordConfirmation" type="text" @focus="clearErrors" placeholder="confirm your new password" name="password">
 							<font-awesome-icon icon="fa-solid fa-eye-slash" @click="toggleHidden" class="text-white" />
 						</div>
 					</div>
@@ -63,15 +63,16 @@
 						<label for="password">Current password</label>
 
 						<div v-if="isHidden" class="password">
-							<input v-model="currentPassword" type="password" placeholder="your current password" name="password">
+							<input v-model="currentPassword" @focus="clearErrors" type="password" placeholder="your current password" name="password">
 							<font-awesome-icon icon="fa-solid fa-eye" @click="toggleHidden" class="text-white" />
 						</div>
 
 						<div v-else class="password">
-							<input v-model="currentPassword" type="text" placeholder="your current password" name="password">
+							<input v-model="currentPassword" @focus="clearErrors" type="text" placeholder="your current password" name="password">
 							<font-awesome-icon icon="fa-solid fa-eye-slash" @click="toggleHidden" class="text-white" />
 						</div>
 					</div>
+					<div v-for="error in sessionStore.getErrors" :key="error" class="text-red-500">{{ error }}</div>
 					<button>Update</button>
 				</form>
 			</div>
@@ -105,12 +106,12 @@ onMounted(() => {
 const update = async () => {
 	const params = {
 		email: email.value,
-		// password: password.value,
-		// password_confirmation: passwordConfirmation.value,
-		current_password: currentPassword.value,
+		password_confirmation: passwordConfirmation.value,
+		password: password.value,
 		username: username.value,
 		first_name: firstname.value,
-		last_name: lastname.value
+		last_name: lastname.value,
+		current_password: currentPassword.value
 	}
 
 	const isUpdated = await sessionStore.updateUser(params)
@@ -123,6 +124,10 @@ const update = async () => {
 
 const toggleHidden = () => {
 	isHidden.value = !isHidden.value
+}
+
+const clearErrors = () => {
+	sessionStore.clearErrors()
 }
 </script>
 

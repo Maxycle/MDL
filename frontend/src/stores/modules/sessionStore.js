@@ -35,6 +35,10 @@ export const useSessionStore = defineStore({
 			return this.user
 		},
 
+		getErrors() {
+			return this.errors
+		},
+
 		isLoggedIn() {
 			const loggedOut = this.authToken === null || this.authToken === JSON.stringify(null)
 			return !loggedOut
@@ -64,7 +68,7 @@ export const useSessionStore = defineStore({
 
 				if (!res.ok) {
 					const error = await res.json()
-					this.errors = error.message
+					this.errors = error.errors
 
 					console.log(`An error occured 1: ${error.message}`)
 					return false
@@ -130,6 +134,10 @@ export const useSessionStore = defineStore({
 		reset() {
 			this.$reset()
 			localStorage.removeItem("authToken")
+		},
+
+		clearErrors() {
+			this.errors = []
 		}
 	}
 })

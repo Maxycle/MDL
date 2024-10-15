@@ -5,6 +5,18 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   before_action :configure_permitted_parameters, only: [:create, :update]
   respond_to :json
+	
+	def update
+    self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
+    
+    resource_updated = update_resource(resource, account_update_params)
+    if resource_updated
+      # Skip bypass_sign_in to avoid session storage issues with JWT
+      render json: { success: true, user: resource }, status: :ok
+    else
+      render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
 
   private
 
@@ -17,11 +29,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
 			message = resource.errors.full_messages.any? ? resource.errors.full_messages : "Something went wrong."
 			register_failed(message)
 		end
-	end
-
-	def update
-		Rails.logger.info "Params received: #{params.inspect}"
-		# Rest of your update code
 	end
 
   def register_success
