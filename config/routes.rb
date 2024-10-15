@@ -1,13 +1,10 @@
 Rails.application.routes.draw do
-  get 'questionnaire_params/show'
-  get 'questionnaire_params/update'
 	resources :xlsx_uploads, only: [:create]
 
 	devise_for :users, path: '', path_names: {
     sign_in: 'login',
     sign_out: 'logout',
     registration: 'signup'
-		# edit: 'profile/edit'
   },
   controllers: {
     sessions: 'users/sessions',
@@ -30,8 +27,8 @@ Rails.application.routes.draw do
 	resources :users, only: [:index]
 
 	get "/questionnaire-params", to: 'questionnaire_params#index'
+	put "/questionnaire-params", to: 'questionnaire_params#update'
 	get "/uzer-scores", to: 'scores#user_scores'
 	get "/member-data", to: "members#show"
-	put "/questionnaire-params", to: 'questionnaire_params#update'
 	get "*path", to: "static#index", constraints: proc { |request| !request.xhr? && request.format.html? }
 end

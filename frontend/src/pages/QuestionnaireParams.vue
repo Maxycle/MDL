@@ -31,11 +31,13 @@
 <script setup>
 import axios from 'axios'
 import { useSessionStore } from "@/stores/modules/sessionStore"
+import { useRouter } from "vue-router"
 import { ref, onMounted, computed } from "vue"
 import { useParamsStore } from "@/stores/modules/paramsStore"
 
 const sessionStore = useSessionStore();
 const storeParams = useParamsStore()
+const router = useRouter()
 
 const parameters = ref([
 	"période d'essais (nb de jours):",
@@ -92,8 +94,12 @@ const updateParams = async () => {
 			}
 		});
 		console.log('Params updated:', response);
+		if (response.status === 200) {
+			router.push({ name: "Home" })
+		}
 	} catch (error) {
 		console.error('Error updating questionnaire params:', error.message);
 	}
 }
 </script>
+
