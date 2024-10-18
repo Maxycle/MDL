@@ -2,6 +2,7 @@
 
 class Users::RegistrationsController < Devise::RegistrationsController
 	include RackSessionFix
+	respond_to :json
 
   before_action :configure_permitted_parameters, only: [:create, :update]
   respond_to :json
@@ -17,6 +18,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
       render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
     end
   end
+
+	def confirm
+		self.resource = resource_class.confirm_by_token(params[:confirmation_token])
+	
+		if resource.errors.empty?
+			render json: { message: 'Your email has been confirmed successfully.' }, status: :ok
+		else
+			render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
+		end
+	end	
 
   private
 

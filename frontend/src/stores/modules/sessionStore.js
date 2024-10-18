@@ -7,7 +7,8 @@ export const useSessionStore = defineStore({
 	state: () => ({
 		authToken: null,
 		user: {},
-		errors: []
+		errors: [],
+		registrationStatus: null
 	}),
 
 	getters: {
@@ -46,9 +47,56 @@ export const useSessionStore = defineStore({
 	},
 
 	actions: {
-		registerUser(params) {
-			return this.handleUserForm(`${BACKEND_URL}/signup`, params, "register")
+		async registerUser(params) {
+			// return this.handleUserForm(`${BACKEND_URL}/signup`, params, "register")
+			try {
+        const res = await fetch(`${BACKEND_URL}/signup`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user: params })
+        })
+        
+        if (!res.ok) {
+          const error = await res.json()
+          this.errors = error.errors
+          console.log(`An error occurred: ${error.message}`)
+          return false
+        }
+        
+        const data = await res.json()
+        this.registrationStatus = 'pending_confirmation'
+        // Don't set authToken or user data here
+        
+        return true
+      } catch (error) {
+        console.log(`An error occurred: ${error}`)
+        return false
+      }
 		},
+
+		async confirmEmail(token) {
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/users/confirmation?confirmation_token=${token}`, {
+          method: "GET"
+        })
+
+        if (!res.ok) {
+          const error = await res.json()
+          this.errors = error.errors
+          console.log(`An error occurred during confirmation: ${error.message}`)
+          return false
+        }
+
+        const data = await res.json()
+        // You might want to automatically log the user in here, or just update the status
+        this.registrationStatus = 'confirmed'
+      
+        return true
+      } catch (error) {
+        console.log(`An error occurred during confirmation: ${error}`)
+        return false
+      }
+    },
 
 		loginUser(params) {
 			return this.handleUserForm(`${BACKEND_URL}/login`, params, "login")
@@ -138,6 +186,10 @@ export const useSessionStore = defineStore({
 
 		clearErrors() {
 			this.errors = []
-		}
+		},
+
+		clearRegistrationStatus() {
+      this.registrationStatus = null
+    }
 	}
 })

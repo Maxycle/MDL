@@ -114,12 +114,14 @@ const showNextAvailability = (domain, button) => {
 }
 
 const isDisabled = (domain, button) => {
-	if (sessionStore.getUserDetails.admin) return false
-	return isDisabledByTiming(domain) || (buttonTextAndApiUrl(domain, button).text !== 'Non validé')
+	console.log('isDisabledddddddddddddddd')
+
+	return sessionStore.getUserDetails.admin ? false : isDisabledByTiming(domain) || (buttonTextAndApiUrl(domain, button).text !== 'Non validé')
 }
 
 const isDisabledByTiming = (domain) => {
 	const score = selectScore(domain)
+	console.log('ze score', score)
 	if (score && score.step) {
 		const lastTryDate = new Date(score.try_date)
 		const isMoreThanCycleLength = (currentDate - lastTryDate) > paramsStore.getParams.cycleLength * 24 * 60 * 60 * 1000;

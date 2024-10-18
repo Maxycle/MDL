@@ -28,7 +28,7 @@ gem 'devise-jwt'
 gem 'roo', '~> 2.10.1'
 # gem 'axlsx', '~> 3.0'
 gem 'caxlsx'
-
+gem 'dotenv-rails', groups: [:development, :test]
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 

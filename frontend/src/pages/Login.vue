@@ -1,71 +1,79 @@
 <template>
 	<div class="flex flex-col items-center bg-gradient-to-b from-black to-blue-900 w-full h-full pt-40">
-		<div id="user-form" class="">
-			<h2>Mouvement des Libertariens</h2>
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-				<!-- eslint-disable-next-line max-len -->
-				<path fill="#42b883" fill-opacity="1"
-					d="M0,128L40,133.3C80,139,160,149,240,149.3C320,149,400,139,480,154.7C560,171,640,213,720,197.3C800,181,880,107,960,112C1040,117,1120,203,1200,229.3C1280,256,1360,224,1400,208L1440,192L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z" />
-			</svg>
+		<div v-if="isRegistered" class="bg-green-500 border-2 border-red-500 rounded-lg p-4">
+			Allez vérifier votre email pour confirmez votre inscription
+		</div>
+		<div v-else>
+			<div id="user-form" class="">
+				<h2>Mouvement des Libertariens</h2>
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+					<!-- eslint-disable-next-line max-len -->
+					<path fill="#42b883" fill-opacity="1"
+						d="M0,128L40,133.3C80,139,160,149,240,149.3C320,149,400,139,480,154.7C560,171,640,213,720,197.3C800,181,880,107,960,112C1040,117,1120,203,1200,229.3C1280,256,1360,224,1400,208L1440,192L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z" />
+				</svg>
 
-			<div v-if="signingIn" class="sign-in">
-				<form @submit.prevent="signIn">
-					<div>
-						<label for="email">Email</label>
-						<input v-model="signInEmail" type="text" placeholder="Please enter your email" name="email">
-					</div>
 
-					<div>
-						<label for="password">Password</label>
-						<input v-model="signInPassword" type="password" placeholder="Please enter your password" name="password">
-					</div>
 
-					<button>Sign in</button>
-				</form>
-
-				<p class="text-green-200">No account ? <span @click="signingIn = false">Sign up</span></p>
-			</div>
-
-			<div v-else class="sign-up">
-				<form @submit.prevent="signUp">
-					<div>
-						<label for="username">Username</label>
-						<input v-model="username" type="text" placeholder="Please choose your username" name="username">
-					</div>
-
-					<div>
-						<label for="firstname">first name</label>
-						<input v-model="firstname" type="text" placeholder="Please choose your firstname" name="firstname">
-					</div>
-
-					<div>
-						<label for="lastname">last name</label>
-						<input v-model="lastname" type="text" placeholder="Please choose your lastname" name="lastname">
-					</div>
-
-					<div>
-						<label for="email">Email</label>
-						<input v-model="signUpEmail" type="text" placeholder="Please enter your email" name="email">
-					</div>
-
-					<div>
-						<label for="password">Password</label>
-
-						<div v-if="isHidden" class="password">
-							<input v-model="signUpPassword" type="password" placeholder="Please enter your password" name="password">
-							<FontAwesomeIcon icon="fa-solid fa-eye" @click="toggleHidden" />
+				<div v-if="signingIn" class="sign-in">
+					<form @submit.prevent="signIn">
+						<div>
+							<label for="email">Email</label>
+							<input v-model="signInEmail" type="text" placeholder="Please enter your email" name="email">
 						</div>
 
-						<div v-else class="password">
-							<input v-model="signUpPassword" type="text" placeholder="Please enter your password" name="password">
-							<FontAwesomeIcon icon="fa-solid fa-eye-slash" @click="toggleHidden" />
+						<div>
+							<label for="password">Password</label>
+							<input v-model="signInPassword" type="password" placeholder="Please enter your password" name="password">
 						</div>
-					</div>
 
-					<button>Sign up</button>
-				</form>
+						<button>Sign in</button>
+					</form>
 
-				<p class="text-green-200">Already registered ? <span @click="signingIn = true">Sign in</span></p>
+					<p class="text-green-200">No account ? <span @click="signingIn = false">Sign up</span></p>
+				</div>
+
+				<div v-else class="sign-up">
+					<form @submit.prevent="signUp">
+						<div>
+							<label for="username">Username</label>
+							<input v-model="username" type="text" placeholder="Please choose your username" name="username">
+						</div>
+
+						<div>
+							<label for="firstname">first name</label>
+							<input v-model="firstname" type="text" placeholder="Please choose your firstname" name="firstname">
+						</div>
+
+						<div>
+							<label for="lastname">last name</label>
+							<input v-model="lastname" type="text" placeholder="Please choose your lastname" name="lastname">
+						</div>
+
+						<div>
+							<label for="email">Email</label>
+							<input v-model="signUpEmail" type="text" placeholder="Please enter your email" name="email">
+						</div>
+
+						<div>
+							<label for="password">Password</label>
+
+							<div v-if="isHidden" class="password">
+								<input v-model="signUpPassword" type="password" placeholder="Please enter your password"
+									name="password">
+								<FontAwesomeIcon icon="fa-solid fa-eye" @click="toggleHidden" />
+							</div>
+
+							<div v-else class="password">
+								<input v-model="signUpPassword" type="text" placeholder="Please enter your password" name="password">
+								<FontAwesomeIcon icon="fa-solid fa-eye-slash" @click="toggleHidden" />
+							</div>
+						</div>
+
+						<button>Sign up</button>
+					</form>
+
+					<p class="text-green-200">Already registered ? <span @click="signingIn = true">Sign in</span></p>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -87,6 +95,7 @@ const firstname = ref("")
 const lastname = ref("")
 const signingIn = ref(true)
 const isHidden = ref(true)
+const isRegistered = ref(false)
 
 const signIn = async () => {
 	const params = { email: signInEmail.value, password: signInPassword.value, }
@@ -96,11 +105,11 @@ const signIn = async () => {
 	if (isSignedIn) router.push({ name: "Home" })
 }
 
+// const signUp = async () => {
 const signUp = async () => {
 	const params = { email: signUpEmail.value, password: signUpPassword.value, username: username.value, first_name: firstname.value, last_name: lastname.value }
 
-	const isRegistered = await sessionStore.registerUser(params)
-	if (isRegistered) router.push({ name: "Home" })
+	isRegistered.value = await sessionStore.registerUser(params)
 }
 
 const toggleHidden = () => {

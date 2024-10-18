@@ -11,6 +11,10 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
+	devise_scope :user do
+    get '/api/users/confirmation', to: 'users/registrations#confirm'
+  end
+
 	get 'questions/export', to: 'xlsx_uploads#export_questions'
 	get 'users/export', to: 'xlsx_uploads#export_users'
 
