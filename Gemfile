@@ -10,7 +10,7 @@ gem "rails", "~> 7.0.8", ">= 7.0.8.4"
 gem "pg", "~> 1.1"
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", "~> 5.0"
+gem "puma", "~> 5.6.9"
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
@@ -28,7 +28,7 @@ gem 'devise-jwt'
 gem 'roo', '~> 2.10.1'
 # gem 'axlsx', '~> 3.0'
 gem 'caxlsx'
-gem 'dotenv-rails', groups: [:development, :test]
+gem 'dotenv-rails', '~> 3.1.4'
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 
