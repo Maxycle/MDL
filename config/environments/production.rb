@@ -1,5 +1,7 @@
 require "active_support/core_ext/integer/time"
 
+Rails.application.routes.default_url_options[:host] = 'libertarien.net'
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -64,7 +66,7 @@ Rails.application.configure do
 		authentication: "plain",
 		enable_starttls_auto: true
 	}
-	
+
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.
