@@ -5,22 +5,28 @@ import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
 
 export default defineConfig({
-  plugins: [vue()],
+	plugins: [vue()],
 	build: {
-    outDir: "../public",
-    emptyOutDir: true
-  },
-  css: {
-    postcss: {
-      plugins: [
-        tailwindcss,
-        autoprefixer
-      ],
-    },
-  },
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, 'src') // Set up an alias for src directory
-    }
-  }
+		outDir: "../public",
+		emptyOutDir: true
+	},
+	css: {
+		postcss: {
+			plugins: [
+				tailwindcss,
+				autoprefixer
+			],
+		},
+	},
+	resolve: {
+		alias: {
+			'@': resolve(__dirname, 'src') // Set up an alias for src directory
+		}
+	},
+	define: {
+		'process.env': {
+			VITE_BACKEND_URL: process.env.VITE_BACKEND_URL,
+			// Add any other environment variables you need
+		}
+	}
 })
