@@ -76,7 +76,7 @@ export const useSessionStore = defineStore({
 
 		async confirmEmail(token) {
       try {
-        const res = await fetch(`${BACKEND_URL}/api/users/confirmation?confirmation_token=${token}`, {
+        const res = await fetch(`${BACKEND_URL}/users/confirmation?confirmation_token=${token}`, {
           method: "GET"
         })
 

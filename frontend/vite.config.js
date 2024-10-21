@@ -23,10 +23,13 @@ export default defineConfig({
 			'@': resolve(__dirname, 'src') // Set up an alias for src directory
 		}
 	},
-	define: {
-		'process.env': {
-			VITE_BACKEND_URL: process.env.VITE_BACKEND_URL,
-			// Add any other environment variables you need
-		}
-	}
+	server: {
+    proxy: {
+      '/api': {
+        target: process.env.VITE_BACKEND_URL || 'http://localhost:3000', // or production server
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  }
 })
