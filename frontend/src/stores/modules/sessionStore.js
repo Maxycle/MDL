@@ -48,7 +48,6 @@ export const useSessionStore = defineStore({
 
 	actions: {
 		async registerUser(params) {
-			// return this.handleUserForm(`${BACKEND_URL}/signup`, params, "register")
 			try {
         const res = await fetch(`${BACKEND_URL}/signup`, {
           method: "POST",
@@ -75,6 +74,7 @@ export const useSessionStore = defineStore({
 		},
 
 		async confirmEmail(token) {
+			console.log('BACKEND_URL', BACKEND_URL)
       try {
         const res = await fetch(`${BACKEND_URL}/users/confirmation?confirmation_token=${token}`, {
           method: "GET"
