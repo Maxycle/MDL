@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+module Api
   module Users
 		class SessionsController < Devise::SessionsController
 			include RackSessionFix
@@ -50,3 +51,4 @@
 			end
 		end
 	end
+end

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+	scope '/api' do
     resources :xlsx_uploads, only: [:create]
 
     devise_for :users, path: '', path_names: {
@@ -6,13 +7,13 @@ Rails.application.routes.draw do
       sign_out: 'logout',
       registration: 'signup'
     }, controllers: {
-      sessions: 'users/sessions',
-      registrations: 'users/registrations'
-    }
+      sessions: 'api/users/sessions',
+      registrations: 'api/users/registrations'
+    }, skip: [:confirmations]
 
 		devise_scope :user do
-			get 'users/confirmation', to: 'confirmations#confirm'
-		end
+      get 'confirmation', to: 'api/users/registrations#confirm', as: :user_confirmation
+    end
 
     get 'questions/export', to: 'xlsx_uploads#export_questions'
     get 'users/export', to: 'xlsx_uploads#export_users'
@@ -35,4 +36,5 @@ Rails.application.routes.draw do
     get "/member-data", to: "members#show"
   	get "*path", to: "static#index", constraints: proc { |request| !request.xhr? && request.format.html? }
   end
+end
 

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+module Api
   module Users
 		class RegistrationsController < Devise::RegistrationsController
 			include RackSessionFix
@@ -7,7 +8,7 @@
 
 			wrap_parameters :user, include: [:email, :password]
 			before_action :configure_permitted_parameters, only: [:create, :update]
-			skip_before_action :authenticate_user!, only: [:create]
+			skip_before_action :authenticate_user!, only: [:create, :confirm]
 			
 			def create
 				Rails.logger.info("Raw Params: #{request.raw_post}")
@@ -36,6 +37,16 @@
 					render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
 				end
 			end
+
+			def confirm
+        self.resource = resource_class.confirm_by_token(params[:confirmation_token])
+      
+        if resource.errors.empty?
+          render json: { message: 'Your email has been confirmed successfully.' }, status: :ok
+        else
+          render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
 
 			private
 
@@ -68,3 +79,4 @@
 			end
 		end
 	end
+end
