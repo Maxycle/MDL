@@ -29,6 +29,12 @@
 						<button>Sign in</button>
 					</form>
 
+					<div v-if="sessionStore.getErrors.length" class="text-red-600">
+						<li v-for="(error, index) in sessionStore.getErrors" :key="index" class="text-red-600">
+							{{ error }}
+						</li>
+					</div>
+
 					<p class="text-green-200">No account ? <span @click="signingIn = false">Sign up</span></p>
 				</div>
 
@@ -102,7 +108,10 @@ const signIn = async () => {
 
 	const isSignedIn = await sessionStore.loginUser(params)
 	console.log('signé in !!', isSignedIn)
-	if (isSignedIn) router.push({ name: "Home" })
+	if (isSignedIn) {
+		sessionStore.clearErrors()
+		router.push({ name: "Home" })
+	}
 }
 
 // const signUp = async () => {

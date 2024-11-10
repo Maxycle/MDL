@@ -49,54 +49,54 @@ export const useSessionStore = defineStore({
 	actions: {
 		async registerUser(params) {
 			try {
-        const res = await fetch(`${BACKEND_URL}/signup`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user: params })
-        })
-        
-        if (!res.ok) {
-          const error = await res.json()
-          this.errors = error.errors
-          console.log(`An error occurred: ${error.message}`)
-          return false
-        }
-        
-        const data = await res.json()
-        this.registrationStatus = 'pending_confirmation'
-        // Don't set authToken or user data here
-        
-        return true
-      } catch (error) {
-        console.log(`An error occurred: ${error}`)
-        return false
-      }
+				const res = await fetch(`${BACKEND_URL}/signup`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ user: params })
+				})
+
+				if (!res.ok) {
+					const error = await res.json()
+					this.errors = error.errors
+					console.log(`An error occurred: ${error.message}`)
+					return false
+				}
+
+				const data = await res.json()
+				this.registrationStatus = 'pending_confirmation'
+				// Don't set authToken or user data here
+
+				return true
+			} catch (error) {
+				console.log(`An error occurred: ${error}`)
+				return false
+			}
 		},
 
 		async confirmEmail(token) {
 			console.log('BACKEND_URL', BACKEND_URL)
-      try {
-        const res = await fetch(`${BACKEND_URL}/confirmation?confirmation_token=${token}`, {
-          method: "GET"
-        })
+			try {
+				const res = await fetch(`${BACKEND_URL}/confirmation?confirmation_token=${token}`, {
+					method: "GET"
+				})
 
-        if (!res.ok) {
-          const error = await res.json()
-          this.errors = error.errors
-          console.log(`An error occurred during confirmation: ${error.message}`)
-          return false
-        }
+				if (!res.ok) {
+					const error = await res.json()
+					this.errors = error.errors
+					console.log(`An error occurred during confirmation: ${error.message}`)
+					return false
+				}
 
-        const data = await res.json()
-        // You might want to automatically log the user in here, or just update the status
-        this.registrationStatus = 'confirmed'
-      
-        return true
-      } catch (error) {
-        console.log(`An error occurred during confirmation: ${error}`)
-        return false
-      }
-    },
+				const data = await res.json()
+				// You might want to automatically log the user in here, or just update the status
+				this.registrationStatus = 'confirmed'
+
+				return true
+			} catch (error) {
+				console.log(`An error occurred during confirmation: ${error}`)
+				return false
+			}
+		},
 
 		loginUser(params) {
 			return this.handleUserForm(`${BACKEND_URL}/login`, params, "login")
@@ -113,23 +113,46 @@ export const useSessionStore = defineStore({
 					headers: action === "update" ? { "Content-Type": "application/json", Authorization: this.authToken } : { "Content-Type": "application/json" },
 					body: JSON.stringify({ user: params })
 				})
-
+				console.log('res', res)
+				
 				if (!res.ok) {
-					const error = await res.json()
-					this.errors = error.errors
-
-					console.log(`An error occured 1: ${error.message}`)
-					return false
+					console.log('!res.ok', res);
+		
+					let errorMessage = "An error occurred"; // Default message
+		
+					// Check if response is JSON
+					const contentType = res.headers.get("content-type");
+					if (contentType && contentType.includes("application/json")) {
+						try {
+							const errorData = await res.json();
+							errorMessage = errorData.message || errorMessage;
+						} catch (jsonError) {
+							console.log("Failed to parse JSON error response", jsonError);
+						}
+					} else {
+						// Fallback: parse response as plain text
+						try {
+							errorMessage = await res.text();
+						} catch (textError) {
+							console.log("Failed to parse text error response", textError);
+						}
+					}
+		
+					// Set error message for display
+					this.errors = [errorMessage];
+					console.log('this.errors', this.errors);
+					console.log(`An error occurred 1: ${errorMessage}`);
+					return false;
 				}
-				console.log('handleUserForm', res)
+		
+				// console.log('handleUserForm', res)
 				this.authToken = action === "update" ? this.authToken : res.headers.get("Authorization")
 				localStorage.setItem("authToken", this.authToken)
 				const data = await res.json()
-				console.log("dataaa logged in", data)
 				this.user = data.user
 				return true
 			} catch (error) {
-				console.log(`An error occured 2: ${error}`)
+				console.log(`An error occured 26: ${error}`)
 				return false
 			}
 		},
@@ -189,7 +212,7 @@ export const useSessionStore = defineStore({
 		},
 
 		clearRegistrationStatus() {
-      this.registrationStatus = null
-    }
+			this.registrationStatus = null
+		}
 	}
 })
