@@ -42,6 +42,10 @@ module Api
         self.resource = resource_class.confirm_by_token(params[:confirmation_token])
       
         if resource.errors.empty?
+					response.headers['Access-Control-Allow-Origin'] = '*'
+    			response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, DELETE, PUT'
+    			response.headers['Access-Control-Expose-Headers'] = 'access-token, expiry, token-type, Authorization'
+					
           render json: { message: 'Your email has been confirmed successfully.' }, status: :ok
         else
           render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
