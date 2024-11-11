@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     }, skip: [:confirmations]
 
 		devise_scope :user do
-      get 'confirmation', to: 'api/users/registrations#confirm', as: :user_confirmation
+      get 'confirmationFromVue', to: 'api/users/registrations#confirm', as: :user_confirmation
     end
 
     get 'questions/export', to: 'xlsx_uploads#export_questions'
