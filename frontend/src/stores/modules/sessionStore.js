@@ -1,6 +1,7 @@
 import { defineStore } from "pinia"
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+const TESTENV = import.meta.env.VITE_TEST_VAR
 
 export const useSessionStore = defineStore({
 	id: 'sessionStore',
@@ -75,6 +76,8 @@ export const useSessionStore = defineStore({
 
 		async confirmEmail(token) {
 			console.log('BACKEND_URL', BACKEND_URL)
+			console.log('TESTENV', TESTENV)
+
 			try {
 				const res = await fetch(`${BACKEND_URL}/confirmationFromVue?confirmation_token=${token}`, {
 					method: "GET"
