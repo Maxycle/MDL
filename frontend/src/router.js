@@ -21,7 +21,7 @@ const routes = [
 	{ path: '/utilisateurs', name: 'UsersScores', component: UsersScores, meta: { requiresAuth: false } },
 	{ path: '/upload-nouvelles-questions', name: 'UploadNewQuestions', component: UploadNewQuestions, meta: { requiresAuth: false } },
 	{ path: '/edit-profile', name: 'EditProfile', component: EditProfile, meta: { requiresAuth: false } },
-	{ path: '/confirmation', name: 'EmailConfirmation', component: EmailConfirmation }
+	{ path: '/email-confirmation', name: 'EmailConfirmation', component: EmailConfirmation }
 ]
 
 const router = createRouter({
