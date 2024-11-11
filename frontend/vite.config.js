@@ -26,7 +26,7 @@ export default defineConfig({
   server: {
 		proxy: {
 			'/api': {
-				target: import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000',  // Use import.meta.env instead of process.env
+				target: process.env.VITE_BACKEND_URL || 'http://localhost:3000',  // Use import.meta.env instead of process.env
 				changeOrigin: true,
 			}
 		}
