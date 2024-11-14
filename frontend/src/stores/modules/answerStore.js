@@ -30,7 +30,6 @@ export const useAnswerStore = defineStore({
 	actions: {
 		addAnswer(answer) {
 			this.answers = { ...this.answers, ...answer }
-			// for (const answer in this.answers) { this.score += this.answers[answer].value }
 		},
 
 		reset() {

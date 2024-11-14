@@ -101,10 +101,10 @@ const buttonTextAndApiUrl = (domain, button) => {
 
 	if (button === 'Bases Acquises') {
 		text = (score.level === 'BA' || score.level === 'SA') ? 'Validé' : 'Non validé'
-		apiUrl = `/questions?domain=${domainParam}&level=BA`
+		apiUrl = `/api/questions?domain=${domainParam}&level=BA`
 	} else {
 		text = score.level === 'SA' ? 'Validé' : score.level === 'BA' ? 'Non validé' : "valider 'Bases Acquises' d'abord"
-		apiUrl = `/questions?domain=${domainParam}&level=SA`
+		apiUrl = `/api/questions?domain=${domainParam}&level=SA`
 	}
 	return { text, apiUrl, availabilityDate }
 }
@@ -175,7 +175,7 @@ async function startQuestionnaire() {
 
 const createScore = async (domain) => {
 	try {
-		const response = await axios.post('/scores',
+		const response = await axios.post('/api/scores',
 			{
 				score: {
 					user_id: sessionStore.getUserId,
@@ -197,7 +197,7 @@ const updateScoreAtStart = async (score) => {
 	const lastTryDate = new Date(score.try_date)
 	const isMoreThanCycleLength = (currentDate - lastTryDate) > paramsStore.getParams.cycleLength * 24 * 60 * 60 * 1000;
 	try {
-		const response = await axios.patch(`/scores/${score.id}`,
+		const response = await axios.patch(`/api/scores/${score.id}`,
 			{
 				score: {
 					step: score.step >= paramsStore.getParams.numberOfTriesPermitted ? 0 : score.step + 1,
@@ -229,7 +229,7 @@ const updateScoreAtFinish = async (score) => {
 			break
 	}
 	try {
-		const response = await axios.patch(`/scores/${score.id}`,
+		const response = await axios.patch(`/api/scores/${score.id}`,
 			{
 				score: {
 					level: success ? nextLevel : score.level,

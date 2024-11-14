@@ -33,7 +33,7 @@ const uploadFile = async () => {
 	isLoading.value = true;
 
 	try {
-		const response = await axios.post('/xlsx_uploads', formData, {
+		const response = await axios.post('/api/xlsx_uploads', formData, {
 			headers: {
 				'Content-Type': 'multipart/form-data',
 				Authorization: `${sessionStore.getAuthToken}` // Ensure this is correct for your app

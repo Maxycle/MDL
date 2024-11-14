@@ -18,7 +18,7 @@ export const useParamsStore = defineStore({
 		async fetchParams() {
 			const sessionStore = useSessionStore()
 			try {
-				const response = await axios.get('/questionnaire-params',
+				const response = await axios.get('/api/questionnaire-params',
 					{
 						headers: {
 							Authorization: `${sessionStore.getAuthToken}`
@@ -40,8 +40,6 @@ export const useParamsStore = defineStore({
 			} catch (error) {
 				console.error('Error fetching questionnaire params:', error.message);
 			}
-
-			// await scoreStore.fetchScores()
 		}
 	}
 })

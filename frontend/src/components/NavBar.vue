@@ -34,7 +34,6 @@
 </template>
 
 <script setup>
-import axios from 'axios';
 import NavBarButton from './buttons/NavBarButton.vue'
 import AdminMenu from './AdminMenu.vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -49,8 +48,6 @@ const store = useSessionStore();
 const router = useRouter();
 const route = useRoute();
 const showAdminMenu = ref(false)
-
-axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL
 
 const loggedInUser = computed(() => {
 	return store.user;

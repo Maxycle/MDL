@@ -74,7 +74,7 @@ const filteredUsers = computed(() => {
 
 const fetchUsers = async () => {
 	try {
-		const response = await axios.get('/users', {
+		const response = await axios.get('/api/users', {
 			headers: {
 				Authorization: `${sessionStore.getAuthToken}`
 			}
@@ -108,7 +108,7 @@ const addFilter = (target, optionSelected) => {
 
 const downloadUsers = async () => {
 	try {
-		const response = await axios.get('/users/export', {
+		const response = await axios.get('/api/users/export', {
 			headers: {
 				Authorization: `${sessionStore.getAuthToken}`
 			},

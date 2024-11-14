@@ -18,7 +18,7 @@ export const useScoreStore = defineStore({
 		async fetchScores() {
 			const sessionStore = useSessionStore();
 			try {
-				const response = await axios.get(`/uzer-scores?user_id=${sessionStore.getUserId}`,
+				const response = await axios.get(`/api/uzer-scores?user_id=${sessionStore.getUserId}`,
 					{
 						headers: {
 							Authorization: `${sessionStore.getAuthToken}`

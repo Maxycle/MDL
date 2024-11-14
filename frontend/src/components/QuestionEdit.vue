@@ -110,7 +110,7 @@ const addItem = () => {
 const createQuestion = async () => {
 	if (props.isUpdating) {
 		try {
-			const responseDelete = await axios.delete(`/questions/${questionId.value}`, {
+			const responseDelete = await axios.delete(`/api/questions/${questionId.value}`, {
 				headers: {
 					Authorization: `${sessionStore.getAuthToken}`
 				}
@@ -121,7 +121,7 @@ const createQuestion = async () => {
 	}
 
 	try {
-		const response = await axios.post('/questions', {
+		const response = await axios.post('/api/questions', {
 			question: {
 				content: question.value,
 				level: level.value,

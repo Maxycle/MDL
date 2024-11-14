@@ -85,7 +85,7 @@ const truncateQuestion = (string) => {
 
 const fetchQuestions = async () => {
 	try {
-		const response = await axios.get('/questions/index_admin', {
+		const response = await axios.get('/api/questions/index_admin', {
 			headers: {
 				Authorization: `${sessionStore.getAuthToken}`
 			}

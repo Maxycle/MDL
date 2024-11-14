@@ -88,7 +88,7 @@ const newValuesObject = computed(() => {
 
 const updateParams = async () => {
 	try {
-		const response = await axios.put('/questionnaire-params', newValuesObject.value, {
+		const response = await axios.put('/api/questionnaire-params', newValuesObject.value, {
 			headers: {
 				Authorization: `${sessionStore.getAuthToken}`
 			}

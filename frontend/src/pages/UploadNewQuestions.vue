@@ -17,7 +17,7 @@ const sessionStore = useSessionStore();
 
 const destroyAllQuestions = async () => {
 	try {
-		await axios.delete('/questions/destroy_all', {
+		await axios.delete('/api/questions/destroy_all', {
 			headers: {
 				Authorization: `${sessionStore.getAuthToken}`
 			}
@@ -29,7 +29,7 @@ const destroyAllQuestions = async () => {
 
 const downloadQuestions = async () => {
 	try {
-		const response = await axios.get('/questions/export', {
+		const response = await axios.get('/api/questions/export', {
 			headers: {
 				Authorization: `${sessionStore.getAuthToken}`
 			},
