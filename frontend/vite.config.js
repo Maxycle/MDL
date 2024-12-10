@@ -9,6 +9,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
 
   console.log('VITE_BACKEND_URL:', env.VITE_BACKEND_URL);
+	console.log('VITE_TEST_VAR:', env.VITE_TEST_VAR);
 
   return {
     plugins: [vue()],
@@ -30,12 +31,13 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
-      proxy: {
-        '/api': {
-          target: env.VITE_BACKEND_URL || 'http://localhost:3000',
-          changeOrigin: true,
-        },
-      },
-    },
-  };
-});
+			proxy: {
+				'^/api/(.*)': {
+					target: env.VITE_BACKEND_URL || 'http://localhost:3000',
+					changeOrigin: true,
+					rewrite: (path) => path.replace(/^\/api/, '')
+				}
+			}
+		}
+  }
+})
