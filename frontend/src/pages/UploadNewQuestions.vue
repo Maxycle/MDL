@@ -26,9 +26,7 @@ const destroyAllQuestions = async () => {
 				Authorization: `${sessionStore.getAuthToken}`
 			}
 		})
-		console.log('response delete', response)
 		deletedResponseMessage.value = `${response.data.message}, ${response.data.deleted_count} questions deleted`
-
 	} catch (error) {
 		console.error(`Error creating:`, error);
 	}

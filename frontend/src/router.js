@@ -10,7 +10,6 @@ import EmailConfirmation from '@/pages/EmailConfirmation.vue'
 import UsersScores from '@/pages/UsersScores.vue'
 import EditProfile from '@/pages/EditProfile.vue'
 import NewPost from '@/pages/NewPost.vue'
-import ShowPost from '@/pages/ShowPost.vue'
 import ShowPostsIndex from '@/pages/ShowPostsIndex.vue'
 import { useSessionStore } from '@/stores/modules/sessionStore'
 
@@ -26,7 +25,6 @@ const routes = [
 	{ path: '/edit-profile', name: 'EditProfile', component: EditProfile, meta: { requiresAuth: false } },
 	{ path: '/confirmation', name: 'EmailConfirmation', component: EmailConfirmation },
 	{ path: '/new-post', name: 'NewPost', component: NewPost },
-	{ path: '/posts/:id', component: ShowPost },
 	{ path: '/', name: 'Blog', component: ShowPostsIndex, meta: { requiresAuth: false } }
 ]
 
