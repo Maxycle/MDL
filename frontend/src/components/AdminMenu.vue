@@ -25,7 +25,8 @@ const items = ref([{ route: '/nouvelle-question', text: 'Créer une nouvelle que
 { route: '/modifier-question', text: 'Modifier une question' }, 
 { route: '/upload-nouvelles-questions', text: 'Upload nouvelle liste de questions' },
 { route: '/utilisateurs', text: 'Scores des utilisateurs' },
-{ route: '/questionnaire-paramètres', text: 'Changer les paramèetres de questionnaire ' }
+{ route: '/questionnaire-paramètres', text: 'Changer les paramèetres de questionnaire' },
+{ route: '/new-post', text: 'Ecrire un article' }
 ])
 const isRouteActive = (path) => {
 	return route.path === path;

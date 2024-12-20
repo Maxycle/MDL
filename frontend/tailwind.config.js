@@ -6,8 +6,11 @@ module.exports = {
   theme: {
 		extend: {
 			fontFamily: {
-				'sans': ['Kode Mono', 'sans-serif'],
-				'sus': ['Barriecito', 'sans-serif']
+				'plain': ['PT serif', 'sans-serif'],
+				'agu': ['Agu Display', 'sans-serif'],
+				'barriecito': ['Barriecito', 'sans-serif'],
+				'modak': ['Modak', 'sans-serif'],
+				'eater': ['Eater', 'sans-serif']
 			},
 			colors: {
         'anarcapYellow': '#fdfd00',

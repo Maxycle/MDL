@@ -26,6 +26,10 @@ Rails.application.routes.draw do
       resources :answers, only: [:index, :create]
     end
 
+		resources :posts do
+			post 'upload_image', on: :collection
+		end
+		
     resources :answers, only: [:show, :update, :destroy]
     resources :scores
     resources :users, only: [:index]

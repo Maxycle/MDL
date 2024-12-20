@@ -2,26 +2,33 @@
 	<div class="flex flex-col items-center justify-center bg-neutral-600 h-full">
 		<div class="border-2 anarcap-border bg-green-500 p-2 rounded mb-4 cursor-pointer" @click="downloadQuestions">
 			Download les questions/réponses</div>
-		<div class="border-2 anarcap-border bg-red-500 p-2 rounded mb-4 cursor-pointer" @click="destroyAllQuestions">Effacer
+		<div v-if="deletedResponseMessage" class="text-3xl text-red-500 pb-4">{{ deletedResponseMessage }}</div>
+		<div v-else class="border-2 anarcap-border bg-red-500 p-2 rounded mb-4 cursor-pointer" @click="destroyAllQuestions">
+			Effacer
 			TOUTES les questions existantes</div>
-		<FileUpload class="border-2 anarcap-border rounded p-4" />
+		<FileUpload class="border-2 anarcap-border rounded p-4" @questions-uploaded="deletedResponseMessage = ''" />
 	</div>
 </template>
 
 <script setup>
 import axios from 'axios'
+import { ref } from "vue"
 import FileUpload from '@/components/FileUpload.vue'
 import { useSessionStore } from "@/stores/modules/sessionStore"
 
 const sessionStore = useSessionStore();
+const deletedResponseMessage = ref('')
 
 const destroyAllQuestions = async () => {
 	try {
-		await axios.delete('/api/questions/destroy_all', {
+		const response = await axios.delete('/api/questions/destroy_all', {
 			headers: {
 				Authorization: `${sessionStore.getAuthToken}`
 			}
 		})
+		console.log('response delete', response)
+		deletedResponseMessage.value = `${response.data.message}, ${response.data.deleted_count} questions deleted`
+
 	} catch (error) {
 		console.error(`Error creating:`, error);
 	}

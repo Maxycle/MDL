@@ -50,9 +50,20 @@ class QuestionsController < ApplicationController
   end
 
 	def destroy_all
-    Question.destroy_all
-		head :no_content
-  end
+		deleted_count = Question.count
+		Question.destroy_all
+		
+		render json: { 
+			message: 'All questions have been deleted', 
+			deleted_count: deleted_count 
+		}, status: :ok
+	rescue => e
+		render json: { 
+			error: 'Failed to delete all questions', 
+			details: e.message 
+		}, status: :unprocessable_entity
+	end
+	
   private
 
   def set_question

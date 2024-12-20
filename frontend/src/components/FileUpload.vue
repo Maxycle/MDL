@@ -19,12 +19,14 @@ const sessionStore = useSessionStore();
 
 const file = ref(null);
 const isLoading = ref(false);
+const emit = defineEmits(['questions-uploaded'])
 
 const onFileChange = (event) => {
 	file.value = event.target.files[0];
 };
 
 const uploadFile = async () => {
+	emit('questions-uploaded')
 	if (!file.value || isLoading.value) return;
 
 	const formData = new FormData();

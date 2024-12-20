@@ -78,6 +78,12 @@
 						<button>Sign up</button>
 					</form>
 
+					<div v-if="sessionStore.getErrors.length" class="text-red-600">
+						<li v-for="(error, index) in sessionStore.getErrors" :key="index" class="text-red-600">
+							{{ error }}
+						</li>
+					</div>
+
 					<p class="text-green-200">Already registered ? <span @click="signingIn = true">Sign in</span></p>
 				</div>
 			</div>

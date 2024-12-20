@@ -9,11 +9,14 @@ import UploadNewQuestions from '@/pages/UploadNewQuestions.vue'
 import EmailConfirmation from '@/pages/EmailConfirmation.vue'
 import UsersScores from '@/pages/UsersScores.vue'
 import EditProfile from '@/pages/EditProfile.vue'
+import NewPost from '@/pages/NewPost.vue'
+import ShowPost from '@/pages/ShowPost.vue'
+import ShowPostsIndex from '@/pages/ShowPostsIndex.vue'
 import { useSessionStore } from '@/stores/modules/sessionStore'
 
 const routes = [
 	{ path: '/Login', name: 'Login', component: Login, meta: { requiresAuth: false } },
-	{ path: '/', name: 'Home', component: Home, meta: { requiresAuth: false } },
+	{ path: '/home-questionnaire', name: 'Home', component: Home, meta: { requiresAuth: false } },
 	{ path: '/questionnaire', name: 'Questionnaire', component: Questionnaire, meta: { requiresAuth: false } },
 	{ path: '/nouvelle-question', name: 'NewQuestion', component: NewQuestion, meta: { requiresAuth: false } },
 	{ path: '/modifier-question', name: 'ModifyQuestion', component: ModifyQuestion, meta: { requiresAuth: false } },
@@ -22,8 +25,9 @@ const routes = [
 	{ path: '/upload-nouvelles-questions', name: 'UploadNewQuestions', component: UploadNewQuestions, meta: { requiresAuth: false } },
 	{ path: '/edit-profile', name: 'EditProfile', component: EditProfile, meta: { requiresAuth: false } },
 	{ path: '/confirmation', name: 'EmailConfirmation', component: EmailConfirmation },
-	// { path: '/email-confirmation', name: 'EmailConfirmation', component: EmailConfirmation },
-	// { path: '/confirmation', redirect: '/email-confirmation' }
+	{ path: '/new-post', name: 'NewPost', component: NewPost },
+	{ path: '/posts/:id', component: ShowPost },
+	{ path: '/', name: 'Blog', component: ShowPostsIndex, meta: { requiresAuth: false } }
 ]
 
 const router = createRouter({

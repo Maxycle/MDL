@@ -20,9 +20,10 @@ gem "puma", "~> 5.6.9"
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors', require: 'rack/cors'
-
+gem 'redcarpet'
 gem 'devise'
 gem 'faker'
+gem 'nokogiri'
 # Adds JWT token authentication and generation to Devise [https://github.com/waiting-for-dev/devise-jwt]
 gem 'devise-jwt'
 gem 'roo', '~> 2.10.1'

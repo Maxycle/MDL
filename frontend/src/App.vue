@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col h-screen" v-cloak>
+	<div class="flex flex-col h-screen font-eater" v-cloak>
 		<div class="flex flex-col h-1/6 bg-black">
 			<Hero class="grow" />
 			<NavBar v-if="sessionStore.isLoggedIn" class="z-10" />
@@ -20,4 +20,5 @@ import NavBar from '@/components/NavBar.vue'
 import { useSessionStore } from "@/stores/modules/sessionStore"
 
 const sessionStore = useSessionStore();
+
 </script>
