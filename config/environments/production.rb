@@ -34,7 +34,12 @@ Rails.application.configure do
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
+	config.active_storage.resolve_model_to_route = :rails_storage_redirect
 
+	# Add these lines
+	config.action_dispatch.x_sendfile_header = nil
+	config.public_file_server.enabled = true
+	
   # Mount Action Cable outside main process or domain.
   config.action_cable.mount_path = nil
   # config.action_cable.url = "wss://example.com/cable"
@@ -68,7 +73,8 @@ Rails.application.configure do
 	}
 
   config.action_mailer.perform_caching = false
-	config.action_mailer.default_url_options = { host: 'libertarien.net', protocol: 'http' }
+	# config.action_mailer.default_url_options = { host: 'libertarien.net', protocol: 'http' }
+	config.action_mailer.default_url_options = { host: 'localhost', protocol: 'http' }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.

@@ -34,38 +34,29 @@ const sessionStore = useSessionStore()
 const router = useRouter()
 
 // Custom image upload handler for TinyMCE
+// Custom image upload handler for TinyMCE
 const imageUploadHandler = (blobInfo, progress) => {
 	return new Promise((resolve, reject) => {
-		// Create FormData for image upload
 		const formData = new FormData()
 		formData.append('image', blobInfo.blob(), blobInfo.filename())
 
-		// Send image to server
 		axios.post('/api/posts/upload_image',
 			formData, {
 			headers: {
 				Authorization: `${sessionStore.getAuthToken}`,
 				'Content-Type': 'multipart/form-data'
 			},
+			withCredentials: true,  // Add this line
 			onUploadProgress: (progressEvent) => {
 				progress(Math.round((progressEvent.loaded * 100) / progressEvent.total))
 			}
 		})
 			.then(response => {
-				// Assume the server returns the URL of the uploaded image
-				// const imageUrl = response.data.url
 				const imageUrl = response.data.location
-
-				console.log('Image URL:', imageUrl);
-				
-				// Keep track of uploaded images
-				uploadedImages.value.push(imageUrl)
-
-				// Resolve with the image URL
+				console.log('Image URL:', imageUrl)
 				resolve(imageUrl)
 			})
 			.catch(error => {
-				// Handle upload error
 				console.error('Image upload failed', error)
 				reject('Image upload failed: ' + error.message)
 			})
@@ -90,7 +81,20 @@ const editorConfig = {
 
 	// Configure image upload
 	images_upload_url: '/api/posts/upload_image', // Your backend upload endpoint
+	images_upload_credentials: true,
+	images_reuse_filename: true,
+
+	// Optional: Add custom headers to image requests
 	images_upload_handler: imageUploadHandler,
+
+	// Add a custom URL filter to append auth token to image URLs
+	urlconverter_callback: (url, node, on_save, name) => {
+		// Only modify Active Storage URLs
+		if (url.includes('active_storage')) {
+			return `${url}?auth_token=${sessionStore.getAuthToken}`
+		}
+		return url
+	},
 
 	// Allow paste and drop of images
 	paste_data_images: true,

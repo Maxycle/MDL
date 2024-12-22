@@ -60,10 +60,16 @@ class PostsController < ApplicationController
 			filename: image.original_filename,
 			content_type: image.content_type
 		)
+	
+		# Add content disposition inline and make URL public
+		url = rails_blob_url(blob)
 		
-		# Use rails_blob_url instead of rails_blob_path to get a full URL
+		# Set headers to allow image display
+		response.headers['Access-Control-Allow-Origin'] = request.headers['origin']
+		response.headers['Access-Control-Allow-Credentials'] = 'true'
+		
 		render json: {
-			location: rails_blob_url(blob, disposition: "inline")
+			location: url
 		}
 	end
 
