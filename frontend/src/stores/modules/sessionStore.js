@@ -80,7 +80,8 @@ export const useSessionStore = defineStore({
 
 			try {
 				const res = await fetch(`${BACKEND_URL}/confirmationFromVue?confirmation_token=${token}`, {
-					method: "GET"
+					method: "GET",
+					credentials: 'include'
 				})
 
 				if (!res.ok) {
@@ -114,15 +115,16 @@ export const useSessionStore = defineStore({
 				const res = await fetch(url, {
 					method: action === "update" ? "PATCH" : "POST",
 					headers: action === "update" ? { "Content-Type": "application/json", Authorization: this.authToken } : { "Content-Type": "application/json" },
-					body: JSON.stringify({ user: params })
+					body: JSON.stringify({ user: params }),
+					credentials: 'include'
 				})
 				console.log('res', res)
-				
+
 				if (!res.ok) {
 					console.log('!res.ok', res);
-		
+
 					let errorMessage = "An error occurred"; // Default message
-		
+
 					// Check if response is JSON
 					const contentType = res.headers.get("content-type");
 					if (contentType && contentType.includes("application/json")) {
@@ -140,14 +142,14 @@ export const useSessionStore = defineStore({
 							console.log("Failed to parse text error response", textError);
 						}
 					}
-		
+
 					// Set error message for display
 					this.errors = [errorMessage];
 					console.log('this.errors', this.errors);
 					console.log(`An error occurred 1: ${errorMessage}`);
 					return false;
 				}
-		
+
 				// console.log('handleUserForm', res)
 				this.authToken = action === "update" ? this.authToken : res.headers.get("Authorization")
 				localStorage.setItem("authToken", this.authToken)
@@ -163,7 +165,8 @@ export const useSessionStore = defineStore({
 		async loginUserWithToken(token) {
 			try {
 				const res = await fetch(`${BACKEND_URL}/member-data`, {
-					headers: { Authorization: token }
+					headers: { Authorization: token },
+					credentials: 'include'
 				})
 				if (!res.ok) {
 					const error = await res.json()
