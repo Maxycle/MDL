@@ -26,6 +26,7 @@ const confirmEmail = async () => {
 		isConfirmed.value = await sessionStore.confirmEmail(confirmationToken)
 		if (isConfirmed.value) {
 			message.value = 'Email confirmé, vous pouvez vous connecter.'
+			console.log('isConfirmed.value:', isConfirmed.value);
 		} else {
 			message.value = 'Email pas confirmé. Réessayez.'
 		}
