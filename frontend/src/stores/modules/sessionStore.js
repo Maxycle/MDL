@@ -80,8 +80,8 @@ export const useSessionStore = defineStore({
 
 			try {
 				const res = await fetch(`${BACKEND_URL}/confirmationFromVue?confirmation_token=${token}`, {
-					method: "GET"
-					// credentials: 'include'
+					method: "GET",
+					credentials: 'include'
 				})
 
 				if (!res.ok) {
@@ -115,8 +115,8 @@ export const useSessionStore = defineStore({
 				const res = await fetch(url, {
 					method: action === "update" ? "PATCH" : "POST",
 					headers: action === "update" ? { "Content-Type": "application/json", Authorization: this.authToken } : { "Content-Type": "application/json" },
-					body: JSON.stringify({ user: params })
-					// credentials: 'include'
+					body: JSON.stringify({ user: params }),
+					credentials: 'include'
 				})
 				console.log('res', res)
 
@@ -165,8 +165,8 @@ export const useSessionStore = defineStore({
 		async loginUserWithToken(token) {
 			try {
 				const res = await fetch(`${BACKEND_URL}/member-data`, {
-					headers: { Authorization: token }
-					// credentials: 'include'
+					headers: { Authorization: token },
+					credentials: 'include'
 				})
 				if (!res.ok) {
 					const error = await res.json()
