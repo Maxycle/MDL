@@ -6,9 +6,9 @@ class UserMailer < Devise::Mailer
     
     # Construct the confirmation link without including the port if it's the default (80 for http or 443 for https)
     if port.present? && ((port != 80 && port != 443) || host == 'localhost')
-      @confirmation_link = "http://#{host}:#{port}/confirmation?confirmation_token=#{token}"
+      @confirmation_link = "https://#{host}:#{port}/confirmation?confirmation_token=#{token}"
     else
-      @confirmation_link = "http://#{host}/confirmation?confirmation_token=#{token}"
+      @confirmation_link = "https://#{host}/confirmation?confirmation_token=#{token}"
     end
 
     opts[:template_path] = 'devise/mailer'
