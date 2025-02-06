@@ -9,15 +9,21 @@
     "preview": "vite preview"
   },
   "dependencies": {
-		"@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-brands-svg-icons": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/vue-fontawesome": "^3.0.3",
     "@mdi/font": "^7.4.47",
-		"axios": "^1.6.8",
+    "@mdi/js": "^7.4.47",
+    "@tinymce/tinymce-vue": "^6.1.0",
+    "axios": "^1.6.8",
+    "dotenv": "^16.4.5",
+    "install": "^0.13.0",
+    "lodash": "^4.17.21",
     "pinia": "^2.1.7",
+    "tinymce": "^7.5.1",
     "vue": "^3.4.21",
-		"vue-router": "4",
+    "vue-router": "4",
     "vuetify": "^3.6.0-beta.0.0"
   },
   "devDependencies": {

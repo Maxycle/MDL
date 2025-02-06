@@ -1,46 +1,24 @@
+
 require 'faker'
 
-# Generate fake questions
-5.times do
-  Question.create(
-    content: Faker::Quote.famous_last_words,
-    domain: "droit naturel",
-    level: "BA"
-  )
-end
+QuestionnaireParam.new().save
 
-5.times do
-  Question.create(
-    content: Faker::Quote.jack_handey,
-    domain: "droit naturel",
-    level: "SA"
-  )
-end
-
-5.times do
-  Question.create(
-    content: Faker::Quote.mitch_hedberg,
-    domain: "école autrichienne",
-    level: "BA"
-  )
-end
-
-5.times do
-  Question.create(
-    content: Faker::Quote.matz,
-    domain: "école autrichienne",
-    level: "SA"
-  )
-end
-
-# Generate fake answers for each question
-values = [0, 25, 50, 75, 100]
-Question.all.each do |question|
-  values.each do |value|
-    Answer.create(
-      content: Faker::Lorem.sentence,
-      question: question,
-      value: value
-    )
+10.times do
+	unique_username = nil
+  while unique_username.nil? || User.exists?(username: unique_username)
+    unique_username = Faker::Creature::Horse.breed
   end
+
+	unique_email = nil
+  while unique_email.nil? || User.exists?(email: unique_email)
+    unique_email = Faker::Internet.email
+  end
+
+  User.create(
+		first_name: Faker::Name.name,
+		last_name: Faker::Name.last_name,
+    username: unique_username,
+    email: unique_email,
+    password: 123456
+  )
 end
