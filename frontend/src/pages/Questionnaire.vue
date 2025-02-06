@@ -85,6 +85,9 @@ const difficultyOrder = { LOW: 1, MID: 2, HIGH: 3 }
 
 onMounted(async () => {
 	await scoreStore.fetchScores()
+	if (!paramsStore.getIsLoaded) {
+		await paramsStore.fetchParams()
+	}
 })
 
 const buttonTextAndApiUrl = (domain, button) => {
@@ -114,7 +117,7 @@ const showNextAvailability = (domain, button) => {
 }
 
 const isDisabled = (domain, button) => {
-	console.log('isDisabledddddddddddddddd')
+	console.log('isDisabledddddddddddddddd ?', sessionStore.getUserDetails.admin ? false : isDisabledByTiming(domain) || (buttonTextAndApiUrl(domain, button).text !== 'Non validé'))
 
 	return sessionStore.getUserDetails.admin ? false : isDisabledByTiming(domain) || (buttonTextAndApiUrl(domain, button).text !== 'Non validé')
 }

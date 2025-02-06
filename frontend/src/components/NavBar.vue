@@ -41,7 +41,7 @@
 import NavBarButton from './buttons/NavBarButton.vue'
 import AdminMenu from './AdminMenu.vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useSessionStore } from '@/stores/modules/sessionStore'
 import { useAnswerStore } from '@/stores/modules/answerStore'
 import { useParamsStore } from '@/stores/modules/paramsStore'
@@ -52,6 +52,12 @@ const store = useSessionStore();
 const router = useRouter();
 const route = useRoute();
 const showAdminMenu = ref(false)
+
+onMounted(async () => {
+	if (!paramsStore.getIsLoaded) {
+		await paramsStore.fetchParams()
+	}
+})
 
 const loggedInUser = computed(() => {
 	return store.user;
