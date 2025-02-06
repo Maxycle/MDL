@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => {
       outDir: "../public",
       emptyOutDir: true,
       rollupOptions: {
-        external: ['img/Flag_of_Anarcho-capitalism.png']
+        external: ['Flag_of_Anarcho-capitalism.png']
       }
     },
     css: {
