@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col items-center bg-gradient-to-b from-black to-blue-900 w-full h-full pt-40">
+	<div class="flex flex-col items-center bg-gradient-to-b from-black to-blue-900 w-full min-h-screen pt-40">
 		<div v-if="isRegistered" class="bg-green-500 border-2 border-red-500 rounded-lg p-4">
 			Allez vérifier votre email pour confirmez votre inscription
 		</div>

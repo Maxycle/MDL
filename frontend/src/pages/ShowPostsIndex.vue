@@ -5,15 +5,22 @@
 		</div>
 		<div v-if="posts.length" class="post">
 			<div v-for="(post, postIndex) in posts" :key="postIndex" class="">
-
 				<div class="post-content px-20">
-					<div v-if="!post.showFullContent" @click="expandPost(postIndex)" class="cursor-pointer">
+					<div v-if="!post.showFullContent" @click="expandPost(postIndex)" class="flex items-center">
 						<PostCard :data="processContent(post.content_html)" :title="post.title" :author="post.author"
-							:created="formattedDate(post.created)" />
+							:created="formattedDate(post.created)" class="cursor-pointer " />
+							<div 
+              v-if="sessionStore.isAdmin"
+              class="rounded-lg p-2 bg-red-700 h-1/3 hover:scale-105 transition duration-300 cursor-pointer"
+              @click.stop="confirmDelete(post.id, postIndex)"
+            >
+              Détruire à tout jamais
+            </div>
 					</div>
 					<div v-else>
 						<div class="text-3xl text-center font-bold font-plain">{{ post.title }}</div>
-						<div class="text-xs italic text-center font-plain py-2 pl-1">{{ formattedDate(post.created) }}, par {{ post.author.username }}</div>
+						<div class="text-xs italic text-center font-plain py-2 pl-1">{{ formattedDate(post.created) }}, par {{
+							post.author.username }}</div>
 						<div v-html="post.content_html" class="font-plain"></div>
 						<button @click="reducePost(postIndex)" class="text-blue-400 mt-2">
 							Fermer l'article
@@ -31,12 +38,15 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { usePostStore } from "@/stores/modules/postStore"
+import { useSessionStore } from "@/stores/modules/sessionStore"
 import PostCard from "@/components/PostCard.vue"
 import Container from "@/components/Container.vue"
+import axios from 'axios'
 
 // Manage posts and expand state
 const posts = ref([])
 const postStore = usePostStore()
+const sessionStore = useSessionStore()
 
 // Truncate function
 const processContent = (html) => {
@@ -80,5 +90,31 @@ const formattedDate = (date) => {
 		month: 'long',
 		day: 'numeric'
 	})
+}
+
+const confirmDelete = (id, postIndex) => {
+  if (window.confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
+    destroyPost(id, postIndex)
+  }
+}
+
+const destroyPost = async (id, postIndex) => {
+  try {
+    await axios.delete(`/api/posts/${id}`, {
+      headers: {
+        Authorization: `${sessionStore.getAuthToken}`
+      }
+    })
+    
+    // Remove the post from local state
+    posts.value = posts.value.filter((_, index) => index !== postIndex)
+    
+    // Optionally refresh posts from the store
+    await postStore.fetchPosts()
+    
+  } catch (error) {
+    console.error('Error deleting post:', error)
+    alert('Une erreur est survenue lors de la suppression de l\'article')
+  }
 }
 </script>

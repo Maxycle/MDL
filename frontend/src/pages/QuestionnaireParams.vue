@@ -1,5 +1,5 @@
 <template>
-	<div class="px-24 pt-12 bg-neutral-600 min-h-screen flex justify-center">
+	<div class="px-24 py-12 bg-neutral-600 min-h-screen flex justify-center">
 		<div class="w-1/2">
 			<div v-for="(param, index) in parameters" :key="index" class="mb-4">
 				<div class="border-2 anarcap-border bg-orange-100 py-2 px-8 rounded flex justify-center w-full">
