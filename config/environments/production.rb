@@ -1,6 +1,6 @@
 require "active_support/core_ext/integer/time"
 
-Rails.application.routes.default_url_options[:host] = 'libertarien.net'
+Rails.application.routes.default_url_options[:host] = 'www.libertarien.net'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -73,7 +73,7 @@ Rails.application.configure do
 	}
 
   config.action_mailer.perform_caching = false
-	config.action_mailer.default_url_options = { host: 'libertarien.net', protocol: 'https' }
+	config.action_mailer.default_url_options = { host: 'www.libertarien.net', protocol: 'https' }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
