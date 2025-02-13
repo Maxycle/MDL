@@ -1,5 +1,5 @@
 <template>
-	<div class="h-full text-black px-12 pt-12 bg-gradient-to-r from-neutral-300 to-neutral-600">
+	<div class="min-h-screen text-black px-12 pt-12 bg-gradient-to-r from-neutral-300 to-neutral-600">
 		<div class="flex justify-start">
 			<div class="grid">
 				<div class="border-2 anarcap-border bg-green-500 p-2 rounded mb-4 cursor-pointer" @click="downloadUsers">
@@ -24,7 +24,7 @@
 							user.username }} ({{ user.first_name }} {{ user.last_name }})</div>
 				</div>
 			</div>
-			<UserInfo v-if="Object.entries(userSelected).length" :data="userSelected" />
+			<UserInfo v-if="Object.entries(userSelected).length" :data="userSelected" @user-updated="updateSelectedUser" />
 			<div v-else class="w-full flex justify-center mt-12">
 				<div class="flex items-center h-fit">
 					<font-awesome-icon icon="fa-solid fa-arrow-left" class="h-12 mr-4" />
@@ -45,7 +45,6 @@ import AutocompleteUsers from '@/components/AutocompleteUsers.vue';
 import { ref, onMounted, computed } from "vue"
 import Menu from '../components/Menu.vue'
 import { useSessionStore } from '@/stores/modules/sessionStore'
-import truncate from 'lodash/truncate'
 import { menuData } from '@/helpers/constants.js'
 
 const hovered = ref('')
@@ -136,6 +135,19 @@ const downloadUsers = async () => {
 		URL.revokeObjectURL(url);
 	} catch (error) {
 		console.error(`Error creating:`, error);
+	}
+}
+
+const updateSelectedUser = async (userId) => {
+	try {
+		const response = await axios.get(`/api/users/${userId}`, {
+			headers: {
+				Authorization: `${sessionStore.getAuthToken}`
+			}
+		});
+		userSelected.value = response.data;
+	} catch (error) {
+		console.error('Error updating user:', error);
 	}
 }
 </script>

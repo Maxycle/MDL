@@ -5,6 +5,10 @@
 		</div>
 		<div class="pl-20 text-xl">
 			<div class="flex space-x-4">
+				<div>Username:</div>
+				<div>{{ data.username }}</div>
+			</div>
+			<div class="flex space-x-4">
 				<div>Prénom:</div>
 				<div>{{ data.first_name }}</div>
 			</div>
@@ -16,19 +20,26 @@
 				<div>email:</div>
 				<div>{{ data.email }}</div>
 			</div>
-			<div v-if="data.scores[0]" class="flex space-x-4">
-				<div>"{{ fullWord(data.scores[0].domain) }}":</div>
-				<div>{{ fullWord(data.scores[0].level) }}</div>
-			</div>
-			<div v-if="data.scores[1]" class="flex space-x-4">
-				<div>"{{ fullWord(data.scores[1].domain) }}":</div>
-				<div>{{ fullWord(data.scores[1].level) }}</div>
-			</div>
+			<template v-for="score in data.scores" :key="score?.id">
+				<div v-if="score" class="flex items-center space-x-4 space-y-4">
+					<div class="flex space-x-4 text-3xl">
+						<div>"{{ fullWord(score.domain) }}":</div>
+						<div>{{ fullWord(score.level) }}</div>
+					</div>
+					<button class="rounded bg-red-600 p-1 text-black text-sm flex items-center"
+						@click="handleScoreDelete(score.id)">
+						Supprimer score "{{ fullWord(score.domain) }}"
+					</button>
+				</div>
+			</template>
 		</div>
 	</div>
 </template>
 
 <script setup>
+import { useScoreStore } from '@/stores/modules/scoreStore'
+
+const scoreStore = useScoreStore()
 
 const props = defineProps({
 	data: {
@@ -56,4 +67,11 @@ const fullWord = ((initials) => {
 			break
 	}
 })
+
+const emit = defineEmits(['userUpdated'])
+
+const handleScoreDelete = async (scoreId) => {
+	await scoreStore.deleteScore(scoreId)
+	emit('userUpdated', props.data.id) // Emit event to update parent
+}
 </script>

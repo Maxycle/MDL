@@ -8,12 +8,12 @@ class UsersController < ApplicationController
   end
 
 	def show
-		render json: @user
+		render json: @user.as_json(include: :scores)
 	end
 
 	private
 
-  def set_user
-    @user = User.find(params[:id])
-  end
+	def set_user
+		@user = User.includes(:scores).find(params[:id])
+	end
 end
