@@ -14,7 +14,7 @@
 						</div>
 					</div>
 				</div>
-				<AutocompleteUsers :options="users" class="pb-4" @questiton-selected="selectUser" />
+				<AutocompleteUsers :options="users" class="pb-4" @user-selected="selectUser" />
 				<div v-for="(user, index) in filteredUsers"
 					class="relative justify-start cursor-pointer text-blue-900 underline" @click="selectUser(user)"
 					@mouseover="showUser(index)" @mouseout="hideUser(index)">

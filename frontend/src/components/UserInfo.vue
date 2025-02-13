@@ -1,30 +1,26 @@
 <template>
 	<div class="w-full text-orange-800">
-		<div class="w-full flex justify-center text-6xl font-extrabold font-serif">
+		<div class="w-full flex justify-center text-6xl font-extrabold text-green-800 font-serif">
 			{{ data.username }}
 		</div>
 		<div class="pl-20 text-xl">
 			<div class="flex space-x-4">
-				<div>Username:</div>
-				<div>{{ data.username }}</div>
-			</div>
-			<div class="flex space-x-4">
 				<div>Prénom:</div>
-				<div>{{ data.first_name }}</div>
+				<div class="text-green-800">{{ data.first_name }}</div>
 			</div>
 			<div class="flex space-x-4">
 				<div>Nom:</div>
-				<div>{{ data.last_name }}</div>
+				<div class="text-green-800">{{ data.last_name }}</div>
 			</div>
 			<div class="flex space-x-4">
 				<div>email:</div>
-				<div>{{ data.email }}</div>
+				<div class="text-green-800">{{ data.email }}</div>
 			</div>
 			<template v-for="score in data.scores" :key="score?.id">
 				<div v-if="score" class="flex items-center space-x-4 space-y-4">
 					<div class="flex space-x-4 text-3xl">
 						<div>"{{ fullWord(score.domain) }}":</div>
-						<div>{{ fullWord(score.level) }}</div>
+						<div class="text-green-800">{{ fullWord(score.level) }}</div>
 					</div>
 					<button class="rounded bg-red-600 p-1 text-black text-sm flex items-center"
 						@click="handleScoreDelete(score.id)">
@@ -32,6 +28,13 @@
 					</button>
 				</div>
 			</template>
+			<div class="flex space-x-4 text-3xl">
+				<div>certification:</div>
+				<div class="text-green-800">{{ data.certification }}</div>
+			</div>
+			<div>{{ data.certification_is_public ? `${data.username} a rendu sa certification publique` : `${data.username}
+				n'a
+				pas rendu sa certification publique` }}</div>
 		</div>
 	</div>
 </template>
