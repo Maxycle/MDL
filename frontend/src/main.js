@@ -3,7 +3,7 @@ import router from './router.js'
 import App from './App.vue'
 import { createPinia } from 'pinia'
 import './assets/main.css'
-import { useSessionStore } from "@/stores/modules/sessionStore"
+import { useSessionStore } from "./stores/modules/sessionStore"
 import 'vuetify/styles'
 import '@mdi/font/css/materialdesignicons.css'
 import { createVuetify } from 'vuetify'
