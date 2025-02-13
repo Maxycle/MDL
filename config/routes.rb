@@ -32,7 +32,7 @@ Rails.application.routes.draw do
 		
     resources :answers, only: [:show, :update, :destroy]
     resources :scores
-    resources :users, only: [:index]
+    resources :users, only: [:index, :show]
 
     get "/questionnaire-params", to: 'questionnaire_params#index'
     put "/questionnaire-params", to: 'questionnaire_params#update'

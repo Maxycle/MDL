@@ -31,6 +31,20 @@ export const useScoreStore = defineStore({
 			} catch (error) {
 				console.error('Error fetching scores:', error.message);
 			}
+		},
+
+		async deleteScore(scoreId) {
+			const sessionStore = useSessionStore();
+			try {
+				await axios.delete(`/api/scores/${scoreId}`, {
+					headers: {
+						Authorization: `${sessionStore.getAuthToken}`
+					}
+				});
+				this.fetchScores(); // Just update the store's scores
+			} catch (error) {
+				console.error('Error deleting scores:', error.message);
+			}
 		}
 	}
 })

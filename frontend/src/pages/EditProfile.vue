@@ -31,15 +31,25 @@
 					</div>
 
 					<div>
+						<label for="certification_public" class="flex items-center gap-2">
+							<input v-model="isCertificationPublic" @focus="clearErrors" type="checkbox" id="certification_public"
+								name="certification_public">
+							Certification publique
+						</label>
+					</div>
+
+					<div>
 						<label for="password">New Password</label>
 
 						<div v-if="isHidden" class="password">
-							<input v-model="password" @focus="clearErrors" type="password" placeholder="your new password" name="password">
+							<input v-model="password" @focus="clearErrors" type="password" placeholder="your new password"
+								name="password">
 							<font-awesome-icon icon="fa-solid fa-eye" @click="toggleHidden" class="text-white" />
 						</div>
 
 						<div v-else class="password">
-							<input v-model="password" @focus="clearErrors" type="text" placeholder="your new password" name="password">
+							<input v-model="password" @focus="clearErrors" type="text" placeholder="your new password"
+								name="password">
 							<font-awesome-icon icon="fa-solid fa-eye-slash" @click="toggleHidden" class="text-white" />
 						</div>
 					</div>
@@ -48,13 +58,14 @@
 						<label for="password">Password confirmation</label>
 
 						<div v-if="isHidden" class="password">
-							<input v-model="passwordConfirmation" @focus="clearErrors" type="password" placeholder="confirm your new password"
-								name="password">
+							<input v-model="passwordConfirmation" @focus="clearErrors" type="password"
+								placeholder="confirm your new password" name="password">
 							<font-awesome-icon icon="fa-solid fa-eye" @click="toggleHidden" class="text-white" />
 						</div>
 
 						<div v-else class="password">
-							<input v-model="passwordConfirmation" type="text" @focus="clearErrors" placeholder="confirm your new password" name="password">
+							<input v-model="passwordConfirmation" type="text" @focus="clearErrors"
+								placeholder="confirm your new password" name="password">
 							<font-awesome-icon icon="fa-solid fa-eye-slash" @click="toggleHidden" class="text-white" />
 						</div>
 					</div>
@@ -63,12 +74,14 @@
 						<label for="password">Current password</label>
 
 						<div v-if="isHidden" class="password">
-							<input v-model="currentPassword" @focus="clearErrors" type="password" placeholder="your current password" name="password">
+							<input v-model="currentPassword" @focus="clearErrors" type="password" placeholder="your current password"
+								name="password">
 							<font-awesome-icon icon="fa-solid fa-eye" @click="toggleHidden" class="text-white" />
 						</div>
 
 						<div v-else class="password">
-							<input v-model="currentPassword" @focus="clearErrors" type="text" placeholder="your current password" name="password">
+							<input v-model="currentPassword" @focus="clearErrors" type="text" placeholder="your current password"
+								name="password">
 							<font-awesome-icon icon="fa-solid fa-eye-slash" @click="toggleHidden" class="text-white" />
 						</div>
 					</div>
@@ -95,12 +108,14 @@ const username = ref("")
 const firstname = ref("")
 const lastname = ref("")
 const isHidden = ref(true)
+const isCertificationPublic = ref(true)
 
 onMounted(() => {
 	email.value = sessionStore.getUserDetails.email
 	username.value = sessionStore.getUserDetails.username
 	firstname.value = sessionStore.getUserDetails.first_name
 	lastname.value = sessionStore.getUserDetails.last_name
+	isCertificationPublic.value = sessionStore.getUserDetails.certification_is_public
 })
 
 const update = async () => {
@@ -111,6 +126,7 @@ const update = async () => {
 		username: username.value,
 		first_name: firstname.value,
 		last_name: lastname.value,
+		certification_is_public: isCertificationPublic.value,
 		current_password: currentPassword.value
 	}
 
