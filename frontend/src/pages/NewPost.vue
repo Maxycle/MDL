@@ -49,9 +49,8 @@ const imageUploadHandler = (blobInfo, progress) => {
 			}
 		})
 			.then(response => {
-				// Append the auth token to the image URL
-				const imageUrl = `${response.data.location}?auth_token=${sessionStore.getAuthToken}`
-				console.log('Image URL with auth:', imageUrl)
+				const imageUrl = `${response.data.location}`
+				console.log('Image URL:', imageUrl)
 				resolve(imageUrl)
 			})
 			.catch(error => {
@@ -84,8 +83,9 @@ const editorConfig = {
 	paste_data_images: true,
 
 	// Remove the URL converter to prevent URL modification
-	convert_urls: false,
-
+	convert_urls: false,  // Empêche TinyMCE de modifier l'URL de l'image
+	relative_urls: false,  // S'assure que l'URL est absolue
+	remove_script_host: false, // Conserve l'hôte dans l'URL
 	// Modified image handling settings
 	file_picker_types: 'image',
 	file_picker_callback: (cb, value, meta) => {
@@ -96,7 +96,7 @@ const editorConfig = {
 		input.addEventListener('change', (e) => {
 			const file = e.target.files[0]
 			const reader = new FileReader()
-			
+
 			reader.addEventListener('load', () => {
 				const id = 'blobid' + (new Date()).getTime()
 				const blobCache = tinymce.activeEditor.editorUpload.blobCache
@@ -144,6 +144,6 @@ const createPost = async () => {
 
 // Clean up TinyMCE instance on component unmount
 onUnmounted(() => {
-  tinymce.remove()
+	tinymce.remove()
 })
 </script>
