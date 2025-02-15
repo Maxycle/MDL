@@ -44,7 +44,7 @@ class PostsController < ApplicationController
         title: @post.title,
         content: @post.content,
         content_html: @post.content_html,
-        images: @post.images.map { |img| rails_blob_url(img) }
+				images: @post.images.map { |img| rails_blob_path(img, disposition: "inline", only_path: true) }
       }, status: :created
     else
       render json: @post.errors, status: :unprocessable_entity
@@ -62,11 +62,10 @@ class PostsController < ApplicationController
 		)
 	
 		# Add content disposition inline and make URL public
-		url = rails_blob_url(blob)
+		url = rails_blob_url(blob, disposition: "inline")
 		
 		# Set headers to allow image display
-		response.headers['Access-Control-Allow-Origin'] = request.headers['origin']
-		response.headers['Access-Control-Allow-Credentials'] = 'true'
+		response.headers['Access-Control-Allow-Origin'] = '*'
 		
 		render json: {
 			location: url

@@ -35,6 +35,7 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 	config.active_storage.resolve_model_to_route = :rails_storage_redirect
+  config.active_storage.service_urls_expire_in = nil # Prevents expiring URLs
 
 	# Add these lines
 	config.action_dispatch.x_sendfile_header = nil
