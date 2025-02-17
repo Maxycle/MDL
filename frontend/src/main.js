@@ -28,7 +28,6 @@ const loadAuthToken = async () => {
 
 	if (authTokenExists) {
 		await useSessionStore(pinia).loginUserWithToken(authToken)
-		("authToken main2", authToken)
 	}
 }
 
