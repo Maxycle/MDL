@@ -36,7 +36,10 @@ Rails.application.configure do
   config.active_storage.service = :local
 	config.active_storage.resolve_model_to_route = :rails_storage_redirect
   config.active_storage.service_urls_expire_in = nil # Prevents expiring URLs
-
+  config.active_storage.service_url_options = {
+    host: "www.libertarien.net",
+    protocol: "https"
+  }
 	# Add these lines
 	config.action_dispatch.x_sendfile_header = nil
 	config.public_file_server.enabled = true
