@@ -113,7 +113,7 @@ const signIn = async () => {
 	const params = { email: signInEmail.value, password: signInPassword.value, }
 
 	const isSignedIn = await sessionStore.loginUser(params)
-	console.log('signé in !!', isSignedIn)
+	('signé in !!', isSignedIn)
 	if (isSignedIn) {
 		sessionStore.clearErrors()
 		router.push({ name: "Home" })

@@ -62,7 +62,7 @@ const questionSelected = ref({});
 const questionRefs = ref([]);
 
 const selectQuestion = (question) => {
-	console.log('selectQuestion', question)
+	('selectQuestion', question)
 	questionSelected.value = question;
 }
 

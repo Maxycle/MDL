@@ -93,7 +93,7 @@ const updateParams = async () => {
 				Authorization: `${sessionStore.getAuthToken}`
 			}
 		});
-		console.log('Params updated:', response);
+		('Params updated:', response);
 		if (response.status === 200) {
 			router.push({ name: "Home" })
 		}

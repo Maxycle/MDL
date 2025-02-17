@@ -42,7 +42,7 @@ const uploadFile = async () => {
 				// Authorization: `Bearer ${sessionStore.getAuthToken()}` // Ensure this is correct for your app
 			},
 		});
-		console.log('XLSX upload done', response);
+		('XLSX upload done', response);
 		alert(response.data.message);
 	} catch (error) {
 		console.error('Upload error:', error.response?.data || error.message);
