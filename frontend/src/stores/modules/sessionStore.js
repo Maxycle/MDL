@@ -75,9 +75,6 @@ export const useSessionStore = defineStore({
 		},
 
 		async confirmEmail(token) {
-			('BACKEND_URL', BACKEND_URL)
-			('TESTENV', TESTENV)
-
 			try {
 				const res = await fetch(`${BACKEND_URL}/confirmationFromVue?confirmation_token=${token}`, {
 					method: "GET",
@@ -118,11 +115,8 @@ export const useSessionStore = defineStore({
 					body: JSON.stringify({ user: params }),
 					credentials: 'include'
 				})
-				('res', res)
 
 				if (!res.ok) {
-					('!res.ok', res);
-
 					let errorMessage = "An error occurred"; // Default message
 
 					// Check if response is JSON
@@ -145,8 +139,6 @@ export const useSessionStore = defineStore({
 
 					// Set error message for display
 					this.errors = [errorMessage];
-					('this.errors', this.errors);
-					(`An error occurred 1: ${errorMessage}`);
 					return false;
 				}
 
@@ -170,11 +162,9 @@ export const useSessionStore = defineStore({
 				})
 				if (!res.ok) {
 					const error = await res.json()
-					(`An error occured while logging in: ${error.message}`) // eslint-disable-line no-console
 					this.reset()
 				} else {
 					const data = await res.json()
-					("dataaa logged in w token", data)
 					this.user = data.user
 					this.authToken = localStorage.getItem("authToken")
 				}
@@ -199,7 +189,6 @@ export const useSessionStore = defineStore({
 					const error = await res.json()
 
 					console.log(`An error occured while logging out: ${error.message}`) // eslint-disable-line no-console
-					('res', res)
 				} else {
 					this.reset()
 				}

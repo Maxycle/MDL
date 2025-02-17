@@ -68,7 +68,6 @@ const answers = computed(() => {
 })
 
 const onPageChange = (event) => {
-	('Page changed:', event)
 	page.value = event
 }
 

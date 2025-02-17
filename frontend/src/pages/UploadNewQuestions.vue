@@ -40,7 +40,6 @@ const downloadQuestions = async () => {
 			},
 			responseType: 'blob'
 		})
-		('ze Excdel !!', response.data)
 
 		// Create a new Blob object using the response data
 		const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })

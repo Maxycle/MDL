@@ -27,7 +27,6 @@ export const useScoreStore = defineStore({
 				const scores = response.data;
 				this.scores.droitNaturel = scores.find(obj => obj.domain === 'DN') || {}
 				this.scores.ecoleAutrichienne = scores.find(obj => obj.domain === 'EA') || {}
-				('fetch scores in store', response.data)
 			} catch (error) {
 				console.error('Error fetching scores:', error.message);
 			}

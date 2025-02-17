@@ -18,7 +18,6 @@ export const usePostStore = defineStore({
 			try {
 				const response = await axios.get(`/api/posts`
 				)
-				('liste de posts', response)
 				this.posts = response.data
 			} catch (error) {
 				console.error('Error fetching post:', error)

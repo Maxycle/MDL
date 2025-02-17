@@ -139,7 +139,6 @@ const createQuestion = async () => {
 			}
 		);
 		if (response.status === 201) {
-			("Question and answers in the database")
 			answers.value = Array(answerCount.value).fill('')
 			answerValues.value = Array(answerCount.value).fill('')
 			question.value = ''

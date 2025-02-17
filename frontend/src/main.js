@@ -24,8 +24,6 @@ app.use(pinia)
 // Load JWT from local storage on refresh
 const loadAuthToken = async () => {
 	const authToken = localStorage.getItem("authToken")
-	("authToken main1", authToken)
-
 	const authTokenExists = authToken !== "undefined" && authToken !== null
 
 	if (authTokenExists) {
