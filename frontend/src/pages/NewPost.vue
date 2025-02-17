@@ -50,7 +50,6 @@ const imageUploadHandler = (blobInfo, progress) => {
 		})
 			.then(response => {
 				const imageUrl = `${response.data.location}`
-				console.log('Image URL:', imageUrl)
 				resolve(imageUrl)
 			})
 			.catch(error => {
@@ -134,7 +133,6 @@ const createPost = async () => {
 			}
 		})
 
-		console.log('Post created successfully', response.data)
 		router.push('/')
 	} catch (error) {
 		console.error('Error creating post', error)

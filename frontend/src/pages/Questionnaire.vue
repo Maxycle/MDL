@@ -117,14 +117,11 @@ const showNextAvailability = (domain, button) => {
 }
 
 const isDisabled = (domain, button) => {
-	console.log('isDisabledddddddddddddddd ?', sessionStore.getUserDetails.admin ? false : isDisabledByTiming(domain) || (buttonTextAndApiUrl(domain, button).text !== 'Non validé'))
-
 	return sessionStore.getUserDetails.admin ? false : isDisabledByTiming(domain) || (buttonTextAndApiUrl(domain, button).text !== 'Non validé')
 }
 
 const isDisabledByTiming = (domain) => {
 	const score = selectScore(domain)
-	console.log('ze score', score)
 	if (score && score.step) {
 		const lastTryDate = new Date(score.try_date)
 		const isMoreThanCycleLength = (currentDate - lastTryDate) > paramsStore.getParams.cycleLength * 24 * 60 * 60 * 1000;
@@ -213,11 +210,9 @@ const updateScoreAtStart = async (score) => {
 				}
 			});
 		scoreBeingUpdated.value = response.data
-		console.log('response', response)
 	} catch (error) {
 		console.error('Error creating score:', error.message);
 	}
-	console.log('scoreBeingUpdated.value', scoreBeingUpdated.value)
 }
 
 const updateScoreAtFinish = async (score) => {
@@ -265,10 +260,7 @@ const closeModal = (event) => {
 	}
 
 	try {
-		console.log('closeModal');
 		isModalVisible.value = false;
-
-		console.log('Modal visibility status after closing:', isModalVisible.value);
 	} catch (error) {
 		console.error('Error in closeModal:', error.message);
 	}
@@ -276,7 +268,6 @@ const closeModal = (event) => {
 
 const openModal = (domain, button) => {
 	if (isModalVisible.value) {
-		console.log('Modal is already open, ignoring openModal call');
 		return;
 	}
 
@@ -284,8 +275,6 @@ const openModal = (domain, button) => {
 		selectedDomain.value = domain;
 		selectedButton.value = button;
 		isModalVisible.value = true;
-
-		console.log('Modal visibility status after opening:', isModalVisible.value);
 	} catch (error) {
 		console.error('Error in openModal:', error.message);
 	}

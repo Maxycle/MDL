@@ -21,10 +21,8 @@ const sessionStore = useSessionStore()
 const confirmEmail = async () => {
 	const params = new URLSearchParams(window.location.search)
 	const confirmationToken = params.get('confirmation_token')
-	console.log('Sending confirmation token:', confirmationToken);
 	try {
 		isConfirmed.value = await sessionStore.confirmEmail(confirmationToken)
-		console.log('isConfirmed.value:', isConfirmed.value);
 		
 		if (isConfirmed.value) {
 			message.value = 'Email confirmé, vous pouvez vous connecter.'

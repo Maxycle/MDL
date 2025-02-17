@@ -62,7 +62,6 @@ export const useAnswerStore = defineStore({
 			this.averageValues = {};
 			for (let level in averages) {
 				const { sum, count } = averages[level];
-				console.log('sum =>', sum, 'count=>', count)
 				this.averageValues[level] = count > 0 ? sum / count : undefined;
 			}
 		}

@@ -60,7 +60,6 @@ onMounted(() => {
 });
 
 const selectUser = (user) => {
-	console.log('selectUser', user)
 	userSelected.value = user;
 }
 
@@ -113,7 +112,6 @@ const downloadUsers = async () => {
 			},
 			responseType: 'blob'
 		})
-		console.log('ze Excdel !!', response.data)
 
 		// Create a new Blob object using the response data
 		const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })

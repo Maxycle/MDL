@@ -8,9 +8,6 @@ export default defineConfig(({ mode }) => {
   // Load env variables based on mode
   const env = loadEnv(mode, process.cwd(), '');
 
-  console.log('VITE_BACKEND_URL:', env.VITE_BACKEND_URL);
-	console.log('VITE_TEST_VAR:', env.VITE_TEST_VAR);
-
   return {
     plugins: [vue()],
     build: {
