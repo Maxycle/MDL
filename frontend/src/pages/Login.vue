@@ -1,98 +1,155 @@
 <template>
 	<div class="flex flex-col items-center bg-gradient-to-b from-black to-blue-900 w-full min-h-screen pt-40">
-		<div v-if="isRegistered" class="bg-green-500 border-2 border-red-500 rounded-lg p-4">
-			Allez vérifier votre email pour confirmez votre inscription
-		</div>
-		<div v-else>
-			<div id="user-form" class="">
-				<h2>Mouvement des Libertariens</h2>
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-					<!-- eslint-disable-next-line max-len -->
-					<path fill="#42b883" fill-opacity="1"
-						d="M0,128L40,133.3C80,139,160,149,240,149.3C320,149,400,139,480,154.7C560,171,640,213,720,197.3C800,181,880,107,960,112C1040,117,1120,203,1200,229.3C1280,256,1360,224,1400,208L1440,192L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z" />
-				</svg>
+		<div class="w-[450px] text-center">
+			<h2 class="text-2xl bg-[#42b883] rounded-t-lg px-4 pt-4 shadow-md text-orange-700 shadow-black/50">Mouvement des
+				Libertariens
+			</h2>
 
+			<!-- Keep your SVG as is since it's a decorative element -->
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+				<!-- eslint-disable-next-line max-len -->
+				<path fill="#42b883" fill-opacity="1"
+					d="M0,128L40,133.3C80,139,160,149,240,149.3C320,149,400,139,480,154.7C560,171,640,213,720,197.3C800,181,880,107,960,112C1040,117,1120,203,1200,229.3C1280,256,1360,224,1400,208L1440,192L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z" />
+			</svg>
 
+			<div v-if="isRegistered">
+				<div class="border-2 border-red-500 rounded-lg bg-green-400 p-4 mb-4">
+					Votre compte a été créé avec gros succès. Attendez maintenant qu'il soit validé par un admin peu scrupuleux.
+					Allez manger un kebab ou faire caca en attendant.
+				</div>
+				<div class="flex justify-center space-x-4">
+					<button class="border-2 border-red-500 rounded-lg bg-blue-400 p-4" @click="router.push('/HomePublic')">Acceuil
+					</button>
+					<button class="border-2 border-red-500 rounded-lg bg-blue-400 p-4" @click="router.push('/')">Blog</button>
+				</div>
+			</div>
 
-				<div v-if="signingIn" class="sign-in">
-					<form @submit.prevent="signIn">
-						<div>
-							<label for="email">Email</label>
-							<input v-model="signInEmail" type="text" placeholder="Please enter your email" name="email">
-						</div>
-
-						<div>
-							<label for="password">Password</label>
-							<input v-model="signInPassword" type="password" placeholder="Please enter your password" name="password">
-						</div>
-
-						<button>Sign in</button>
-					</form>
-
-					<div v-if="sessionStore.getErrors.length" class="text-red-600">
-						<li v-for="(error, index) in sessionStore.getErrors" :key="index" class="text-red-600">
-							{{ error }}
-						</li>
+			<div v-else-if="signingIn">
+				<form @submit.prevent="signIn"
+					class="bg-[#242d36] text-white rounded-b-lg shadow-lg flex flex-col overflow-hidden">
+					<div class="flex flex-col gap-1.5 py-2.5 text-left">
+						<label for="email" class="text-sm text-[#e65edfaa] mx-4">Email</label>
+						<input v-model="signInEmail" type="text" placeholder="Please enter your email" name="email"
+							class="bg-transparent border-b border-transparent mx-4 py-2 focus:border-[#42b883aa] focus:outline-none transition-colors duration-300">
 					</div>
 
-					<p class="text-green-200">No account ? <span @click="signingIn = false">Sign up</span></p>
-				</div>
-
-				<div v-else class="sign-up">
-					<form @submit.prevent="signUp">
-						<div>
-							<label for="username">Username</label>
-							<input v-model="username" type="text" placeholder="Please choose your username" name="username">
-						</div>
-
-						<div>
-							<label for="firstname">first name</label>
-							<input v-model="firstname" type="text" placeholder="Please choose your firstname" name="firstname">
-						</div>
-
-						<div>
-							<label for="lastname">last name</label>
-							<input v-model="lastname" type="text" placeholder="Please choose your lastname" name="lastname">
-						</div>
-
-						<div>
-							<label for="email">Email</label>
-							<input v-model="signUpEmail" type="text" placeholder="Please enter your email" name="email">
-						</div>
-
-						<div>
-							<label for="password">Password</label>
-
-							<div v-if="isHidden" class="password">
-								<input v-model="signUpPassword" type="password" placeholder="Please enter your password"
-									name="password">
-								<FontAwesomeIcon icon="fa-solid fa-eye" @click="toggleHidden" />
-							</div>
-
-							<div v-else class="password">
-								<input v-model="signUpPassword" type="text" placeholder="Please enter your password" name="password">
-								<FontAwesomeIcon icon="fa-solid fa-eye-slash" @click="toggleHidden" />
-							</div>
-						</div>
-
-						<button>Sign up</button>
-					</form>
-
-					<div v-if="sessionStore.getErrors.length" class="text-red-600">
-						<li v-for="(error, index) in sessionStore.getErrors" :key="index" class="text-red-600">
-							{{ error }}
-						</li>
+					<div class="flex flex-col gap-1.5 py-2.5 text-left">
+						<label for="password" class="text-sm text-[#e65edfaa] mx-4">Password</label>
+						<input v-model="signInPassword" type="password" placeholder="Please enter your password" name="password"
+							class="bg-transparent border-b border-transparent mx-4 py-2 focus:border-[#42b883aa] focus:outline-none transition-colors duration-300">
 					</div>
 
-					<p class="text-green-200">Already registered ? <span @click="signingIn = true">Sign in</span></p>
+					<button
+						class="text-orange-700 bg-gradient-to-br from-[#229968] to-[#26634c] font-semibold py-2.5 text-shadow hover:brightness-110 transition-all duration-300">
+						Valider
+					</button>
+				</form>
+
+				<div v-if="sessionStore.getErrors.length" class="text-red-600">
+					<li v-for="(error, index) in sessionStore.getErrors" :key="index">{{ error }}</li>
 				</div>
+
+				<p class="text-green-200 text-sm mt-5">
+					No account ? <span
+						class="text-[#fac208aa] hover:text-[#42b883] cursor-pointer relative z-10 transition-colors duration-300"
+						@click="signingIn = false">Sign up</span>
+				</p>
+			</div>
+
+			<div v-else>
+				<form @submit.prevent="signUp"
+					class="bg-[#242d36] text-white rounded-b-lg shadow-lg flex flex-col overflow-hidden">
+					<div class="flex flex-col gap-1.5 py-2.5 text-left">
+						<label for="username" class="text-sm text-[#e65edfaa] mx-4">Identifiant</label>
+						<input v-model="username" type="text" placeholder="Votre identifiant..." name="username"
+							class="bg-transparent border-b border-transparent mx-4 py-2 focus:border-[#fa7ffaaa] focus:outline-none transition-colors duration-300">
+					</div>
+
+					<div class="flex flex-col gap-1.5 py-2.5 text-left">
+						<label for="firstname" class="text-sm text-[#e65edfaa] mx-4">Prénom</label>
+						<input v-model="firstname" type="text" placeholder="Votre prénom..." name="firstname"
+							class="bg-transparent border-b border-transparent mx-4 py-2 focus:border-[#42b883aa] focus:outline-none transition-colors duration-300">
+					</div>
+
+					<div class="flex flex-col gap-1.5 py-2.5 text-left">
+						<label for="lastname" class="text-sm text-[#e65edfaa] mx-4">Nom</label>
+						<input v-model="lastname" type="text" placeholder="Votre nom..." name="lastname"
+							class="bg-transparent border-b border-transparent mx-4 py-2 focus:border-[#42b883aa] focus:outline-none transition-colors duration-300">
+					</div>
+
+					<div class="flex flex-col gap-1.5 py-2.5 text-left">
+						<label for="signUpEmail" class="text-sm text-[#e65edfaa] mx-4">Email</label>
+						<input v-model="signUpEmail" type="text" placeholder="Votre email..." name="signUpEmail"
+							class="bg-transparent border-b border-transparent mx-4 py-2 focus:border-[#42b883aa] focus:outline-none transition-colors duration-300">
+					</div>
+
+					<!-- Password field with eye icon -->
+					<div class="flex flex-col gap-1.5 py-2.5 text-left">
+						<label for="password" class="text-sm text-[#e65edfaa] mx-4">Mot de passe</label>
+						<div class="flex flex-row items-center">
+							<input v-model="signUpPassword" :type="isHidden ? 'password' : 'text'" placeholder="Votre mot de passe..."
+								name="password"
+								class="bg-transparent border-b border-transparent flex-grow py-2  ml-4 focus:border-[#42b883aa] focus:outline-none transition-colors duration-300">
+							<FontAwesomeIcon :icon="isHidden ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'" @click="toggleHidden"
+								class="text-xs cursor-pointer text-white pr-2" />
+							<!-- <div class="bg-red-500 p-2">kloug</div> -->
+						</div>
+					</div>
+
+					<!-- Textarea for intro -->
+					<div class="flex flex-col gap-1.5 py-2.5 text-left">
+						<label for="intro" class="text-sm text-[#e65edfaa] mx-4">Intro</label>
+						<textarea v-model="intro" name="intro" placeholder="Expliquez-nous ce que vous foutez là..."
+							class="bg-transparent border-b border-transparent mx-4 py-2 min-h-[100px] focus:border-[#42b883aa] focus:outline-none transition-colors duration-300 resize-y"></textarea>
+					</div>
+
+					<div class="flex flex-col gap-1.5 py-2.5 text-left">
+						<label for="selected_admin" class="text-sm text-[#e65edfaa] mx-4">
+							Qui vous a parlé de libertarien.net ?
+						</label>
+						<div class="relative mx-4">
+							<select v-model="selectedAdmin" name="selected_admin" class="w-full bg-transparent border-b border-transparent py-2 pr-8 
+             text-[#e65edfaa] appearance-none cursor-pointer
+             focus:border-[#42b883aa] focus:outline-none 
+             transition-colors duration-300">
+								<option value="nobody" class="text-gray-500">Personne</option>
+								<option v-for="admin in admins" :key="admin.id" :value="admin.id" class="text-black">
+									{{ admin.first_name }} {{ admin.last_name }} ({{ admin.username }})
+								</option>
+							</select>
+							<!-- Down arrow indicator -->
+							<div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-[#e65edfaa]">
+								<svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+									<path
+										d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+								</svg>
+							</div>
+						</div>
+					</div>
+
+					<button
+						class="text-orange-700 bg-gradient-to-br from-[#229968] to-[#26634c] font-semibold py-2.5 text-shadow hover:brightness-110 transition-all duration-300">
+						Valider
+					</button>
+				</form>
+
+				<div v-if="sessionStore.getErrors.length" class="text-red-600">
+					<li v-for="(error, index) in sessionStore.getErrors" :key="index">{{ error }}</li>
+				</div>
+
+				<p class="text-green-200 text-sm mt-5">
+					Already registered ? <span
+						class="text-[#fac208aa] hover:text-[#42b883] cursor-pointer relative z-10 transition-colors duration-300"
+						@click="signingIn = true">Sign in</span>
+				</p>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
-import { ref } from "vue"
+import axios from 'axios'
+import { ref, watch } from "vue"
 import { useRouter } from "vue-router"
 import { useSessionStore } from "@/stores/modules/sessionStore"
 
@@ -108,6 +165,26 @@ const lastname = ref("")
 const signingIn = ref(true)
 const isHidden = ref(true)
 const isRegistered = ref(false)
+const intro = ref("")
+const selectedAdmin = ref("")
+const admins = ref([])
+
+watch(signingIn, (newValue) => {
+	if (!newValue) {  // When signingIn becomes false (switching to signup form)
+		fetchAdmins()
+	}
+})
+
+const fetchAdmins = async () => {
+	try {
+		const response = await axios.get('/api/users/index_admin', {
+			withCredentials: false
+		})
+		admins.value = response.data
+	} catch (error) {
+		console.error('Error fetching admin users:', error)
+	}
+}
 
 const signIn = async () => {
 	const params = { email: signInEmail.value, password: signInPassword.value, }
@@ -119,9 +196,16 @@ const signIn = async () => {
 	}
 }
 
-// const signUp = async () => {
 const signUp = async () => {
-	const params = { email: signUpEmail.value, password: signUpPassword.value, username: username.value, first_name: firstname.value, last_name: lastname.value }
+	const params = {
+		email: signUpEmail.value,
+		password: signUpPassword.value,
+		username: username.value,
+		first_name: firstname.value,
+		last_name: lastname.value,
+		intro: intro.value,  // Changed from bio to intro to match your template
+		selected_admin_id: selectedAdmin.value
+	}
 
 	isRegistered.value = await sessionStore.registerUser(params)
 }
@@ -130,120 +214,3 @@ const toggleHidden = () => {
 	isHidden.value = !isHidden.value
 }
 </script>
-
-<style lang="scss" scoped>
-#user-form {
-	margin: 0 auto;
-	text-align: center;
-	width: 250px;
-}
-
-form {
-	background-color: #242d36;
-	border-radius: 0 0 10px 10px;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-	display: flex;
-	flex-direction: column;
-	overflow: hidden;
-
-	button,
-	input {
-		color: inherit;
-	}
-
-	button {
-		background-image: linear-gradient(135deg, #229968, #26634c);
-		border: none;
-		cursor: pointer;
-		font-weight: 600;
-		max-height: 35px;
-		padding: 10px;
-		text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-		transition: all 0.3s ease;
-
-		&:hover {
-			filter: brightness(120%);
-		}
-	}
-
-	div {
-		display: flex;
-		flex-direction: column;
-		gap: 5px;
-		padding: 10px 0;
-		text-align: left;
-	}
-
-	input,
-	label {
-		background-color: transparent;
-		border: none;
-		border-bottom: 1px solid transparent;
-		margin: 0 1rem;
-		padding: 0.5rem 0;
-		transition: border-bottom 0.3s ease;
-		color: #e65edfaa;
-
-		&:focus {
-			border-bottom: 1px solid #42b883aa;
-			outline: none;
-		}
-
-		&:-webkit-autofill,
-		&:-webkit-autofill:focus {
-			transition: background-color 600000s 0s, color 600000s 0s;
-		}
-	}
-
-	label {
-		font-size: 0.8rem;
-	}
-}
-
-h2 {
-	background-color: #42b883;
-	border-radius: 10px 10px 0 0;
-	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5), 0px 0px 5px rgba(0, 0, 0, 0.5);
-	padding: 15px;
-	text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-}
-
-p {
-	font-size: 0.8rem;
-	margin-top: 20px;
-}
-
-span {
-	color: #fac208aa;
-	cursor: pointer;
-	position: relative;
-	transition: color 0.3s ease;
-	z-index: 10;
-
-	&:hover {
-		color: lighten(#42b883, 10%);
-	}
-}
-
-svg {
-	background-color: #242d36;
-	margin: -20px 0 -20px;
-}
-
-.password {
-	align-items: center;
-	flex-direction: row;
-	justify-content: space-between;
-	margin: 0 1rem;
-
-	input {
-		flex-grow: 1;
-		margin: 0;
-	}
-}
-
-.svg-inline--fa {
-	cursor: pointer;
-	font-size: 0.8rem;
-}
-</style>
