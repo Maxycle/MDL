@@ -43,7 +43,7 @@ export const useSessionStore = defineStore({
 
 		isLoggedIn() {
 			const loggedOut = this.authToken === null || this.authToken === JSON.stringify(null)
-			return !loggedOut
+			return !loggedOut && this.user.confirmed_by_admin_id !== null
 		}
 	},
 
@@ -73,31 +73,6 @@ export const useSessionStore = defineStore({
 				return false
 			}
 		},
-
-		// async confirmEmail(token) {
-		// 	try {
-		// 		const res = await fetch(`${BACKEND_URL}/confirmationFromVue?confirmation_token=${token}`, {
-		// 			method: "GET",
-		// 			credentials: 'include'
-		// 		})
-
-		// 		if (!res.ok) {
-		// 			const error = await res.json()
-		// 			this.errors = error.errors
-		// 			console.log(`An error occurred during confirmation: ${error.message}`)
-		// 			return false
-		// 		}
-
-		// 		const data = await res.json()
-		// 		// You might want to automatically log the user in here, or just update the status
-		// 		this.registrationStatus = 'confirmed'
-
-		// 		return true
-		// 	} catch (error) {
-		// 		console.log(`An error occurred during confirmation: ${error}`)
-		// 		return false
-		// 	}
-		// },
 
 		loginUser(params) {
 			return this.handleUserForm(`${BACKEND_URL}/login`, params, "login")

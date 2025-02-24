@@ -23,6 +23,9 @@
 					<button class="border-2 border-red-500 rounded-lg bg-blue-400 p-4" @click="router.push('/')">Blog</button>
 				</div>
 			</div>
+			<div v-if="!accountConfirmed" class="border-2 border-red-500 rounded-lg bg-green-400 p-4 mb-4">
+				Votre compte n'a pas encore été validé.
+			</div>
 
 			<div v-else-if="signingIn">
 				<form @submit.prevent="signIn"
@@ -104,26 +107,8 @@
 					</div>
 
 					<div class="flex flex-col gap-1.5 py-2.5 text-left">
-						<label for="selected_admin" class="text-sm text-[#e65edfaa] mx-4">
-							Qui vous a parlé de libertarien.net ?
-						</label>
 						<div class="relative mx-4">
-							<select v-model="selectedAdmin" name="selected_admin" class="w-full bg-transparent border-b border-transparent py-2 pr-8 
-             text-[#e65edfaa] appearance-none cursor-pointer
-             focus:border-[#42b883aa] focus:outline-none 
-             transition-colors duration-300">
-								<option value="nobody" class="text-gray-500">Personne</option>
-								<option v-for="admin in admins" :key="admin.id" :value="admin.id" class="text-black">
-									{{ admin.first_name }} {{ admin.last_name }} ({{ admin.username }})
-								</option>
-							</select>
-							<!-- Down arrow indicator -->
-							<div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-[#e65edfaa]">
-								<svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-									<path
-										d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-								</svg>
-							</div>
+							<AdminSelect v-model="selectedAdmin" :admins="admins" />
 						</div>
 					</div>
 
@@ -152,6 +137,7 @@ import axios from 'axios'
 import { ref, watch } from "vue"
 import { useRouter } from "vue-router"
 import { useSessionStore } from "@/stores/modules/sessionStore"
+import AdminSelect from '@/components/AdminSelect.vue'
 
 const router = useRouter()
 const sessionStore = useSessionStore()
@@ -168,6 +154,7 @@ const isRegistered = ref(false)
 const intro = ref("")
 const selectedAdmin = ref("")
 const admins = ref([])
+const accountConfirmed = ref(true)
 
 watch(signingIn, (newValue) => {
 	if (!newValue) {  // When signingIn becomes false (switching to signup form)
@@ -190,7 +177,8 @@ const signIn = async () => {
 	const params = { email: signInEmail.value, password: signInPassword.value, }
 
 	const isSignedIn = await sessionStore.loginUser(params)
-	if (isSignedIn) {
+	accountConfirmed.value = sessionStore.getUserDetails.confirmed_by_admin_id !== null
+	if (isSignedIn && accountConfirmed.value) {
 		sessionStore.clearErrors()
 		router.push({ name: "Home" })
 	}
