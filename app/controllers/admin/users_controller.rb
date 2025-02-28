@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module Api
+# module Api
   module Admin
     class UsersController < ApplicationController
       before_action :authenticate_user!  # Ensure admin is logged in
@@ -12,7 +12,7 @@ module Api
           return render json: { error: "User not found" }, status: :not_found
         end
 
-        if user.confirmed_at.present?
+        if user.confirmed_by_admin_id.present?
           return render json: { error: "User is already confirmed" }, status: :unprocessable_entity
         end
 
@@ -30,4 +30,4 @@ module Api
       end
     end
   end
-end
+# end

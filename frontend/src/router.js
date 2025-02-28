@@ -13,6 +13,7 @@ import EditProfile from '@/pages/EditProfile.vue'
 import NewPost from '@/pages/NewPost.vue'
 import ShowPostsIndex from '@/pages/ShowPostsIndex.vue'
 import HomePublic from '@/pages/HomePublic.vue'
+import UsersResults from '@/pages/UsersResults.vue'
 import { useSessionStore } from '@/stores/modules/sessionStore'
 
 const routes = [
@@ -24,7 +25,7 @@ const routes = [
     meta: { requiresAuth: false } 
   },
 	{ 
-    path: '/HomePublic', 
+    path: '/', 
     name: 'HomePublic', 
     component: HomePublic, 
     meta: { requiresAuth: false } 
@@ -41,7 +42,7 @@ const routes = [
     component: EmailConfirmation 
   },
   { 
-    path: '/', 
+    path: '/Blog', 
     name: 'Blog', 
     component: ShowPostsIndex, 
     meta: { requiresAuth: false } 
@@ -58,6 +59,12 @@ const routes = [
     path: '/edit-profile', 
     name: 'EditProfile', 
     component: EditProfile, 
+    meta: { requiresAuth: true } 
+  },
+	{ 
+    path: '/users-results', 
+    name: 'UsersResults', 
+    component: UsersResults, 
     meta: { requiresAuth: true } 
   },
 
