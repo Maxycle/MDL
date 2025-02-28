@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_11_094143) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_19_040047) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -118,16 +118,15 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_11_094143) do
     t.string "username"
     t.string "jti", null: false
     t.boolean "admin", default: false
-    t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
-    t.string "unconfirmed_email"
     t.boolean "certification_is_public", default: true
     t.string "certification", default: "not certified"
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.integer "confirmed_by_admin_id"
+    t.text "intro"
+    t.bigint "selected_admin_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["selected_admin_id"], name: "index_users_on_selected_admin_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -135,4 +134,5 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_11_094143) do
   add_foreign_key "answers", "questions"
   add_foreign_key "posts", "users"
   add_foreign_key "scores", "users"
+  add_foreign_key "users", "users", column: "selected_admin_id"
 end

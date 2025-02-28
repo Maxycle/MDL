@@ -8,44 +8,137 @@ import QuestionnaireParams from '@/pages/QuestionnaireParams.vue'
 import UploadNewQuestions from '@/pages/UploadNewQuestions.vue'
 import EmailConfirmation from '@/pages/EmailConfirmation.vue'
 import UsersScores from '@/pages/UsersScores.vue'
+import UnconfirmedUsers from '@/pages/UnconfirmedUsers.vue'
 import EditProfile from '@/pages/EditProfile.vue'
 import NewPost from '@/pages/NewPost.vue'
 import ShowPostsIndex from '@/pages/ShowPostsIndex.vue'
+import HomePublic from '@/pages/HomePublic.vue'
+import UsersResults from '@/pages/UsersResults.vue'
 import { useSessionStore } from '@/stores/modules/sessionStore'
 
 const routes = [
-	{ path: '/Login', name: 'Login', component: Login, meta: { requiresAuth: false } },
-	{ path: '/home-questionnaire', name: 'Home', component: Home, meta: { requiresAuth: false } },
-	{ path: '/questionnaire', name: 'Questionnaire', component: Questionnaire, meta: { requiresAuth: false } },
-	{ path: '/nouvelle-question', name: 'NewQuestion', component: NewQuestion, meta: { requiresAuth: false } },
-	{ path: '/modifier-question', name: 'ModifyQuestion', component: ModifyQuestion, meta: { requiresAuth: false } },
-	{ path: '/questionnaire-paramètres', name: 'QuestionnaireParams', component: QuestionnaireParams, meta: { requiresAuth: false } },
-	{ path: '/utilisateurs', name: 'UsersScores', component: UsersScores, meta: { requiresAuth: false } },
-	{ path: '/upload-nouvelles-questions', name: 'UploadNewQuestions', component: UploadNewQuestions, meta: { requiresAuth: false } },
-	{ path: '/edit-profile', name: 'EditProfile', component: EditProfile, meta: { requiresAuth: false } },
-	{ path: '/confirmation', name: 'EmailConfirmation', component: EmailConfirmation },
-	{ path: '/new-post', name: 'NewPost', component: NewPost },
-	{ path: '/', name: 'Blog', component: ShowPostsIndex, meta: { requiresAuth: false } }
+  // Public routes
+  { 
+    path: '/Login', 
+    name: 'Login', 
+    component: Login, 
+    meta: { requiresAuth: false } 
+  },
+	{ 
+    path: '/', 
+    name: 'HomePublic', 
+    component: HomePublic, 
+    meta: { requiresAuth: false } 
+  },
+  { 
+    path: '/questionnaire', 
+    name: 'Questionnaire', 
+    component: Questionnaire, 
+    meta: { requiresAuth: false } 
+  },
+  { 
+    path: '/confirmation', 
+    name: 'EmailConfirmation', 
+    component: EmailConfirmation 
+  },
+  { 
+    path: '/Blog', 
+    name: 'Blog', 
+    component: ShowPostsIndex, 
+    meta: { requiresAuth: false } 
+  },
+  
+  // Authenticated user routes
+  { 
+    path: '/home-questionnaire', 
+    name: 'Home', 
+    component: Home, 
+    meta: { requiresAuth: true } 
+  },
+  { 
+    path: '/edit-profile', 
+    name: 'EditProfile', 
+    component: EditProfile, 
+    meta: { requiresAuth: true } 
+  },
+	{ 
+    path: '/users-results', 
+    name: 'UsersResults', 
+    component: UsersResults, 
+    meta: { requiresAuth: true } 
+  },
+
+	// Admin-only routes
+  { 
+    path: '/new-post', 
+    name: 'NewPost', 
+    component: NewPost, 
+    meta: { requiresAuth: true, requiresAdmin: true } 
+  },
+
+  { 
+    path: '/nouvelle-question', 
+    name: 'NewQuestion', 
+    component: NewQuestion, 
+    meta: { requiresAuth: true, requiresAdmin: true } 
+  },
+  { 
+    path: '/modifier-question', 
+    name: 'ModifyQuestion', 
+    component: ModifyQuestion, 
+    meta: { requiresAuth: true, requiresAdmin: true } 
+  },
+  { 
+    path: '/questionnaire-paramètres', 
+    name: 'QuestionnaireParams', 
+    component: QuestionnaireParams, 
+    meta: { requiresAuth: true, requiresAdmin: true } 
+  },
+  { 
+    path: '/utilisateurs', 
+    name: 'UsersScores', 
+    component: UsersScores, 
+    meta: { requiresAuth: true, requiresAdmin: true } 
+  },
+  { 
+    path: '/utilisateurs-non-confirmes', 
+    name: 'UnconfirmedUsers', 
+    component: UnconfirmedUsers, 
+    meta: { requiresAuth: true, requiresAdmin: true } 
+  },
+  { 
+    path: '/upload-nouvelles-questions', 
+    name: 'UploadNewQuestions', 
+    component: UploadNewQuestions, 
+    meta: { requiresAuth: true, requiresAdmin: true } 
+  }
 ]
 
 const router = createRouter({
-	history: createWebHistory(),
-	routes
+  history: createWebHistory(),
+  routes
 })
 
 router.beforeEach((to, from, next) => {
-	const store = useSessionStore();
+  const store = useSessionStore();
+  const isAuthenticated = store.getAuthToken !== null;
+  const isAdmin = store.isAdmin;
 
-	const isAuthenticated = store.getAuthToken !== null/* Check if user is authenticated (e.g., token exists) */;
+  // Check if route requires authentication
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/Login');
+    return;
+  }
 
-	if (to.meta.requiresAuth && !isAuthenticated) {
-		// Redirect to login page if authentication is required and user is not authenticated
-		next('/');
-	} else {
-		// Continue to requested route
-		next();
-	}
+  // Check if route requires admin privileges
+  if (to.meta.requiresAdmin && !isAdmin) {
+    // Redirect to home or show unauthorized page
+    next('/');
+    return;
+  }
+
+  // If all checks pass, proceed to route
+  next();
 })
 
 export default router
-

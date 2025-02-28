@@ -44,7 +44,7 @@ class PostsController < ApplicationController
         title: @post.title,
         content: @post.content,
         content_html: @post.content_html,
-				images: @post.images.map { |img| rails_blob_path(img, disposition: "inline", only_path: true) }
+				images: @post.images.map { |img| rails_blob_url(img, disposition: "inline") }
       }, status: :created
     else
       render json: @post.errors, status: :unprocessable_entity

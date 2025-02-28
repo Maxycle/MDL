@@ -11,8 +11,14 @@ Rails.application.routes.draw do
       registrations: 'api/users/registrations'
     }, skip: [:confirmations]
 
-		devise_scope :user do
-      get 'confirmationFromVue', to: 'api/users/registrations#confirm', as: :user_confirmation
+		# devise_scope :user do
+    #   get 'confirmationFromVue', to: 'api/users/registrations#confirm', as: :user_confirmation
+    # end
+
+		namespace :admin do
+      resources :users, only: [] do
+        post 'confirm', on: :member  # New admin confirmation route
+      end
     end
 
     get 'questions/export', to: 'xlsx_uploads#export_questions'
@@ -32,7 +38,12 @@ Rails.application.routes.draw do
 		
     resources :answers, only: [:show, :update, :destroy]
     resources :scores
-    resources :users, only: [:index, :show]
+    resources :users, only: [:index, :show] do
+			collection do
+				get 'unconfirmed', to: 'users#index_unconfirmed'
+				get 'index_admin', to: 'users#index_admin'
+			end
+		end
 
     get "/questionnaire-params", to: 'questionnaire_params#index'
     put "/questionnaire-params", to: 'questionnaire_params#update'

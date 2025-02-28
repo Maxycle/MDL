@@ -15,7 +15,7 @@ module Api
 				Rails.logger.info("Processed Params: #{params.inspect}")
 			
 				# Extract user parameters
-				user_params = params.require(:user).permit(:email, :password, :username, :first_name, :last_name)
+				user_params = params.require(:user).permit(:email, :password, :username, :first_name, :last_name, :intro, :selected_admin_id)
 				
 				build_resource(user_params)
 			
@@ -74,7 +74,7 @@ module Api
 			end
 
 			def configure_permitted_parameters
-				devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :username, :first_name, :last_name])
+				devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :username, :first_name, :last_name, :intro, :selected_admin_id])
 				devise_parameter_sanitizer.permit(:account_update, keys: [:username, :first_name, :last_name, :certification_is_public, :email, :password, :password_confirmation, :current_password])
 			end
 		end

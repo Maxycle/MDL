@@ -5,10 +5,11 @@ class User < ApplicationRecord
 	devise :database_authenticatable,
 	:registerable,
 	:validatable,
-	:confirmable,
 	:jwt_authenticatable,
 	jwt_revocation_strategy: self
 	
+	belongs_to :confirmed_by_admin, class_name: "User", foreign_key: "confirmed_by_admin_id", optional: true
+
 	has_many :scores, dependent: :destroy
   has_many :posts, dependent: :destroy
 	
@@ -16,4 +17,8 @@ class User < ApplicationRecord
   validates :last_name, presence: true
 	validates :email, presence: true, uniqueness: true
   validates :username, presence: true, uniqueness: true
+
+	def confirm_by_admin!(admin)
+    update(confirmed_by_admin_id: admin.id)
+  end
 end
