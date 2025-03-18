@@ -19,6 +19,6 @@ class User < ApplicationRecord
   validates :username, presence: true, uniqueness: true
 
 	def confirm_by_admin!(admin)
-    update(confirmed_by_admin_id: admin.id)
+    update(confirmed_by_admin_id: admin.id, certification: 'SM')
   end
 end

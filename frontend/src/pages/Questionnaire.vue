@@ -46,10 +46,17 @@
 					que tu te
 					loggues gros bêta !!</div>
 			</button>
-			<div v-if="questionnaireStarted">
-				<QuestionAnswerBlock :questionsList="questionsList" />
+			<div v-if="questionnaireStarted" class="flex flex-col items-center">
+				<div>
+					<QuestionAnswerBlock :questionsList="questionsList" />
+				</div>
+				<button class="rounded bg-green-500 p-1 text-orange-800 text-xl flex items-center px-4 mt-12"
+					@click="stopQuestionnaire">
+					terminer questionnaire
+				</button>
+				<StopWatch @time-is-up="stopQuestionnaire" class="mt-16" />
 			</div>
-			<StopWatch v-if="questionnaireStarted" @time-is-up="stopQuestionnaire" class="mt-16" />
+
 		</div>
 	</div>
 </template>
@@ -246,9 +253,32 @@ const updateScoreAtFinish = async (score) => {
 	await scoreStore.fetchScores()
 }
 
-const stopQuestionnaire = () => {
-	updateScoreAtFinish(scoreBeingUpdated.value)
+const updateCertification = async (newCertification) => {
+	try {
+		const userId = sessionStore.getUserId
+
+		await axios.patch(`/api/admin/users/${userId}/update_certification`,
+			{
+				certification: newCertification
+			},
+			{
+				headers: {
+					Authorization: `${sessionStore.getAuthToken}`
+				}
+			})
+	} catch (error) {
+		console.error('Error updating certification:', error.message)
+	}
+}
+
+const stopQuestionnaire = async () => {
+	await updateScoreAtFinish(scoreBeingUpdated.value)
 	answerStore.addDetails({})
+	scoreStore.fetchScores()
+	if (scoreStore.getScore.droitNaturel.level === "BA" && scoreStore.getScore.ecoleAutrichienne.level === "BA") {
+		await updateCertification('MC')
+	}
+	sessionStore.loginUserWithToken(localStorage.getItem("authToken"))
 	router.push({ name: "Home" })
 }
 

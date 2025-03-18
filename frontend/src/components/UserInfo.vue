@@ -36,12 +36,18 @@
 				n'a
 				pas rendu sa certification publique` }}</div>
 		</div>
+		<button class="rounded bg-green-600 p-1 text-black text-sm flex items-center" @click="updateCertif('shakademousse')">
+			certif moi ça
+		</button>
 	</div>
 </template>
 
 <script setup>
+import axios from 'axios';
 import { useScoreStore } from '@/stores/modules/scoreStore'
+import { useSessionStore } from '@/stores/modules/sessionStore'
 
+const sessionStore = useSessionStore()
 const scoreStore = useScoreStore()
 
 const props = defineProps({
@@ -75,6 +81,26 @@ const emit = defineEmits(['userUpdated'])
 
 const handleScoreDelete = async (scoreId) => {
 	await scoreStore.deleteScore(scoreId)
+	await updateCertification('lalalallalaalal')
+
 	emit('userUpdated', props.data.id) // Emit event to update parent
+}
+
+const updateCertification = async (newCertification) => {
+	try {
+		const userId = sessionStore.getUserId
+
+		await axios.patch(`/api/admin/users/${props.data.id}/update_certification`,
+			{
+				certification: newCertification
+			},
+			{
+				headers: {
+					Authorization: `${sessionStore.getAuthToken}`
+				}
+			})
+	} catch (error) {
+		console.error('Error updating certification:', error.message)
+	}
 }
 </script>

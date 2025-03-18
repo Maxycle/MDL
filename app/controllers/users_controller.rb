@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 	before_action :set_user, only: [:show, :destroy]
 
   def index
-		@users = User.includes(:scores)
+		@users = User.includes(:scores).where.not(confirmed_by_admin_id: nil)
 		render json: @users.as_json(include: :scores)
   end
 

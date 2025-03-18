@@ -21,6 +21,19 @@
         render json: { message: "User confirmed successfully", confirmed_by: current_user.email }, status: :ok
       end
 
+			def update_certification
+				user = User.find_by(id: params[:id])
+				if user.nil?
+					return render json: { error: "User not found" }, status: :not_found
+				end
+				
+				# Get the certification from params
+				new_certification = params[:certification]
+				
+				user.update(certification: new_certification)
+				render json: { message: "Certification updated successfully" }, status: :ok
+			end
+
       private
 
       def authorize_admin!
