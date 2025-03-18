@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+	attr_accessor :login
+
 	include Devise::JWT::RevocationStrategies::JTIMatcher
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -20,5 +22,14 @@ class User < ApplicationRecord
 
 	def confirm_by_admin!(admin)
     update(confirmed_by_admin_id: admin.id, certification: 'SM')
+  end
+
+	def self.find_for_database_authentication(warden_conditions)
+    conditions = warden_conditions.dup
+    if (login = conditions.delete(:login))
+      where(conditions.to_h).where(["lower(username) = :value OR lower(email) = :value", { value: login.downcase }]).first
+    elsif conditions.has_key?(:username) || conditions.has_key?(:email)
+      where(conditions.to_h).first
+    end
   end
 end

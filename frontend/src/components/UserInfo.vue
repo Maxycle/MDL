@@ -36,9 +36,6 @@
 				n'a
 				pas rendu sa certification publique` }}</div>
 		</div>
-		<button class="rounded bg-green-600 p-1 text-black text-sm flex items-center" @click="updateCertif('shakademousse')">
-			certif moi ça
-		</button>
 	</div>
 </template>
 

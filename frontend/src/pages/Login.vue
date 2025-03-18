@@ -33,8 +33,8 @@
 					<form @submit.prevent="signIn"
 						class="bg-[#242d36] text-white rounded-b-lg shadow-lg flex flex-col overflow-hidden">
 						<div class="flex flex-col gap-1.5 py-2.5 text-left">
-							<label for="email" class="text-sm text-[#e65edfaa] mx-4">Email</label>
-							<input v-model="signInEmail" type="text" placeholder="Please enter your email" name="email"
+							<label for="login" class="text-sm text-[#e65edfaa] mx-4">Email</label>
+							<input v-model="signInLogin" type="text" placeholder="Please enter your email" name="email"
 								class="bg-transparent border-b border-transparent mx-4 py-2 focus:border-[#42b883aa] focus:outline-none transition-colors duration-300">
 						</div>
 
@@ -144,8 +144,8 @@ import Container from "@/components/Container.vue"
 
 const router = useRouter()
 const sessionStore = useSessionStore()
-const signInEmail = ref("")
 const signInPassword = ref("")
+const signInLogin = ref("")
 const signUpEmail = ref("")
 const signUpPassword = ref("")
 const username = ref("")
@@ -156,28 +156,11 @@ const isHidden = ref(true)
 const isRegistered = ref(false)
 const intro = ref("")
 const selectedAdmin = ref("")
-// const admins = ref([])
 const accountConfirmed = ref(true)
 
-// watch(signingIn, (newValue) => {
-// 	if (!newValue) {  // When signingIn becomes false (switching to signup form)
-// 		fetchAdmins()
-// 	}
-// })
-
-// const fetchAdmins = async () => {
-// 	try {
-// 		const response = await axios.get('/api/users/index_admin', {
-// 			withCredentials: false
-// 		})
-// 		admins.value = response.data
-// 	} catch (error) {
-// 		console.error('Error fetching admin users:', error)
-// 	}
-// }
 
 const signIn = async () => {
-	const params = { email: signInEmail.value, password: signInPassword.value, }
+	const params = { login: signInLogin.value, password: signInPassword.value, }
 
 	const isSignedIn = await sessionStore.loginUser(params)
 	accountConfirmed.value = sessionStore.getUserDetails.confirmed_by_admin_id !== null
