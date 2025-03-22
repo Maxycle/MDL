@@ -21,10 +21,7 @@
 							</div>
 							<StartModal :isVisible="isModalVisible" title="Le questionnaire va commencer" @close="closeModal"
 								class="cursor-default">
-								<p>Attention les gars ça va commencer, faites pas les cons, ya un temps limite et une fois que ça a
-									commencé, ça compte pour un coup !! Et ya que 2 ou 3 coups possibles pendant une semaine alors hein,
-									déconnez pas. Une fois que le questionnaire est lancé c'est pas le moment d'aller chercher un kebab
-									(avec salade ET oignons) ou d'aller faire caca. Sauf si vous avez la diahrrrrrrée.</p>
+								<p class="text-xs">Quand vous cliquez sur commencer, cela compte pour un essai. Si vous n'êtes pas prêt, fermez cette boite de dialogue.</p>
 								<div class="flex space-x-2 justify-center">
 									<button @click="closeModal" class="mt-4 bg-red-600 text-white p-2 rounded-lg font-bold">
 										fermer
@@ -39,13 +36,6 @@
 					</div>
 				</div>
 			</div>
-			<button>
-				<div v-if="showNotLoggedInMessage" @click="router.push('/Login')"
-					class="text-lg border-4 anarcap-border rounded-lg bg-red-600 w-fit p-2">
-					Il faut
-					que tu te
-					loggues gros bêta !!</div>
-			</button>
 			<div v-if="questionnaireStarted" class="flex flex-col items-center">
 				<div>
 					<QuestionAnswerBlock :questionsList="questionsList" />
@@ -79,7 +69,6 @@ const answerStore = useAnswerStore()
 const scoreStore = useScoreStore()
 const paramsStore = useParamsStore()
 const questionsList = ref([])
-const showNotLoggedInMessage = ref(false)
 const questionnaireStarted = ref(false)
 const buttonsQuestionaires = ['Bases Acquises', 'Sait Analyser']
 const questionnaireDomain = ['Droit Naturel', 'Ecole Autrichienne']
@@ -151,7 +140,6 @@ async function startQuestionnaire() {
 	const button = selectedButton.value
 	answerStore.addDetails({ domain, button })
 	questionsList.value = []
-	showNotLoggedInMessage.value = !sessionStore.isLoggedIn
 	answerStore.reset()
 	try {
 		const response = await axios.get(buttonTextAndApiUrl(domain, button).apiUrl,

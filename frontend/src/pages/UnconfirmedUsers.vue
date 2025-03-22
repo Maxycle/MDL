@@ -114,23 +114,6 @@ const confirmAccount = async (id) => {
 	}
 }
 
-// const updateCertif = async (newCertif) => {
-//   try {
-//     const response = await axios.patch(
-//       `/api/admin/users/${props.data.id}/update_certification`,
-//       { certification: newCertif },  // Send the certification in the request body
-//       {
-//         headers: {
-//           Authorization: `${sessionStore.getAuthToken}`
-//         }
-//       }
-//     )
-//   } catch (error) {
-//     console.error('Error updating certification:', error)
-//   }
-// 	emit('userUpdated', props.data.id)
-// }
-
 watch(selectedAdmin, (newValue) => {
 	filteredUsers.value = newValue === null ? users.value : users.value.filter(item => item.selected_admin_id === newValue)
 })

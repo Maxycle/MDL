@@ -16,7 +16,7 @@ Rails.application.routes.draw do
     # end
 
 		namespace :admin do
-      resources :users, only: [] do
+      resources :users, only: [:destroy] do
         post 'confirm', on: :member  # New admin confirmation route
 				patch 'update_certification', on: :member
       end

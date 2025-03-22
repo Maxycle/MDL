@@ -103,7 +103,7 @@ const toggleHidden = () => {
 
 const translateInitialsIntoFullWords = (initials) => {
 	let words = ""
-	if (initials === "BA") { words = "Bases Aqccuize" }
+	if (initials === "BA") { words = "Bases Acquise" }
 	if (initials === "SA") { words = "Sait Analyser" }
 	if (initials === "beginner") { words = "Débutant" }
 	return words
