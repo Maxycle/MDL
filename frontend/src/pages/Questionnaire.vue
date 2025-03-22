@@ -21,10 +21,7 @@
 							</div>
 							<StartModal :isVisible="isModalVisible" title="Le questionnaire va commencer" @close="closeModal"
 								class="cursor-default">
-								<p>Attention les gars ça va commencer, faites pas les cons, ya un temps limite et une fois que ça a
-									commencé, ça compte pour un coup !! Et ya que 2 ou 3 coups possibles pendant une semaine alors hein,
-									déconnez pas. Une fois que le questionnaire est lancé c'est pas le moment d'aller chercher un kebab
-									(avec salade ET oignons) ou d'aller faire caca. Sauf si vous avez la diahrrrrrrée.</p>
+								<p class="text-xs">Quand vous cliquez sur commencer, cela compte pour un essai. Si vous n'êtes pas prêt, fermez cette boite de dialogue.</p>
 								<div class="flex space-x-2 justify-center">
 									<button @click="closeModal" class="mt-4 bg-red-600 text-white p-2 rounded-lg font-bold">
 										fermer
@@ -39,17 +36,17 @@
 					</div>
 				</div>
 			</div>
-			<button>
-				<div v-if="showNotLoggedInMessage" @click="router.push('/Login')"
-					class="text-lg border-4 anarcap-border rounded-lg bg-red-600 w-fit p-2">
-					Il faut
-					que tu te
-					loggues gros bêta !!</div>
-			</button>
-			<div v-if="questionnaireStarted">
-				<QuestionAnswerBlock :questionsList="questionsList" />
+			<div v-if="questionnaireStarted" class="flex flex-col items-center">
+				<div>
+					<QuestionAnswerBlock :questionsList="questionsList" />
+				</div>
+				<button class="rounded bg-green-500 p-1 text-orange-800 text-xl flex items-center px-4 mt-12"
+					@click="stopQuestionnaire">
+					terminer questionnaire
+				</button>
+				<StopWatch @time-is-up="stopQuestionnaire" class="mt-16" />
 			</div>
-			<StopWatch v-if="questionnaireStarted" @time-is-up="stopQuestionnaire" class="mt-16" />
+
 		</div>
 	</div>
 </template>
@@ -72,7 +69,6 @@ const answerStore = useAnswerStore()
 const scoreStore = useScoreStore()
 const paramsStore = useParamsStore()
 const questionsList = ref([])
-const showNotLoggedInMessage = ref(false)
 const questionnaireStarted = ref(false)
 const buttonsQuestionaires = ['Bases Acquises', 'Sait Analyser']
 const questionnaireDomain = ['Droit Naturel', 'Ecole Autrichienne']
@@ -144,7 +140,6 @@ async function startQuestionnaire() {
 	const button = selectedButton.value
 	answerStore.addDetails({ domain, button })
 	questionsList.value = []
-	showNotLoggedInMessage.value = !sessionStore.isLoggedIn
 	answerStore.reset()
 	try {
 		const response = await axios.get(buttonTextAndApiUrl(domain, button).apiUrl,
@@ -246,9 +241,32 @@ const updateScoreAtFinish = async (score) => {
 	await scoreStore.fetchScores()
 }
 
-const stopQuestionnaire = () => {
-	updateScoreAtFinish(scoreBeingUpdated.value)
+const updateCertification = async (newCertification) => {
+	try {
+		const userId = sessionStore.getUserId
+
+		await axios.patch(`/api/admin/users/${userId}/update_certification`,
+			{
+				certification: newCertification
+			},
+			{
+				headers: {
+					Authorization: `${sessionStore.getAuthToken}`
+				}
+			})
+	} catch (error) {
+		console.error('Error updating certification:', error.message)
+	}
+}
+
+const stopQuestionnaire = async () => {
+	await updateScoreAtFinish(scoreBeingUpdated.value)
 	answerStore.addDetails({})
+	scoreStore.fetchScores()
+	if (scoreStore.getScore.droitNaturel.level === "BA" && scoreStore.getScore.ecoleAutrichienne.level === "BA") {
+		await updateCertification('MC')
+	}
+	sessionStore.loginUserWithToken(localStorage.getItem("authToken"))
 	router.push({ name: "Home" })
 }
 

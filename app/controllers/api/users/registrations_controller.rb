@@ -48,6 +48,12 @@ module Api
         end
       end
 
+			def destroy
+				resource.destroy
+				Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
+				render json: { message: "Account successfully deleted" }, status: :ok
+			end
+			
 			private
 
 			def set_flash_message(_key, _kind, _options); end

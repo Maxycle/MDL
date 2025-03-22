@@ -42,6 +42,7 @@
 						}}"</span></div>
 				<div v-else class="text-red-600">Vous n'avez pas encore répondu au questionnaire "Ecole Autrichienne"</div>
 			</div>
+			<div class="font-extrabold italic text-3xl text-orange-700 pt-16">Vous êtes certifié "{{ sessionStore.getUserDetails.certification }}"</div>
 			<div class="p-4 bg-blue-700 rounded-2xl mt-16 cursor-pointer font-bold text-white">
 				<div v-if="!sessionStore.isLoggedIn" @click="router.push('/Login')">Il va falloir commencer par vous identifier
 				</div>
@@ -102,7 +103,7 @@ const toggleHidden = () => {
 
 const translateInitialsIntoFullWords = (initials) => {
 	let words = ""
-	if (initials === "BA") { words = "Bases Aqccuize" }
+	if (initials === "BA") { words = "Bases Acquise" }
 	if (initials === "SA") { words = "Sait Analyser" }
 	if (initials === "beginner") { words = "Débutant" }
 	return words

@@ -47,7 +47,6 @@ import { useSessionStore } from '@/stores/modules/sessionStore'
 import AdminSelect from '@/components/AdminSelect.vue'
 
 const sessionStore = useSessionStore()
-// const users = ref([])
 const adminDetails = ref(null)
 const userSelected = ref(null) // Initialize with null instead of empty object
 const selectedAdmin = ref(null)
@@ -60,8 +59,9 @@ const selectedUserInfo = computed(() => {
 	return userSelected.value
 })
 
-onMounted(() => {
-	fetchUsers()
+onMounted( async () => {
+	await fetchUsers()
+	userSelected.value = users.value[0]
 })
 
 const fetchUsers = async () => {
@@ -92,7 +92,6 @@ const fetchAdminDetails = async (id) => {
 }
 
 const selectUser = (user) => {
-	console.log('User selected:', user)
 	adminDetails.value = null
 	userSelected.value = { ...user }
 	user.selected_admin_id ? fetchAdminDetails(user.selected_admin_id) : console.log(`no selected admin for ${user.username}`)

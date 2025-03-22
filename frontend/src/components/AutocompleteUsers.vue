@@ -28,7 +28,7 @@ const emit = defineEmits(['user-selected']);
 const inputData = ref('')
 const filteredItems = ref([])
 
-const placeholder = ref('ta gueule')
+const placeholder = ref('username')
 const selectionMade = ref(false)
 
 const filterItems = () => {

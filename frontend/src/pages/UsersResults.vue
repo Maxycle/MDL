@@ -28,6 +28,8 @@
 					<div class="py-2">Nom: <span class="text-green-700">{{ selectedUserInfo.last_name }}</span></div>
 					<div class="py-2">Email: <span class="text-green-700">{{ selectedUserInfo.email }}</span></div>
 					<div class="py-2">Intro: <span class="text-green-700">{{ selectedUserInfo.intro }}</span></div>
+					<div>certification:</div>
+					<div class="text-green-800">{{ selectedUserInfo.certification }}</div>
 					<div v-if="adminDetails !== null" class="py-2">Contact admin: <span class="text-green-700">{{
 						adminDetails.first_name }} {{
 								adminDetails.last_name }} aka {{ adminDetails.username }}</span></div>

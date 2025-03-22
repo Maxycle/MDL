@@ -22,10 +22,13 @@
 						<div>"{{ fullWord(score.domain) }}":</div>
 						<div class="text-green-800">{{ fullWord(score.level) }}</div>
 					</div>
-					<button class="rounded bg-red-600 p-1 text-black text-sm flex items-center"
-						@click="handleScoreDelete(score.id)">
-						Supprimer score "{{ fullWord(score.domain) }}"
-					</button>
+					<div class="text-black">
+						<button
+							class="rounded bg-orange-300 p-1 hover:bg-red-600 hover:text-white hover:scale-105 transition duration-300 text-sm flex items-center shadow-lg shadow-stone-600"
+							@click="handleScoreDelete(score.id)">
+							Supprimer score "{{ fullWord(score.domain) }}"
+						</button>
+					</div>
 				</div>
 			</template>
 			<div class="flex space-x-4 text-3xl">
@@ -35,13 +38,22 @@
 			<div>{{ data.certification_is_public ? `${data.username} a rendu sa certification publique` : `${data.username}
 				n'a
 				pas rendu sa certification publique` }}</div>
+			<div class="flex justify-center space-x-10 text-black">
+				<button
+					class="rounded-lg bg-orange-300 p-4 mt-32 text-3xl hover:scale-105 hover:bg-red-600 hover:text-white transition duration-300 shadow-lg shadow-stone-600"
+					@click="destroyAccount(data.id)">Détruire
+					compte</button>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
+import axios from 'axios';
 import { useScoreStore } from '@/stores/modules/scoreStore'
+import { useSessionStore } from '@/stores/modules/sessionStore'
 
+const sessionStore = useSessionStore()
 const scoreStore = useScoreStore()
 
 const props = defineProps({
@@ -75,6 +87,40 @@ const emit = defineEmits(['userUpdated'])
 
 const handleScoreDelete = async (scoreId) => {
 	await scoreStore.deleteScore(scoreId)
+	await updateCertification('Simple Membre')
+
 	emit('userUpdated', props.data.id) // Emit event to update parent
+}
+
+const updateCertification = async (newCertification) => {
+	try {
+		const userId = sessionStore.getUserId
+
+		await axios.patch(`/api/admin/users/${props.data.id}/update_certification`,
+			{
+				certification: newCertification
+			},
+			{
+				headers: {
+					Authorization: `${sessionStore.getAuthToken}`
+				}
+			})
+	} catch (error) {
+		console.error('Error updating certification:', error.message)
+	}
+}
+
+const destroyAccount = async (id) => {
+	try {
+		const response = await axios.delete(`/api/admin/users/${id}`,
+			{
+				headers: {
+					Authorization: `${sessionStore.getAuthToken}`
+				}
+			})
+
+	} catch (error) {
+		console.error('Error confirming account:', error)
+	}
 }
 </script>

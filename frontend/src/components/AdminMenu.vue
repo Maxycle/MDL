@@ -3,7 +3,7 @@
 		class="bg-orange-100 text-black flex flex-col divide-y divide-orange-700 border-4 border-orange-700 divide-solid rounded-lg w-max">
 		<div v-for="(item, index) in items" class="first:rounded-t-lg last:rounded-b-lg">
 			<NavBarButton :isActive="isRouteActive(item.route)"
-				:class="[{ 'bg-orange-800': isRouteActive(item.route) }, { 'rounded-t': index === 0 }, { 'rounded-b': index === 2 }]">
+				:class="[{ 'bg-orange-800 text-white': isRouteActive(item.route) }, { 'rounded-t': index === 0 }, { 'rounded-b': index === 2 }]">
 				<span class="relative"><router-link :to=item.route>{{ item.text }}
 					</router-link></span>
 			</NavBarButton>
