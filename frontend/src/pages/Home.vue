@@ -23,21 +23,19 @@
 		<div class="flex flex-col items-center w-full">
 			<p class=" w-2/3 text-white pt-12 px-8 text-center">{{ storeParams.getParams.intro }}
 			</p>
-			<div v-if="sessionStore.isLoggedIn" class="text-2xl text-green-500 pt-12">
-				<div v-if="scoreStore.getScore.droitNaturel && Object.keys(scoreStore.getScore.droitNaturel).length !== 0">En
+				<div v-if="hasScoreData('droitNaturel')" class="text-2xl text-green-500 pt-12">En
 					<span class="font-extrabold italic">"Droit
 						Naturel"</span> vous avez le niveau <span class="font-extrabold">"{{
 							translateInitialsIntoFullWords(scoreStore.getScore.droitNaturel.level) }}"</span>
 				</div>
-				<div v-else class="text-red-600">Vous n'avez pas encore répondu au questionnaire "Droit Naturel"</div>
+				<div v-else class="text-2xl text-red-600 pt-12">Vous n'avez pas encore répondu au questionnaire "Droit Naturel"</div>
 				<div
-					v-if="scoreStore.getScore.ecoleAutrichienne && Object.keys(scoreStore.getScore.ecoleAutrichienne).length !== 0">
+					v-if="hasScoreData('ecoleAutrichienne')" class="text-2xl text-green-500">
 					En <span class="font-extrabold italic">"Ecole
 						Autrichienne"</span> vous avez le niveau <span class="font-extrabold">"{{
 							translateInitialsIntoFullWords(scoreStore.getScore.ecoleAutrichienne.level)
 						}}"</span></div>
-				<div v-else class="text-red-600">Vous n'avez pas encore répondu au questionnaire "Ecole Autrichienne"</div>
-			</div>
+				<div v-else class="text-2xl text-red-600">Vous n'avez pas encore répondu au questionnaire "Ecole Autrichienne"</div>
 			<div class="font-extrabold italic text-5xl text-orange-700 pt-16 mb-10">Vous êtes certifié "{{
 				sessionStore.getUserDetails.certification }}"</div>
 			<p v-if="sessionStore.getUserCertification === 'MC' && sessionStore.getUserDetails.wantsToBecomePP === false"
@@ -136,6 +134,11 @@ const update = async (field) => {
 
 const toggleHidden = () => {
 	isHidden.value = !isHidden.value
+}
+
+const hasScoreData = (category) => {
+  return scoreStore.getScore[category] && 
+         Object.keys(scoreStore.getScore[category]).length !== 0
 }
 
 const translateInitialsIntoFullWords = (initials) => {
