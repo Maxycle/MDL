@@ -263,7 +263,7 @@ const stopQuestionnaire = async () => {
 	await updateScoreAtFinish(scoreBeingUpdated.value)
 	answerStore.addDetails({})
 	scoreStore.fetchScores()
-	if (scoreStore.getScore.droitNaturel.level === "BA" && scoreStore.getScore.ecoleAutrichienne.level === "BA") {
+	if (scoreStore.getScore.droitNaturel.level === "SA" && scoreStore.getScore.ecoleAutrichienne.level === "SA") {
 		await updateCertification('MC')
 	}
 	sessionStore.loginUserWithToken(localStorage.getItem("authToken"))

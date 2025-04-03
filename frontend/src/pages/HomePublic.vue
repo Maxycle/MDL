@@ -6,7 +6,6 @@
 				C'est ici qu'on essplique tout
 			</div>
 		</div>
-
 	</Container>
 </template>
 

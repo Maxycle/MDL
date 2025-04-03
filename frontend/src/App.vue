@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col h-screen font-agu" v-cloak>
+	<div class="flex flex-col h-screen font-lora" v-cloak>
 		<div class="flex flex-col h-1/6 bg-black">
 			<Hero class="grow" />
 			<NavBar v-if="sessionStore.isLoggedIn" class="z-10" />

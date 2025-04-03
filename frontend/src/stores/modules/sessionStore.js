@@ -25,6 +25,10 @@ export const useSessionStore = defineStore({
 			return this.user.id
 		},
 
+		getUserCertification() {
+			return this.user.certification
+		},
+
 		getUserUsername() {
 			return this.user.username
 		},

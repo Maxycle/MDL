@@ -81,7 +81,7 @@ module Api
 
 			def configure_permitted_parameters
 				devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :username, :first_name, :last_name, :intro, :selected_admin_id])
-				devise_parameter_sanitizer.permit(:account_update, keys: [:username, :first_name, :last_name, :certification_is_public, :email, :password, :password_confirmation, :current_password])
+				devise_parameter_sanitizer.permit(:account_update, keys: [:username, :first_name, :last_name, :certification_is_public, :email, :password, :password_confirmation, :current_password, :wantsToBecomePP])
 			end
 		end
 	end
