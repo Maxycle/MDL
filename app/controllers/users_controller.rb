@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-	skip_before_action :authenticate_user!, only: [:index_admin]
-	before_action :authenticate_user!, except: [:index_admin] # Ensure the user is authenticated
+	skip_before_action :authenticate_user!, only: [:index, :index_admin]
+	before_action :authenticate_user!, except: [:index, :index_admin] # Ensure the user is authenticated
 	before_action :set_user, only: [:show, :destroy]
 
   def index

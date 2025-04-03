@@ -47,6 +47,12 @@ const routes = [
     component: ShowPostsIndex, 
     meta: { requiresAuth: false } 
   },
+	{ 
+    path: '/users-results', 
+    name: 'UsersResults', 
+    component: UsersResults, 
+    meta: { requiresAuth: false } 
+  },
   
   // Authenticated user routes
   { 
@@ -59,12 +65,6 @@ const routes = [
     path: '/edit-profile', 
     name: 'EditProfile', 
     component: EditProfile, 
-    meta: { requiresAuth: true } 
-  },
-	{ 
-    path: '/users-results', 
-    name: 'UsersResults', 
-    component: UsersResults, 
     meta: { requiresAuth: true } 
   },
 
