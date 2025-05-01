@@ -33,34 +33,68 @@
 			</template>
 			<div class="flex space-x-4 text-3xl">
 				<div>certification:</div>
-				<div class="text-green-800">{{ data.certification }}</div>
+				<div class="text-green-800">{{ updatedCertification ? updatedCertification : data.certification }}</div>
 			</div>
 			<div>{{ data.certification_is_public ? `${data.username} a rendu sa certification publique` : `${data.username}
 				n'a
 				pas rendu sa certification publique` }}</div>
-			<div class="flex justify-center space-x-10 text-black">
-				<button
-					class="rounded-lg bg-orange-300 p-4 mt-32 text-3xl hover:scale-105 hover:bg-red-600 hover:text-white transition duration-300 shadow-lg shadow-stone-600"
-					@click="destroyAccount(data.id)">Détruire
-					compte</button>
+			<div class="mt-32 flex flex-col items-center">
+				<div v-if="newCertification"
+					class="flex justify-center items-center bg-yellow-200 rounded-lg p-2 shadow-lg shadow-stone-600">
+					<div>Modifier certification à: <span class="text-2xl text-green-800">{{
+						newCertification }}</span></div>
+					<div class="text-black">
+						<button
+							class="rounded-lg bg-orange-300 p-2 ml-4 hover:scale-105 hover:bg-orange-600 hover:text-white transition duration-300"
+							@click="updateCertification()">Valider</button>
+					</div>
+				</div>
+				<div class="flex justify-center space-x-10 text-black mt-4">
+					<button
+						class="rounded-lg bg-orange-300 p-4 text-3xl hover:scale-105 hover:bg-red-600 hover:text-white transition duration-300 shadow-lg shadow-stone-600"
+						@click="destroyAccount(data.id)">Détruire
+						compte</button>
+					<div class="relative" @mouseover="showMenu()" @mouseout="hideMenu()">
+						<div class="rounded-lg bg-green-700 text-white shadow-lg shadow-stone-600 text-3xl p-4">Changer
+							certification</div>
+						<Menu v-show="hovered" class="absolute -bottom-13 z-10"
+							:options="{ content: [{ text: 'Simple Membre', symbol: 'SM' }, { text: 'Membre Certrifié', symbol: 'MC' }, { text: 'Porte Parole', symbol: 'PP' }] }"
+							@optionSelected="(optionSelected) => newCertification = optionSelected" />
+					</div>
+					<button
+						class="rounded-lg bg-blue-300 p-4 text-3xl hover:scale-105 hover:bg-orange-600 hover:text-white transition duration-300 shadow-lg shadow-stone-600"
+						@click="changeAdminStatus">
+						{{ adminButtonText }}
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
-import axios from 'axios';
+import axios from 'axios'
+import { ref, onMounted, computed } from "vue"
 import { useScoreStore } from '@/stores/modules/scoreStore'
 import { useSessionStore } from '@/stores/modules/sessionStore'
+import Menu from '../components/Menu.vue'
 
 const sessionStore = useSessionStore()
 const scoreStore = useScoreStore()
+const hovered = ref(false)
+const newCertification = ref('')
+const updatedCertification = ref('')
+const adminButtonText = ref('')
 
 const props = defineProps({
 	data: {
 		type: Object,
 		required: true
 	}
+})
+
+onMounted(() => {
+	adminButtonText.value = props.data.admin ? 'Enlever status admin' : 'Donner status admin'
 })
 
 const fullWord = ((initials) => {
@@ -87,23 +121,24 @@ const emit = defineEmits(['userUpdated'])
 
 const handleScoreDelete = async (scoreId) => {
 	await scoreStore.deleteScore(scoreId)
-	await updateCertification('Simple Membre')
+	await updateCertification('SM')
 
 	emit('userUpdated', props.data.id) // Emit event to update parent
 }
 
-const updateCertification = async (newCertification) => {
+const updateCertification = async () => {
 	try {
-		const userId = sessionStore.getUserId
-
-		await axios.patch(`/api/admin/users/${props.data.id}/update_certification`,
+		const response = await axios.patch(`/api/admin/users/${props.data.id}/update_certification`,
 			{
-				certification: newCertification
+				certification: newCertification.value
 			},
 			{
 				headers: {
 					Authorization: `${sessionStore.getAuthToken}`
 				}
+			}).then((response) => {
+				updatedCertification.value = response.data.message === 'Certification updated successfully' ? newCertification.value : ''
+				newCertification.value = ''
 			})
 	} catch (error) {
 		console.error('Error updating certification:', error.message)
@@ -112,7 +147,7 @@ const updateCertification = async (newCertification) => {
 
 const destroyAccount = async (id) => {
 	try {
-		const response = await axios.delete(`/api/admin/users/${id}`,
+		await axios.delete(`/api/admin/users/${id}`,
 			{
 				headers: {
 					Authorization: `${sessionStore.getAuthToken}`
@@ -120,7 +155,35 @@ const destroyAccount = async (id) => {
 			})
 
 	} catch (error) {
-		console.error('Error confirming account:', error)
+		console.error('Error deleting account:', error)
 	}
+}
+
+const changeAdminStatus = async () => {
+	try {
+		const action = adminButtonText.value === 'Enlever status admin' ? 'remove' : 'give'
+		const response = await axios.patch(`/api/admin/users/${props.data.id}/${action}_admin_status`,
+			{},
+			{
+				headers: {
+					Authorization: `${sessionStore.getAuthToken}`
+				}
+			})
+		adminButtonText.value = response.data.message === 'User is now admin' ? 'Enlever status admin' : 'Donner status admin'
+	} catch (error) {
+		console.error('Error updating certification:', error.message)
+	}
+}
+
+// const displayAdminButtonText = computed(() => {
+// 	return adminButtonText.value
+// })
+
+const showMenu = () => {
+	hovered.value = true
+}
+
+const hideMenu = () => {
+	hovered.value = false
 }
 </script>

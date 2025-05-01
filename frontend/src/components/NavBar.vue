@@ -1,6 +1,6 @@
 <template>
 	<div class="flex justify-between px-4 items-center bg-blue-900">
-		<div class="italic">{{ paramsStore.getParams.welcome_start }} {{ loggedInUser.username }} {{
+		<div class="italic">{{ paramsStore.getParams.welcome_start }} {{ store.getUserUsername }} {{
 			paramsStore.getParams.welcome_end }}
 		</div>
 		<div v-if="answerStore.getQuestionnaireDetails.domain && route.path === '/questionnaire'" class="text-blue-100">
@@ -22,10 +22,10 @@
 			<NavBarButton :isActive="isRouteActive('/questionnaire')">
 				<span class="relative"><router-link to="/questionnaire">Questionnaire</router-link></span>
 			</NavBarButton>
-			<NavBarButton v-if="loggedInUser.admin" :isActive="isRouteActive('/nouvelle-question')" @mouseover="showMenu"
+			<NavBarButton v-if="actionsMenuShowing" :isActive="isRouteActive('/nouvelle-question')" @mouseover="showMenu"
 				@mouseout="hideMenu" class="relative">
-				<span>Admin</span>
-				<AdminMenu v-show="showAdminMenu" class="absolute top-12 -left-44 w-fit" />
+				<span>Actions</span>
+				<ActionsMenu v-show="showActionsMenu" class="absolute top-12 -left-44 w-fit" />
 			</NavBarButton>
 			<NavBarButton :isActive="isRouteActive('/edit-profile')">
 				<span class="relative"><router-link to="/edit-profile">Modifier le compte</router-link></span>
@@ -45,7 +45,7 @@
 
 <script setup>
 import NavBarButton from './buttons/NavBarButton.vue'
-import AdminMenu from './AdminMenu.vue'
+import ActionsMenu from './ActionsMenu.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, computed, onMounted } from 'vue'
 import { useSessionStore } from '@/stores/modules/sessionStore'
@@ -57,7 +57,7 @@ const answerStore = useAnswerStore()
 const store = useSessionStore();
 const router = useRouter();
 const route = useRoute();
-const showAdminMenu = ref(false)
+const showActionsMenu = ref(false)
 
 onMounted(async () => {
 	if (!paramsStore.getIsLoaded) {
@@ -65,8 +65,8 @@ onMounted(async () => {
 	}
 })
 
-const loggedInUser = computed(() => {
-	return store.user;
+const actionsMenuShowing = computed(() => {
+	return !(store.getUserCertification === "SM" && !store.isAdmin)
 })
 
 const isRouteActive = (path) => {
@@ -83,10 +83,10 @@ const logout = async () => {
 }
 
 const showMenu = () => {
-	showAdminMenu.value = true
+	showActionsMenu.value = true
 }
 
 const hideMenu = () => {
-	showAdminMenu.value = false
+	showActionsMenu.value = false
 }
 </script>

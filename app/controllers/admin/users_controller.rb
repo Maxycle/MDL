@@ -4,20 +4,26 @@
     class UsersController < ApplicationController
       before_action :authenticate_user!  # Ensure admin is logged in
       before_action :authorize_admin!  # Ensure only admins can confirm users
-			before_action :set_user, only: [:confirm, :update_certification, :destroy]
+			before_action :set_user, only: [:give_admin_status, :remove_admin_status, :update_certification, :destroy]
 
-      def confirm
+      def give_admin_status
         if @user.nil?
           return render json: { error: "User not found" }, status: :not_found
         end
 
-        if @user.confirmed_by_admin_id.present?
-          return render json: { error: "User is already confirmed" }, status: :unprocessable_entity
+				@user.update(admin: true)
+
+        render json: { message: "User is now admin" }, status: :ok
+      end
+
+			def remove_admin_status
+        if @user.nil?
+          return render json: { error: "User not found" }, status: :not_found
         end
 
-        @user.confirm_by_admin!(current_user)
+				@user.update(admin: false)
 
-        render json: { message: "User confirmed successfully", confirmed_by: current_user.email }, status: :ok
+        render json: { message: "User is not admin anymore" }, status: :ok
       end
 
 			def update_certification

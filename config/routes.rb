@@ -17,10 +17,18 @@ Rails.application.routes.draw do
 
 		namespace :admin do
       resources :users, only: [:destroy] do
-        post 'confirm', on: :member  # New admin confirmation route
 				patch 'update_certification', on: :member
+				patch 'give_admin_status', on: :member
+				patch 'remove_admin_status', on: :member
       end
     end
+
+		resources :account_creation_request, only: [:index, :create] do
+		member do
+			post 'accept_candidate'
+			post 'refuse_candidate'
+		end
+	end
 
     get 'questions/export', to: 'xlsx_uploads#export_questions'
     get 'users/export', to: 'xlsx_uploads#export_users'

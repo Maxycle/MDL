@@ -10,18 +10,20 @@ class User < ApplicationRecord
 	:jwt_authenticatable,
 	jwt_revocation_strategy: self
 	
-	belongs_to :confirmed_by_admin, class_name: "User", foreign_key: "confirmed_by_admin_id", optional: true
-
 	has_many :scores, dependent: :destroy
   has_many :posts, dependent: :destroy
-	
+
+	# Validations given as a PP user
+
+	scope :pp_users, -> { where(certification: 'PP') }
+
 	validates :first_name, presence: true
   validates :last_name, presence: true
 	validates :email, presence: true, uniqueness: true
   validates :username, presence: true, uniqueness: true
 
-	def confirm_by_admin!(admin)
-    update(confirmed_by_admin_id: admin.id, certification: 'SM')
+	def pp?
+    certification == 'PP'
   end
 
 	def self.find_for_database_authentication(warden_conditions)

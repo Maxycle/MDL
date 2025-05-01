@@ -13,7 +13,7 @@
 
 <script setup>
 import NavBarButton from "@/components/buttons/NavBarButton.vue"
-import { ref } from "vue"
+import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from "vue-router"
 import { useSessionStore } from "@/stores/modules/sessionStore"
 
@@ -21,16 +21,25 @@ const router = useRouter()
 const route = useRoute();
 
 const sessionStore = useSessionStore();
-const items = ref([{ route: '/nouvelle-question', text: 'Créer une nouvelle question' },
-{ route: '/modifier-question', text: 'Modifier une question' }, 
-{ route: '/upload-nouvelles-questions', text: 'Upload nouvelle liste de questions' },
-{ route: '/utilisateurs', text: 'Scores des utilisateurs' },
-{ route: '/utilisateurs-non-confirmes', text: 'Utilisateurs non confirmés' },
-{ route: '/questionnaire-paramètres', text: 'Changer les paramèetres de questionnaire' },
-{ route: '/new-post', text: 'Ecrire un article' }
-])
+
+const items = ref([])
+
+onMounted(() => {
+	if (sessionStore.getUserCertification === 'PP') {
+		items.value.push({ route: '/utilisateurs', text: 'Membres' },
+			{ route: '/utilisateurs-non-confirmes', text: 'Demandes d\'ouverture de compte' },
+			{ route: '/account-creation-request', text: 'Coopter un candidat' },
+			{ route: '/new-post', text: 'Ecrire un article' })
+	} else if (sessionStore.getUserCertification === 'MC') {
+		items.value.push({ route: '/account-creation-request', text: 'Coopter un candidat' })
+	}
+
+	if (sessionStore.isAdmin) {
+		items.value.push({ route: '/upload-nouvelles-questions', text: 'Upload nouvelle liste de questions' }, { route: '/questionnaire-paramètres', text: 'Changer les paramèetres de questionnaire' })
+	}
+})
+
 const isRouteActive = (path) => {
 	return route.path === path;
 }
-
 </script>

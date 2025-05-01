@@ -8,7 +8,9 @@
 			<div v-if="!isRouteActive('/')" class="bg-stone-300 text-black rounded p-2 cursor-pointer shadow-md shadow-stone-600"
 				@click="router.push('/')">Accueuil</div>
 			<div v-if="!isRouteActive('/Login')" class="bg-stone-300 text-black rounded p-2 cursor-pointer shadow-md shadow-stone-600"
-				@click="router.push('/Login')">Login/Signup</div>
+				@click="router.push('/Login')">Login</div>
+				<div v-if="!isRouteActive('/account-creation-request')" class="bg-stone-300 text-black rounded p-2 cursor-pointer shadow-md shadow-stone-600"
+				@click="router.push('/account-creation-request')">Demande d'ouverture de compte</div>
 		</div>
 		<slot></slot>
 	</div>
