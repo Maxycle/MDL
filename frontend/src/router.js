@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/pages/Home.vue'
 import Questionnaire from '@/pages/Questionnaire.vue'
 import Login from '@/pages/Login.vue'
+import SignUp from '@/pages/SignUp.vue'
+import AccountCreationRequest from '@/pages/AccountCreationRequest.vue'
 import NewQuestion from '@/pages/NewQuestion.vue'
 import ModifyQuestion from '@/pages/ModifyQuestion.vue'
 import QuestionnaireParams from '@/pages/QuestionnaireParams.vue'
@@ -22,6 +24,18 @@ const routes = [
     path: '/Login', 
     name: 'Login', 
     component: Login, 
+    meta: { requiresAuth: false } 
+  },
+	{ 
+    path: '/SignUp', 
+    name: 'SignUp', 
+    component: SignUp, 
+    meta: { requiresAuth: false } 
+  },
+	{ 
+    path: '/account-creation-request', 
+    name: 'AccountCreationRequest', 
+    component: AccountCreationRequest, 
     meta: { requiresAuth: false } 
   },
 	{ 

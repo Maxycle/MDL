@@ -3,9 +3,6 @@
 		<label v-if="props.context !== 'non confirmed users'">
 			Qui vous a parlé de libertarien.net ?
 		</label>
-		<!-- <label class="text-sm text-[#e65edfaa]">
-      {{ props.context === "non confirmed users" ? 'Filtrer les comptes par admin' : 'Qui vous a parlé de libertarien.net ?'}}
-    </label> -->
 		<div class="relative mt-1">
 			<select v-model="selectedAdmin" class="w-full bg-transparent border-b border-transparent py-2 pr-8
           text-[#e65edfaa] appearance-none cursor-pointer

@@ -1,5 +1,5 @@
 <template>
-	<div class="bg-neutral-500">
+	<div class="bg-green-300">
 		<input type="file" @change="onFileChange" accept=".xlsx" />
 		<button @click="uploadFile" :disabled="isLoading">
 			<div class="border-2 anarcap-border bg-blue-500 rounded p-2">
@@ -19,14 +19,27 @@ const sessionStore = useSessionStore();
 
 const file = ref(null);
 const isLoading = ref(false);
-const emit = defineEmits(['questions-uploaded'])
 
 const onFileChange = (event) => {
 	file.value = event.target.files[0];
 };
 
+const destroyAllQuestions = async () => {
+	try {
+		const response = await axios.delete('/api/questions/destroy_all', {
+			headers: {
+				Authorization: `${sessionStore.getAuthToken}`
+			}
+		})
+		deletedResponseMessage.value = `${response.data.message}, ${response.data.deleted_count} questions deleted`
+	} catch (error) {
+		console.error(`Error creating:`, error);
+	}
+}
+
 const uploadFile = async () => {
-	emit('questions-uploaded')
+	await destroyAllQuestions()
+	
 	if (!file.value || isLoading.value) return;
 
 	const formData = new FormData();
