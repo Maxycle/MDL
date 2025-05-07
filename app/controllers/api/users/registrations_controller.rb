@@ -8,7 +8,6 @@ module Api
 
 			wrap_parameters :user, include: [:email, :password]
 			before_action :configure_permitted_parameters, only: [:create, :update]
-			# before_action :validate_signup_token, only: [:create]
 			skip_before_action :authenticate_user!, only: [:create, :confirm]
 			
 			# Validates the signup token before allowing access to signup
