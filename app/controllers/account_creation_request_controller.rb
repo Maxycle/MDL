@@ -1,12 +1,12 @@
 class AccountCreationRequestController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:create]
-  before_action :set_account_creation_request, only: [:accept_candidate, :refuse_candidate]
+  skip_before_action :authenticate_user!, only: [:create, :validate_email]
+  before_action :set_account_creation_request, only: [:accept_candidate, :refuse_candidate, :validate_email]
 
   def index
 		@accountCreationRequests = AccountCreationRequest.all
 		
 		if params[:pending_approval]
-			@accountCreationRequests = @accountCreationRequests.not_refused.not_approved_by(current_user.id)
+			@accountCreationRequests = @accountCreationRequests.active.not_refused.not_approved_by(current_user.id)
 		end
 		
 		render json: @accountCreationRequests.as_json
@@ -15,9 +15,19 @@ class AccountCreationRequestController < ApplicationController
   def create
     @accountCreationRequest = AccountCreationRequest.new(request_params)
     if @accountCreationRequest.save
+			# Send validation email
+      AccountCreationRequestMailer.email_validation(@accountCreationRequest).deliver_now
       render json: @accountCreationRequest, status: :created
     else
       render json: @accountCreationRequest.errors, status: :unprocessable_entity
+    end
+  end
+
+  def validate_email
+    if @accountCreationRequest && @accountCreationRequest.validate_with_token(params[:token])
+      redirect_to "#{frontend_url}/confirmation?status=success&email=#{CGI.escape(@accountCreationRequest.email)}"
+    else
+      redirect_to "#{frontend_url}/confirmation?status=error&message=#{CGI.escape('Invalid or expired token')}"
     end
   end
 
@@ -87,6 +97,10 @@ class AccountCreationRequestController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def request_params
-    params.require(:account_creation_request).permit(:email, :first_name, :last_name, :motivations, :referencer)
+    params.require(:account_creation_request).permit(:email, :first_name, :last_name, :motivations, :referencer, :validated)
   end
+
+	def frontend_url
+		Rails.env.production? ? ENV['FRONTEND_URL'] || "https://www.libertarien.net/" : "http://localhost:5173"
+	end
 end

@@ -11,10 +11,6 @@ Rails.application.routes.draw do
       registrations: 'api/users/registrations'
     }, skip: [:confirmations]
 
-		# devise_scope :user do
-    #   get 'confirmationFromVue', to: 'api/users/registrations#confirm', as: :user_confirmation
-    # end
-
 		namespace :admin do
       resources :users, only: [:destroy] do
 				patch 'update_certification', on: :member
@@ -23,10 +19,15 @@ Rails.application.routes.draw do
       end
     end
 
+		devise_scope :user do
+			get '/validate_signup_token/:token', to: 'api/users/registrations#validate_signup_token'
+		end
+
 		resources :account_creation_request, only: [:index, :create] do
 		member do
 			post 'accept_candidate'
 			post 'refuse_candidate'
+			get '/validate_email/:token', to: 'account_creation_request#validate_email'
 		end
 	end
 

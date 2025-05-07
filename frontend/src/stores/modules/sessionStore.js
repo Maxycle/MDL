@@ -52,9 +52,9 @@ export const useSessionStore = defineStore({
 	},
 
 	actions: {
-		async registerUser(params) {
+		async registerUser(params, token) {
 			try {
-				const res = await fetch(`${BACKEND_URL}/signup`, {
+				const res = await fetch(`${BACKEND_URL}/signup?token=${token}`, {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({ user: params })

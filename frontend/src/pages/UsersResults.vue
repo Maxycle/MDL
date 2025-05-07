@@ -27,7 +27,6 @@
 					<div>
 						<div class="py-2">Prénom: <span class="text-green-700">{{ selectedUserInfo.first_name }}</span></div>
 						<div class="py-2">Nom: <span class="text-green-700">{{ selectedUserInfo.last_name }}</span></div>
-						<div class="py-2">Email: <span class="text-green-700">{{ selectedUserInfo.email }}</span></div>
 						<div class="py-2">Intro: <span class="text-green-700">{{ selectedUserInfo.intro }}</span></div>
 						<div>certification:</div>
 						<div class="text-green-800">{{ selectedUserInfo.certification }}</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_04_25_170631) do
+ActiveRecord::Schema[7.0].define(version: 2025_05_06_202311) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -26,7 +26,12 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_25_170631) do
     t.boolean "email_sent", default: false
     t.datetime "email_sent_at"
     t.boolean "refused", default: false
+    t.boolean "validated", default: false
+    t.string "validation_token"
+    t.datetime "token_created_at", precision: nil
+    t.boolean "token_used_for_signup", default: false
     t.index ["email"], name: "index_account_creation_requests_on_email", unique: true
+    t.index ["validation_token"], name: "index_account_creation_requests_on_validation_token", unique: true
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|

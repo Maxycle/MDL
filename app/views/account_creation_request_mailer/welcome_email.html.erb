@@ -4,13 +4,14 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h1>Congratulations, <%= @account_creation_request.first_name %>!</h1>
+    <h1>Bravo, <%= @account_creation_request.first_name %>!</h1>
     <p>
-      Your account request has been approved by all PP members.
+      Votre demande d'ouverture de compte a été acceptée.
     </p>
     <p>
-      You can now create your account by clicking on the following link: <a href="<%= @url %>"><%= @url %></a>
+      Vous pouvez maintenant créer un compte en cliquant sur le lien: 
+			<p><%= link_to 'Création de compte', @url %></p>
     </p>
-    <p>Thank you for joining us!</p>
+    <p>Heureux de vous compter parmi les libertariens !</p>
   </body>
 </html>
