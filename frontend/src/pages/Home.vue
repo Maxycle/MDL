@@ -40,7 +40,7 @@
 			<div class="w-1/6">
 				<Logo :certification="scoresInitials" />
 			</div>
-			<div class="font-extrabold italic text-5xl text-orange-700 mb-10">Vous êtes certifié "{{
+			<div class="font-extrabold italic text-5xl text-orangeLogo mb-10">Vous êtes certifié "{{
 				sessionStore.getUserDetails.certification }}"</div>
 			<p v-if="sessionStore.getUserCertification === 'MC' && sessionStore.getUserDetails.wantsToBecomePP === false"
 				class="text-white pb-10">
@@ -49,9 +49,11 @@
 			</p>
 			<div class="grid grid-cols-2 gap-4 w-1/2">
 				<div
-					class="rounded-2xl cursor-pointer p-4 font-bold text-white text-center hover:scale-105 transition duration-300 hover:border-green-500 hover:border-2 bg-blue-800 hover:bg-blue-900"
+					class="rounded-2xl text-2xl p-4 cursor-pointer font-bold text-blueLogoDark text-center hover:scale-105 transition duration-300 hover:border-green-500 hover:border-2 bg-gradient-to-r from-orangeLogo to-yellowLogo hover:bg-blue-900"
 					:class="{ 'col-span-2': sessionStore.getUserCertification !== 'MC' }" @click="router.push('/questionnaire')">
+					<!-- <div class="bg-white/30 backdrop-invert backdrop-opacity-20 rounded-2xl p-4"> -->
 					Aller au questionnaire
+				<!-- </div> -->
 				</div>
 				<div v-if="sessionStore.getUserCertification === 'MC'"
 					class="rounded-2xl cursor-pointer p-4 font-bold text-white text-center hover:scale-105 transition duration-300 hover:border-green-500 hover:border-2 bg-orange-800 hover:bg-orange-900"

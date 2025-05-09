@@ -1,55 +1,57 @@
 <template>
-	<div class="h-full flex w-full text-black">
-		<div class="flex flex-col h-full w-1/4 bg-gradient-to-r from-stone-300 to-orange-300">
-			<div class="flex justify-around mt-10 px-28">
-				<button class="rounded-lg bg-green-400 px-2 shadow-md shadow-stone-600 mr-2"
-					@click="filterCandidates('cooptés')">{{
-						cooptedButtonLabel }}</button>
-				<button class="rounded-lg bg-green-400  px-2 shadow-md shadow-stone-600"
-					@click="filterCandidates('non cooptés')">{{
-						nonCooptedButtonLabel }}</button>
-			</div>
-			<p class="flex justify-center pt-4 underline">{{ listTitle }} </p>
-			<div class="flex-1 overflow-y-auto my-2 px-8">
-				<!-- <div class="rounded bg-green-950 p-2 text-white">Selectionner les vouveaux comptes par admin</div> -->
-				<!-- <AdminSelect v-model="selectedAdmin" context="non confirmed users" /> -->
-				<div v-for="(user, index) in filteredUsers" :key="index"
-					class="py-2 cursor-pointer hover:scale-105 transition duration-300 text-green-700"
-					:class="{ 'bg-orange-700 px-2 rounded-lg shadow-md shadow-stone-600 text-white': userSelected?.id === user.id }"
-					@click="selectUser(user)">
-					<div class="">
-						{{ user.first_name }} {{ user.last_name }}
+	<Container>
+		<div class="h-full flex w-full text-black">
+			<div class="flex flex-col h-full w-1/4">
+				<div class="flex justify-around mt-10 px-28">
+					<button class="rounded-lg bg-green-400 px-2 shadow-md shadow-stone-600 mr-2"
+						@click="filterCandidates('cooptés')">{{
+							cooptedButtonLabel }}</button>
+					<button class="rounded-lg bg-green-400  px-2 shadow-md shadow-stone-600"
+						@click="filterCandidates('non cooptés')">{{
+							nonCooptedButtonLabel }}</button>
+				</div>
+				<p class="flex justify-center pt-4 underline">{{ listTitle }} </p>
+				<div class="flex-1 overflow-y-auto my-2 px-8">
+					<!-- <div class="rounded bg-green-950 p-2 text-white">Selectionner les vouveaux comptes par admin</div> -->
+					<!-- <AdminSelect v-model="selectedAdmin" context="non confirmed users" /> -->
+					<div v-for="(user, index) in filteredUsers" :key="index"
+						class="py-2 cursor-pointer hover:scale-105 transition duration-300 text-green-700"
+						:class="{ 'bg-orange-700 px-2 rounded-lg shadow-md shadow-stone-600 text-white': userSelected?.id === user.id }"
+						@click="selectUser(user)">
+						<div class="">
+							{{ user.first_name }} {{ user.last_name }}
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="bg-gradient-to-l from-stone-300 to-orange-300 w-3/4">
-			<!-- Adding debug info to verify reactive updates -->
-			<div v-if="selectedUserInfo" class="p-8 text-3xl">
-				<div class="py-2">Prénom: <span class="text-green-700">{{ selectedUserInfo.first_name }}</span></div>
-				<div class="py-2">Nom: <span class="text-green-700">{{ selectedUserInfo.last_name }}</span></div>
-				<div class="py-2">Email: <span class="text-green-700">{{ selectedUserInfo.email }}</span></div>
-				<div class="py-2">Motivations: <span class="text-green-700">{{ selectedUserInfo.motivations }}</span></div>
-				<div v-if="adminDetails !== null" class="py-2">Contact admin: <span class="text-green-700">{{
-					adminDetails.first_name }} {{
-							adminDetails.last_name }} aka {{ adminDetails.username }}</span></div>
+			<div class="w-3/4">
+				<div v-if="selectedUserInfo" class="p-8 text-3xl">
+					<div class="py-2">Prénom: <span class="text-green-700">{{ selectedUserInfo.first_name }}</span></div>
+					<div class="py-2">Nom: <span class="text-green-700">{{ selectedUserInfo.last_name }}</span></div>
+					<div class="py-2">Email: <span class="text-green-700">{{ selectedUserInfo.email }}</span></div>
+					<div class="py-2">Motivations: <span class="text-green-700">{{ selectedUserInfo.motivations }}</span></div>
+					<div v-if="adminDetails !== null" class="py-2">Contact admin: <span class="text-green-700">{{
+						adminDetails.first_name }} {{
+								adminDetails.last_name }} aka {{ adminDetails.username }}</span></div>
+				</div>
+				<div v-if="selectedUserInfo" class="flex justify-center space-x-10">
+					<button
+						class="rounded-lg bg-blue-400 p-4 text-3xl hover:scale-105 hover:bg-blue-700 hover:text-white transition duration-300 shadow-lg shadow-stone-600"
+						@click="acceptCandidate(selectedUserInfo.id)">Admettre</button>
+					<button
+						class="rounded-lg bg-red-400 p-4 text-3xl hover:scale-105 hover:bg-red-500 hover:text-white transition duration-300 shadow-lg shadow-stone-600"
+						@click="refuseCandidate(selectedUserInfo.id)">Refuser</button>
+				</div>
 			</div>
-			<div v-if="selectedUserInfo" class="flex justify-center space-x-10">
-				<button
-					class="rounded-lg bg-blue-400 p-4 text-3xl hover:scale-105 hover:bg-blue-700 hover:text-white transition duration-300 shadow-lg shadow-stone-600"
-					@click="acceptCandidate(selectedUserInfo.id)">Admettre</button>
-				<button
-					class="rounded-lg bg-red-400 p-4 text-3xl hover:scale-105 hover:bg-red-500 hover:text-white transition duration-300 shadow-lg shadow-stone-600"
-					@click="refuseCandidate(selectedUserInfo.id)">Refuser</button>
-			</div>
 		</div>
-	</div>
+	</Container>
 </template>
 
 <script setup>
 import axios from 'axios'
 import { ref, onMounted, computed, watch } from "vue"
 import { useSessionStore } from '@/stores/modules/sessionStore'
+import Container from "@/components/Container.vue"
 
 const sessionStore = useSessionStore()
 const adminDetails = ref(null)

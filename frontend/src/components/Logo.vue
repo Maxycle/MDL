@@ -1,6 +1,6 @@
 <!-- Logo.vue -->
 <template>
-	<img ref="imageRef" :src="logoSource" alt="MDL logo" class="h-full w-full object-fill" />
+	<img ref="imageRef" :src="logoSource" alt="MDL logo" class="h-full w-full object-fill rounded" />
  </template>
  
  <script setup>
@@ -19,22 +19,22 @@
 			 return 'MDLlogo1.jpg'
 		 case 'beginner BA':
 			 return 'MDLlogo2.jpg'
-		 case 'beginner SA':
-			 return 'MDLlogo3.jpg'
 		 case 'BA beginner':
-			 return 'MDLlogo4.jpg'
+			 return 'MDLlogo3.jpg'
 		 case 'BA BA':
-			 return 'MDLlogo5.jpg'
+			 return 'MDLlogo4.jpg'
 		 case 'BA SA':
-			 return 'MDLlogo6.jpg'
-		 case 'SA beginner':
-			 return 'MDLlogo7.jpg'
+			 return 'MDLlogo5.jpg'
 		 case 'SA BA':
-			 return 'MDLlogo8.jpg'
+			 return 'MDLlogo6.jpg'
 		 case 'SA SA':
+			 return 'MDLlogo7.jpg'
+		 case 'SA SE':
+			 return 'MDLlogo8.jpg'
+		 case 'SE SA':
 			 return 'MDLlogo9.jpg'
 		 default:
-			 return 'MDLlogo1.jpg'
+			 return 'MDLlogoPP.jpg'
 	 }
  })
  </script>
