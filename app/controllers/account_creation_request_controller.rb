@@ -101,6 +101,6 @@ class AccountCreationRequestController < ApplicationController
   end
 
 	def frontend_url
-		Rails.env.production? ? ENV['FRONTEND_URL'] || "https://www.libertarien.net/" : "http://localhost:5173"
+		Rails.env.production? ? ENV['FRONTEND_URL'] || "https://www.libertarien.net" : "http://localhost:5173"
 	end
 end
