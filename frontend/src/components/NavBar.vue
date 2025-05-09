@@ -1,6 +1,6 @@
 <template>
-	<div class="flex justify-between px-4 items-center bg-gradient-to-r from-[#fc3f1f] to-[#fddd00]">
-		<div class="italic text-[#a4ecb0] font-extrabold text-xl">{{ paramsStore.getParams.welcome_start }} {{ store.getUserUsername }}{{
+	<div class="flex justify-between px-4 items-center bg-gradient-to-r from-orangeLogo to-yellowLogo">
+		<div class="italic text-yellowLogo font-extrabold text-xl">{{ paramsStore.getParams.welcome_start }} {{ store.getUserUsername }}{{
 			paramsStore.getParams.welcome_end }}
 		</div>
 		<div v-if="answerStore.getQuestionnaireDetails.domain && route.path === '/questionnaire'" class="text-blue-100">
@@ -17,7 +17,7 @@
 				<span class="relative"><router-link to="/home-questionnaire">Mes résultats</router-link></span>
 			</NavBarButton>
 			<NavBarButton :isActive="isRouteActive('/users-results')">
-				<span class="relative"><router-link to="/users-results">Les résultats des autres</router-link></span>
+				<span class="relative"><router-link to="/users-results">Membres</router-link></span>
 			</NavBarButton>
 			<NavBarButton :isActive="isRouteActive('/questionnaire')">
 				<span class="relative"><router-link to="/questionnaire">Questionnaire</router-link></span>

@@ -1,7 +1,7 @@
 <template>
 	<div class="w-full text-orange-800">
 		<div class="w-full flex justify-center text-6xl font-extrabold text-green-800 font-serif">
-			{{ data.username }}
+			{{ data.username }} {{ adminButtonText === 'Enlever status admin' ? '(admin)' : '' }}
 		</div>
 		<div class="pl-20 text-xl">
 			<div class="flex space-x-4">
@@ -38,7 +38,14 @@
 			<div>{{ data.certification_is_public ? `${data.username} a rendu sa certification publique` : `${data.username}
 				n'a
 				pas rendu sa certification publique` }}</div>
-			<div class="mt-32 flex flex-col items-center">
+			<div class="w-full flex justify-center">
+
+				<div class="w-1/12">
+					<Logo :certification="scoresInitials" />
+				</div>
+			</div>
+
+			<div class="mt-4 flex flex-col items-center">
 				<div v-if="newCertification"
 					class="flex justify-center items-center bg-yellow-200 rounded-lg p-2 shadow-lg shadow-stone-600">
 					<div>Modifier certification à: <span class="text-2xl text-green-800">{{
@@ -78,6 +85,7 @@ import { ref, onMounted, computed } from "vue"
 import { useScoreStore } from '@/stores/modules/scoreStore'
 import { useSessionStore } from '@/stores/modules/sessionStore'
 import Menu from '../components/Menu.vue'
+import Logo from "@/components/Logo.vue"
 
 const sessionStore = useSessionStore()
 const scoreStore = useScoreStore()
@@ -107,6 +115,9 @@ const fullWord = ((initials) => {
 			break
 		case 'SA':
 			return 'Sait Analyser'
+			break
+		case 'SE':
+			return 'Sait Extrapoler'
 			break
 		case 'DN':
 			return 'Droit Naturel'
@@ -175,9 +186,29 @@ const changeAdminStatus = async () => {
 	}
 }
 
-// const displayAdminButtonText = computed(() => {
-// 	return adminButtonText.value
-// })
+const scoresInitials = computed(() => {
+	// First check if selectedUserInfo.value and scores exist
+	if (!props.data || !props.data.scores) {
+		// Return a default value or empty string when scores are not available
+		return 'beginner beginner';
+	}
+
+	// Initialize variables for domain levels
+	let initialsDN = 'beginner';
+	let initialsEA = 'beginner';
+
+	// Loop through scores array to find DN and EA domains
+	props.data.scores.forEach(score => {
+		if (score && score.domain === 'DN') {
+			initialsDN = score.level;
+		} else if (score && score.domain === 'EA') {
+			initialsEA = score.level;
+		}
+	});
+
+	// Return the combined initials
+	return initialsDN + ' ' + initialsEA;
+});
 
 const showMenu = () => {
 	hovered.value = true

@@ -1,26 +1,24 @@
 <template>
-	<div class="relative min-h-screen text-white bg-gradient-to-r from-[#fc3f1f] to-[#fddd00]" v-cloak>
-		<div class="h-screen bg-white/30 backdrop-invert backdrop-opacity-10 pt-10">
-			<div class="flex flex-col items-center">
+	<Container>
+		<div class="relative">
+			<div class="flex flex-col items-center pt-20">
 				<div v-if="!questionnaireStarted" class="flex space-x-4 mb-4">
 					<div v-for="domain in questionnaireDomain" :key="domain"
-						class="rounded-lg bg-gradient-to-r from-[#245891] to-[#0089d1] p-4 flex flex-col items-center">
+						class="rounded-lg bg-gradient-to-r from-[#245891] to-[#0089d1] p-4 flex flex-col items-center shadow-md shadow-stone-600">
 						<div class="bg-blue-100 rounded-md p-2 mb-10 z-10 text-blue-900 text-xl font-extrabold">
 							{{
 								domain }}</div>
 						<div class="flex h-1/2">
 							<button v-for="(button, index) in buttonsQuestionaires" :key="button"
-								class="bg-[#14191d] text-white rounded-lg disabled:opacity-40" :class="{ 'mr-2': index === 0 }"
-								@click="openModal(domain, button)" :disabled="isDisabled(domain, button)">
-								<div class="p-2 rounded h-full flex items-center">
-									<div>
-										<div class="font-extrabold">{{ button }}</div>
-										<div class="italic">{{ buttonTextAndApiUrl(domain, button).text }}</div>
-										<div v-if="showNextAvailability(domain, button)" class="text-xs italic">Disponible le
-											{{ buttonTextAndApiUrl(domain, button).availabilityDate }}</div>
-									</div>
+								class="bg-yellowLogo text-blueLogoDark hover:text-orangeLogo rounded-lg p-2 disabled:opacity-40 hover:scale-105 transition duration-300"
+								:class="{ 'mr-2': index === 0 }" @click="openModal(domain, button)"
+								:disabled="isDisabled(domain, button)">
+								<div>
+									<div class="font-extrabold">{{ button }}</div>
+									<div class="italic">{{ buttonTextAndApiUrl(domain, button).text }}</div>
+									<div v-if="showNextAvailability(domain, button)" class="text-xs italic">Disponible le
+										{{ buttonTextAndApiUrl(domain, button).availabilityDate }}</div>
 								</div>
-
 							</button>
 						</div>
 					</div>
@@ -36,11 +34,9 @@
 					<StopWatch @time-is-up="stopQuestionnaire" class="mt-16" />
 				</div>
 			</div>
-		</div>
-		<div class="absolute left-0 top-0">
-			<StartModal :isVisible="isModalVisible" title="Le questionnaire va commencer" @close="closeModal"
-				class="cursor-default">
-				<p class="text-xs">Quand vous cliquez sur commencer, cela compte pour un essai. Si vous n'êtes pas
+			<StartModal :isVisible="isModalVisible" :title="modalTitle" @close="closeModal">
+				<p class="text-xs">Quand vous cliquez sur commencer, le questionnaire démarre et cela compte pour un essai. Si
+					vous n'êtes pas
 					prêt, fermez cette boite de dialogue.</p>
 				<div class="flex space-x-2 justify-center">
 					<button @click="closeModal()" class="mt-4 bg-red-600 text-white p-2 rounded-lg font-bold">
@@ -53,12 +49,11 @@
 				</div>
 			</StartModal>
 		</div>
-
-	</div>
+	</Container>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref, onMounted, computed } from "vue"
 import { useRouter } from "vue-router"
 import { useSessionStore } from "@/stores/modules/sessionStore"
 import { useAnswerStore } from '@/stores/modules/answerStore'
@@ -68,6 +63,7 @@ import axios from 'axios'
 import QuestionAnswerBlock from "@/components/QuestionAnswerBlock.vue"
 import StopWatch from "@/components/StopWatch.vue"
 import StartModal from "@/components/StartModal.vue"
+import Container from "@/components/Container.vue"
 
 const router = useRouter()
 const sessionStore = useSessionStore()
@@ -305,4 +301,7 @@ const openModal = (domain, button) => {
 	}
 };
 
+const modalTitle = computed(() => {
+	return `"${selectedDomain.value}, ${selectedButton.value}"`
+})
 </script>
