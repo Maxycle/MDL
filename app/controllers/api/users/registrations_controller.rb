@@ -10,13 +10,50 @@ module Api
 			before_action :configure_permitted_parameters, only: [:create, :update]
 			skip_before_action :authenticate_user!, only: [:create, :confirm]
 			
+			# Validates the signup token before allowing access to signup
+      def validate_signup_token
+        token = params[:token]
+
+        # Find the account creation request with this token
+        @account_request = AccountCreationRequest.find_by(validation_token: token)
+        
+        if @account_request && @account_request.validated && !@account_request.token_used_for_signup
+          # Token is valid and not yet used for signup
+					render json: { 
+            email: @account_request.email
+          }
+          true
+        else
+          # Invalid token, already used, or account request not validated
+          render json: { 
+            success: false, 
+            message: "Invalid or expired signup link" 
+          }, status: :unauthorized
+          false
+        end
+      end
+
 			def create
 				# Extract user parameters
 				user_params = params.require(:user).permit(:email, :password, :username, :first_name, :last_name, :intro)
 				
+				 # If we have a token and validated email, enforce it
+				 token = params[:token]
+				 @account_request = AccountCreationRequest.find_by(validation_token: token)
+				 @validated_email = @account_request.email
+
+				 if token.present? && @validated_email.present?
+					 # Override the email with the one from the account request to prevent tampering
+					 user_params[:email] = @validated_email
+				 end
+
 				build_resource(user_params)
 			
 				if resource.save
+					# If we used a token, mark it as used
+          if @account_request
+            @account_request.update(token_used_for_signup: true)
+          end
 					register_success
 				else
 					register_failed(resource.errors.full_messages)
@@ -79,6 +116,11 @@ module Api
 			def configure_permitted_parameters
 				devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :username, :first_name, :last_name, :intro])
 				devise_parameter_sanitizer.permit(:account_update, keys: [:username, :first_name, :last_name, :certification_is_public, :email, :password, :password_confirmation, :current_password, :wantsToBecomePP])
+			end
+
+			def generate_validation_token
+				self.validation_token = SecureRandom.urlsafe_base64(32)
+				self.token_created_at = Time.current
 			end
 		end
 	end

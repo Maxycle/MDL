@@ -1,5 +1,5 @@
 <template>
-	<div class="bg-gradient-to-b from-black to-blue-900 w-full h-full relative" v-cloak>
+	<div class="bg-[#14191d] w-full relative h-full" v-cloak>
 		<div class="absolute top-2 right-10 flex flex-col items-center">
 			<div class="text-white pb-2">Votre profile est {{ sessionStore.getUserDetails.certification_is_public ? 'publique'
 				:
@@ -21,7 +21,7 @@
 			</div>
 		</div>
 		<div class="flex flex-col items-center w-full">
-			<p class=" w-2/3 text-white pt-12 px-8 text-center">{{ storeParams.getParams.intro }}
+			<p class=" w-2/3 text-white pt-4 px-8 text-center">{{ storeParams.getParams.intro }}
 			</p>
 			<div v-if="hasScoreData('droitNaturel')" class="text-2xl text-green-500 pt-12">En
 				<span class="font-extrabold italic">"Droit
@@ -37,7 +37,10 @@
 					}}"</span></div>
 			<div v-else class="text-2xl text-red-600">Vous n'avez pas encore répondu au questionnaire "Ecole Autrichienne"
 			</div>
-			<div class="font-extrabold italic text-5xl text-orange-700 pt-16 mb-10">Vous êtes certifié "{{
+			<div class="w-1/6">
+				<Logo :certification="scoresInitials" />
+			</div>
+			<div class="font-extrabold italic text-5xl text-orange-700 mb-10">Vous êtes certifié "{{
 				sessionStore.getUserDetails.certification }}"</div>
 			<p v-if="sessionStore.getUserCertification === 'MC' && sessionStore.getUserDetails.wantsToBecomePP === false"
 				class="text-white pb-10">
@@ -72,11 +75,12 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue"
+import { onMounted, ref, computed } from "vue"
 import { useRouter } from "vue-router"
 import { useSessionStore } from "@/stores/modules/sessionStore"
 import { useScoreStore } from "@/stores/modules/scoreStore"
 import { useParamsStore } from "@/stores/modules/paramsStore"
+import Logo from "@/components/Logo.vue"
 
 const sessionStore = useSessionStore();
 const scoreStore = useScoreStore()
@@ -149,4 +153,11 @@ const translateInitialsIntoFullWords = (initials) => {
 	if (initials === "beginner") { words = "Débutant" }
 	return words
 }
+
+const scoresInitials = computed(() => {
+  // Use optional chaining (?.) to safely access nested properties
+  const initialsDN = scoreStore.getScore?.droitNaturel?.level || 'beginner'
+  const initialsEA = scoreStore.getScore?.ecoleAutrichienne?.level || 'beginner'
+  return initialsDN + ' ' + initialsEA
+})
 </script>

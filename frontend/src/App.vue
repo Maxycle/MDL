@@ -1,17 +1,21 @@
 <template>
-	<div class="flex flex-col h-screen font-lora" v-cloak>
-		<div class="flex flex-col h-1/6 bg-black">
-			<Hero class="grow" />
-			<NavBar v-if="sessionStore.isLoggedIn" class="z-10" />
-		</div>
-		<div class="h-5/6">
-			<router-view v-slot="{ Component }">
-				<transition name="fade-to-black" mode="out-in">
-					<component :is="Component" />
-				</transition>
-			</router-view>
-		</div>
-	</div>
+  <div class="flex flex-col h-screen font-lora" v-cloak>
+    <!-- Header section with Hero and NavBar -->
+    <header class="flex-none">
+			<NavBar v-if="sessionStore.isLoggedIn" class="z-50"/>
+      <Hero />
+      <!-- <NavBar v-if="sessionStore.isLoggedIn" class="z-50"/> -->
+    </header>
+    
+    <!-- Main content area that takes remaining space -->
+    <main class="flex-1 overflow-auto">
+      <router-view v-slot="{ Component }">
+        <transition name="fade-to-black" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </main>
+  </div>
 </template>
 
 <script setup>

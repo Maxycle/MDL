@@ -1,0 +1,23 @@
+<!-- app/views/account_creation_request_mailer/email_validation.html.erb -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+</head>
+<body>
+  <h1>Mouvement des Libertariens - Validation de la demande d'ouverture de compte</h1>
+  
+  <p>Bonjour <%= @account_creation_request.first_name %> <%= @account_creation_request.last_name %>,</p>
+  
+  <p>Merci de vouloir joindre le Mouvement des Libertariens. Pour valider votre demande, veuillez cliquer sur le lien suivant:</p>
+  
+  <p><%= link_to 'Valider ma demande d\'ouverure de compte', @validation_url %></p>
+  <p>Ce lien ne fonctionnera plus dans 24 heures.</p>
+	<p>Si votre demande est acceptée, un mail vous sera envoyé avec un lien pour créer un compte.</p>
+  
+  <p>If you did not create this account request, please ignore this email.</p>
+  
+  <p>Merci,<br>
+  le Mouvement des Libertariens</p>
+</body>
+</html>

@@ -16,9 +16,7 @@
 				<div v-if="errorMessage">{{ errorMessage }}</div>
 				<div v-else-if="!sessionStore.getUserId && fullname">
 					<div class="border-2 border-red-500 rounded-lg bg-green-600 p-4 mb-4">
-						{{ fullname }}, votre demande a été reçue. Si elle est acceptée, vous recevrez un email avec un lien pour
-						créer votre
-						compte.
+						{{ fullname }}, veuillez valider votre demande d'ouverture de compte en cliquant le lien qui vous a été envoyé par email.
 					</div>
 				</div>
 				<div v-else-if="sessionStore.getUserId && fullname">
@@ -95,7 +93,8 @@ const sendRequest = async () => {
 		first_name: firstname.value,
 		last_name: lastname.value,
 		motivations: motivations.value,
-		referencer: sessionStore.getUserId ? sessionStore.getUserId : null
+		referencer: sessionStore.getUserId ? sessionStore.getUserId : null,
+		validated: sessionStore.getUserId ? true : false
 	}
 
 	axios.post('/api/account_creation_request', {
