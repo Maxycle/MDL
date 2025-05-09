@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_05_06_202311) do
+ActiveRecord::Schema[7.0].define(version: 2025_05_07_194401) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -139,7 +139,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_06_202311) do
     t.string "jti", null: false
     t.boolean "admin", default: false
     t.boolean "certification_is_public", default: true
-    t.string "certification", default: "not certified"
+    t.string "certification", default: "SM"
     t.text "intro"
     t.boolean "wantsToBecomePP", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true

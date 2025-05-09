@@ -2,7 +2,7 @@
 	<div class="relative">
 		<div class="flex flex-col items-center mb-6">
 			<div class="flex items-center">
-				<div v-if="sessionStore.isAdmin" class="mr-4">difficulté: {{ question.difficulty }}</div>
+				<div v-if="sessionStore.isAdmin && question" class="mr-4">difficulté: {{ question.difficulty }}</div>
 				<Question :text="question.content" class="my-8 text-3xl font-bold max-w-7xl text-center" />
 			</div>
 			<div class="">

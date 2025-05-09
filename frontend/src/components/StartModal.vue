@@ -1,5 +1,5 @@
 <template>
-	<div v-if="isVisible" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
+	<div v-if="isVisible" class="fixed inset-0 bg-[#14191d] bg-opacity-100 flex justify-center items-center z-10">
 		<div class="relative bg-orange-100 p-8 rounded-lg max-w-lg w-full text-blue-900">
 			<h2 class="text-2xl mb-4 text-center">{{ title }}</h2>
 			<div class="modal-body">

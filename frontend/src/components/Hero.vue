@@ -1,8 +1,12 @@
 <template>
-	<div class="relative bg-black flex items-center justify-center">
-		<img ref="imageRef" src="/Flag_of_Anarcho-capitalism.png" alt="yellow and black triangles"
-			class="absolute inset-0 h-full w-full object-fill md:object-center" />
-		<h1 v-for="(letter, index) in 'Mouvement&nbsp;des&nbsp;Libertariens'" 
-		class="z-10 text-5xl font-extrabold text-blue-500 hover:text-green-500 hover:animate-spin transition duration-700 " >{{ letter }}</h1>
+	<div class="bg-[#14191d] flex items-center justify-around">
+		<img ref="imageRef" src="/MDLlogoPP.jpg" alt="yellow and black triangles" class="w-1/12 md:w-1/10 lg:w-1/12" />
+		<div class="flex">
+			<h1 v-for="(letter, index) in 'Mouvement&nbsp;des&nbsp;Libertariens'"
+				class="flex z-10 text-5xl font-extrabold text-[#0089d1] hover:text-green-500 hover:animate-spin transition duration-700 ">
+				{{ letter }}</h1>
+		</div>
+		<img ref="imageRef" src="/MDLlogoPP.jpg" alt="yellow and black triangles" class="w-1/12 md:w-1/10 lg:w-1/12" />
 	</div>
+	<div class="bg-gradient-to-r from-[#fc3f1f] to-[#fddd00] h-1 w-full"></div>
 </template>
