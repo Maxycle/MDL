@@ -81,7 +81,7 @@
 
 <script setup>
 import axios from 'axios'
-import { ref, onMounted, computed } from "vue"
+import { ref, computed} from "vue"
 import { useScoreStore } from '@/stores/modules/scoreStore'
 import { useSessionStore } from '@/stores/modules/sessionStore'
 import Menu from '../components/Menu.vue'
@@ -92,7 +92,6 @@ const scoreStore = useScoreStore()
 const hovered = ref(false)
 const newCertification = ref('')
 const updatedCertification = ref('')
-const adminButtonText = ref('')
 
 const props = defineProps({
 	data: {
@@ -101,8 +100,8 @@ const props = defineProps({
 	}
 })
 
-onMounted(() => {
-	adminButtonText.value = props.data.admin ? 'Enlever status admin' : 'Donner status admin'
+const adminButtonText = computed(() => {
+	return props.data.admin ? 'Enlever status admin' : 'Donner status admin'
 })
 
 const fullWord = ((initials) => {
@@ -147,8 +146,8 @@ const updateCertification = async () => {
 				headers: {
 					Authorization: `${sessionStore.getAuthToken}`
 				}
-			}).then((response) => {
-				updatedCertification.value = response.data.message === 'Certification updated successfully' ? newCertification.value : ''
+			}).then(() => {
+				emit('userUpdated', props.data.id)
 				newCertification.value = ''
 			})
 	} catch (error) {
@@ -179,8 +178,9 @@ const changeAdminStatus = async () => {
 				headers: {
 					Authorization: `${sessionStore.getAuthToken}`
 				}
+			}).then(() => {
+				emit('userUpdated', props.data.id)
 			})
-		adminButtonText.value = response.data.message === 'User is now admin' ? 'Enlever status admin' : 'Donner status admin'
 	} catch (error) {
 		console.error('Error updating certification:', error.message)
 	}
