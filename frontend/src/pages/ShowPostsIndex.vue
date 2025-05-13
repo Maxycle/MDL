@@ -1,6 +1,6 @@
 <template>
 	<Container>
-		<div class="h-screen">
+		<div class="flex flex-col grow text-orangeLogo">
 			<div class="flex justify-center w-full mb-4">
 				<div class="text-center text-yellowLogo text-5xl p-4 border-2 border-orangeLogo bg-blueLogoDark font-extrabold italic rounded-lg mt-2">Derniers articles</div>
 			</div>
@@ -9,11 +9,11 @@
 					<div class="post-content px-20">
 						<div v-if="!post.showFullContent" @click="expandPost(postIndex)" class="flex items-center">
 							<PostCard :data="processContent(post.content_html)" :title="post.title" :author="post.author"
-								:created="formattedDate(post.created)" class="cursor-pointer " />
+								:created="formattedDate(post.created)" class="cursor-pointer hover:shadow-lg hover:shadow-yellowLogo" />
 							<div v-if="sessionStore.isAdmin"
-								class="rounded-lg p-2 bg-red-700 h-1/3 hover:scale-105 transition duration-300 cursor-pointer"
+								class="rounded-lg p-2 ml-8 text-yellowLogo bg-red-700 h-1/3 hover:scale-105 transition duration-300 cursor-pointer"
 								@click.stop="confirmDelete(post.id, postIndex)">
-								Détruire à tout jamais
+								Détruire "{{ post.title }}"
 							</div>
 						</div>
 						<div v-else>
