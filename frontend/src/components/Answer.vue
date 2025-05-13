@@ -1,7 +1,8 @@
 <template>
-	<div class="flex text-2xl font-bold p-1 items-center hover:bg-blueLogoLight hover:text-yellowLogo rounded-full cursor-pointer transition duration-300 px-4">
-		<div v-if="!showTick" class="border-2 border-black w-4 h-4 mr-2" />
-		<AnarcapTick v-else class="mr-2" />
+	<div
+		class="flex text-2xl font-bold p-1 items-center hover:bg-blueLogoLight rounded-full cursor-pointer transition duration-300 px-4">
+		<div v-if="!showTick" class="border-2 border-yellowLogo w-4 h-4 mr-2" />
+		<Logo v-else class="w-10 mr-2"/>
 		{{ data.content }}
 	</div>
 </template>
@@ -10,6 +11,7 @@
 import AnarcapTick from './AnarcapTick.vue';
 import { computed } from 'vue';
 import { useAnswerStore } from '@/stores/modules/answerStore';
+import Logo from "@/components/Logo.vue"
 
 const props = defineProps({
 	data: {

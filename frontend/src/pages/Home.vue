@@ -1,7 +1,8 @@
 <template>
-	<div class="bg-[#14191d] w-full relative h-full" v-cloak>
+	<div class="w-full relative bg-blackLogo h-screen">
 		<div class="absolute top-2 right-10 flex flex-col items-center">
-			<div class="text-white pb-2">Votre profile est {{ sessionStore.getUserDetails.certification_is_public ? 'publique'
+			<div class="text-white pb-2">Votre profile est {{ sessionStore.getUserDetails.certification_is_public ?
+				'publique'
 				:
 				'privé' }}</div>
 			<button class="rounded bg-blue-200 p-2 text-blue-900" @click="onPrivacyOrPPdemandClick('privacy')">Rendre profil
@@ -40,8 +41,7 @@
 			<div class="w-1/6">
 				<Logo :certification="scoresInitials" />
 			</div>
-			<div class="font-extrabold italic text-5xl text-orangeLogo mb-10">Vous êtes certifié "{{
-				sessionStore.getUserDetails.certification }}"</div>
+			<div class="font-extrabold italic text-5xl text-orangeLogo mb-10">{{ certificationSentence }}</div>
 			<p v-if="sessionStore.getUserCertification === 'MC' && sessionStore.getUserDetails.wantsToBecomePP === false"
 				class="text-white pb-10">
 				Vous pouvez maintenant demander à devenir un porte parole du mouvement des libertariens. En cliquant sur le
@@ -50,13 +50,12 @@
 			<div class="grid grid-cols-2 gap-4 w-1/2">
 				<div
 					class="rounded-2xl text-2xl p-4 cursor-pointer font-bold text-blueLogoDark text-center hover:scale-105 transition duration-300 hover:border-green-500 hover:border-2 bg-gradient-to-r from-orangeLogo to-yellowLogo hover:bg-blue-900"
-					:class="{ 'col-span-2': sessionStore.getUserCertification !== 'MC' }" @click="router.push('/questionnaire')">
-					<!-- <div class="bg-white/30 backdrop-invert backdrop-opacity-20 rounded-2xl p-4"> -->
+					:class="{ 'col-span-2': sessionStore.getUserCertification !== 'MC' }"
+					@click="router.push('/questionnaire')">
 					Aller au questionnaire
-				<!-- </div> -->
 				</div>
 				<div v-if="sessionStore.getUserCertification === 'MC'"
-					class="rounded-2xl cursor-pointer p-4 font-bold text-white text-center hover:scale-105 transition duration-300 hover:border-green-500 hover:border-2 bg-orange-800 hover:bg-orange-900"
+					class="rounded-2xl text-2xl cursor-pointer p-4 font-bold text-blueLogoDark text-center hover:scale-105 transition duration-300 hover:border-green-500 hover:border-2 bg-gradient-to-l from-orangeLogo to-yellowLogo hover:bg-orange-900"
 					@click="onPrivacyOrPPdemandClick('PPdemand')">
 					{{ sessionStore.getUserDetails.wantsToBecomePP === false ? 'Devenir porte parole' : 'annuler la demande de certification porte parole' }}
 				</div>
@@ -157,9 +156,22 @@ const translateInitialsIntoFullWords = (initials) => {
 }
 
 const scoresInitials = computed(() => {
-  // Use optional chaining (?.) to safely access nested properties
-  const initialsDN = scoreStore.getScore?.droitNaturel?.level || 'beginner'
-  const initialsEA = scoreStore.getScore?.ecoleAutrichienne?.level || 'beginner'
-  return initialsDN + ' ' + initialsEA
+	// Use optional chaining (?.) to safely access nested properties
+	const initialsDN = scoreStore.getScore?.droitNaturel?.level || 'beginner'
+	const initialsEA = scoreStore.getScore?.ecoleAutrichienne?.level || 'beginner'
+	return initialsDN + ' ' + initialsEA
+})
+
+const certificationSentence = computed(() => {
+	switch (sessionStore.getUserCertification) {
+		case 'SM':
+			return `Vous êtes est un Simple Membre`
+		case 'MC':
+			return `Vous êtes est un Membre Certifié`
+		case 'PP':
+			return `Vous êtes est un Porte Parole`
+		default:
+			return `Vous êtes est une chèvre`
+	}
 })
 </script>

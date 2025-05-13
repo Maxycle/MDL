@@ -1,14 +1,14 @@
 <template>
 	<Container>
-		<div class="flex w-full text-black" style="height: calc(100vh - 200px);">
+		<div class="flex w-full text-blueLogoLight pt-8" style="height: calc(100vh - 200px);">
 			<div class="w-1/4 h-full">
-				<div class="h-full px-8 py-8 flex flex-col">
+				<div class="h-full px-8 flex flex-col">
 					<AutocompleteUsers :options="users" class="py-4" @user-selected="selectUser" />
 					<div class="flex-1 overflow-hidden">
 						<div class="h-full overflow-y-auto overscroll-contain pb-4">
 							<div v-for="(user, index) in filteredUsers" :key="index"
-								class="py-2 cursor-pointer hover:text-blueLogoDark transition duration-300"
-								:class="{ 'bg-orange-700 px-2 rounded-lg shadow-md shadow-stone-600 text-white': userSelected?.id === user.id }"
+								class="py-2 text-orangeLogo cursor-pointer hover:text-blueLogoLight transition duration-300"
+								:class="{ 'bg-blueLogoDark px-2 rounded-lg  text-yellowLogo font-extrabold': userSelected?.id === user.id }"
 								@click="selectUser(user)">
 								<div v-if="user.certification_is_public" class="flex justify-between items-center">
 									<div>
@@ -31,15 +31,19 @@
 					<div class="flex-1 overflow-y-auto">
 						<div class="flex items-center justify-center">
 							<div
-								class="rounded-xl p-4 text-white bg-gradient-to-r from-blueLogoDark to-blueLogoLight shadow-md shadow-stone-600 mx-4">
+								class="rounded-xl bg-blueLogoDark p-4 border-2 border-orangeLogo text-5xl text-yellowLogo font-extrabold mx-4 italic">
 								{{ selectedUserInfo.username }}
 							</div>
 						</div>
-						<div class="py-2">Prénom: <span class="text-green-700">{{ selectedUserInfo.first_name }}</span></div>
-						<div class="py-2">Nom: <span class="text-green-700">{{ selectedUserInfo.last_name }}</span></div>
-						<div class="py-2">Intro: <span class="text-green-700">{{ selectedUserInfo.intro }}</span></div>
-						<div>certification: <span class="text-green-800">{{ selectedUserInfo.certification }}</span></div>
-						<div class="w-full flex justify-center">
+						<div class="py-2">Prénom: <span class="text-yellowLogo">{{ selectedUserInfo.first_name }}</span></div>
+						<div class="py-2">Nom: <span class="text-yellowLogo">{{ selectedUserInfo.last_name }}</span></div>
+						<div class="py-2">Intro: <span class="text-yellowLogo">{{ selectedUserInfo.intro }}</span></div>
+						<div class="w-full flex justify-center items-center">
+							<div class="w-1/12">
+								<Logo :certification="scoresInitials" />
+							</div>
+							<div class="text-orangeLogo italic text-5xl border-2 border-blueLogoDark rounded-lg p-2 mx-8">{{
+								certificationSentence }}</div>
 							<div class="w-1/12">
 								<Logo :certification="scoresInitials" />
 							</div>
@@ -53,7 +57,7 @@
 
 <script setup>
 import axios from 'axios'
-import { ref, onMounted, computed, watch } from "vue"
+import { ref, onMounted, computed } from "vue"
 import Container from "@/components/Container.vue"
 import AutocompleteUsers from '@/components/AutocompleteUsers.vue';
 import Logo from "@/components/Logo.vue"
@@ -110,4 +114,17 @@ const scoresInitials = computed(() => {
 	// Return the combined initials
 	return initialsDN + ' ' + initialsEA;
 });
+
+const certificationSentence = computed(() => {
+	switch (selectedUserInfo.value.certification) {
+		case 'SM':
+			return `${selectedUserInfo.value.username} est un Simple Membre`
+		case 'MC':
+			return `${selectedUserInfo.value.username} est un Membre Certifié`
+		case 'PP':
+			return `${selectedUserInfo.value.username} est un Porte Parole`
+		default:
+			return `${selectedUserInfo.value.username} est un foutboleure`
+	}
+})
 </script>

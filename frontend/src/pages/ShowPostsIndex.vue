@@ -2,7 +2,7 @@
 	<Container>
 		<div class="h-screen">
 			<div class="flex justify-center w-full mb-4">
-				<div class="text-center text-blueLogoDark text-5xl p-4">Derniers articles</div>
+				<div class="text-center text-yellowLogo text-5xl p-4 border-2 border-orangeLogo bg-blueLogoDark font-extrabold italic rounded-lg mt-2">Derniers articles</div>
 			</div>
 			<div v-if="posts.length" class="post">
 				<div v-for="(post, postIndex) in posts" :key="postIndex" class="">

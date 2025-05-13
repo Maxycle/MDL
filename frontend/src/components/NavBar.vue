@@ -1,13 +1,7 @@
 <template>
-	<div class="flex justify-between px-4 items-center bg-gradient-to-r from-orangeLogo to-yellowLogo">
+	<div class="flex justify-between px-4 items-center bg-blueLogoLight">
 		<div class="italic text-yellowLogo font-extrabold text-xl">{{ paramsStore.getParams.welcome_start }} {{ store.getUserUsername }}{{
 			paramsStore.getParams.welcome_end }}
-		</div>
-		<div v-if="answerStore.getQuestionnaireDetails.domain && route.path === '/questionnaire'" class="text-blue-100">
-			<div>domaine: <span class="font-bold italic">{{
-				answerStore.getQuestionnaireDetails.domain }}</span></div>
-			<div>niveau: <span class="font-bold italic">{{
-				answerStore.getQuestionnaireDetails.button }}</span></div>
 		</div>
 		<div class="flex justify-end space-x-2">
 			<NavBarButton :isActive="isRouteActive('/')">

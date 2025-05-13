@@ -1,16 +1,24 @@
 <template>
 	<Container>
+
 		<div class="relative">
+			<div v-if="answerStore.getQuestionnaireDetails.domain"
+				class="absolute font-bold text-orangeLogoDark bg-yellowLogo px-1 rounded w-fit left-6 top-6">
+				<div>domaine: <span class="font-extrabold italic">{{
+					answerStore.getQuestionnaireDetails.domain }}</span></div>
+				<div>niveau: <span class="font-bold italic">{{
+					answerStore.getQuestionnaireDetails.button }}</span></div>
+			</div>
 			<div class="flex flex-col items-center pt-20">
 				<div v-if="!questionnaireStarted" class="flex space-x-4 mb-4">
 					<div v-for="domain in questionnaireDomain" :key="domain"
-						class="rounded-lg bg-gradient-to-r from-[#245891] to-[#0089d1] p-4 flex flex-col items-center shadow-md shadow-stone-600">
+						class="rounded-lg bg-gradient-to-r from-blueLogoDark to-blueLogoLight p-4 flex flex-col items-center">
 						<div class="bg-blue-100 rounded-md p-2 mb-10 z-10 text-blue-900 text-xl font-extrabold">
-							{{
-								domain }}</div>
+							{{ domain }}
+						</div>
 						<div class="flex h-1/2">
 							<button v-for="(button, index) in buttonsQuestionaires" :key="button"
-								class="bg-yellowLogo text-blueLogoDark hover:text-orangeLogo rounded-lg p-2 disabled:opacity-40 hover:scale-105 transition duration-300"
+								class="bg-blue-100 text-orangeLogo hover:text-orangeLogoDark hover:bg-yellowLogo rounded-lg p-2 disabled:opacity-40 hover:scale-105 transition duration-300"
 								:class="{ 'mr-2': index === 0 }" @click="openModal(domain, button)"
 								:disabled="isDisabled(domain, button)">
 								<div>
@@ -27,7 +35,8 @@
 					<div>
 						<QuestionAnswerBlock :questionsList="questionsList" />
 					</div>
-					<button class="rounded bg-green-500 p-1 text-orange-800 text-xl flex items-center px-4 mt-12"
+					<button
+						class="rounded bg-blueLogoLight p-1 text-blackLogo text-xl flex items-center px-4 mt-12 transition hover:scale-125 duration-300"
 						@click="stopQuestionnaire">
 						terminer questionnaire
 					</button>
@@ -39,11 +48,10 @@
 					vous n'êtes pas
 					prêt, fermez cette boite de dialogue.</p>
 				<div class="flex space-x-2 justify-center">
-					<button @click="closeModal()" class="mt-4 bg-red-600 text-white p-2 rounded-lg font-bold">
+					<button @click="closeModal" class="mt-4 bg-red-600 text-white p-2 rounded-lg font-bold">
 						fermer
 					</button>
-					<button @click="startQuestionnaire(domain, button)"
-						class="mt-4 bg-green-600 text-white p-2 rounded-lg font-bold">
+					<button @click="startQuestionnaire" class="mt-4 bg-green-600 text-white p-2 rounded-lg font-bold">
 						commencer
 					</button>
 				</div>
@@ -140,9 +148,11 @@ const isDisabledByTiming = (domain) => {
 async function startQuestionnaire() {
 	const domain = selectedDomain.value
 	const button = selectedButton.value
+
 	answerStore.addDetails({ domain, button })
 	questionsList.value = []
 	answerStore.reset()
+
 	try {
 		const response = await axios.get(buttonTextAndApiUrl(domain, button).apiUrl,
 			{
@@ -159,6 +169,7 @@ async function startQuestionnaire() {
 	} catch (error) {
 		console.error('Error fetching questions:', error.message);
 	}
+
 	if (questionsList.value.length) {
 		questionnaireStarted.value = true
 		scoreBeingUpdated.value = selectScore(domain)
@@ -209,7 +220,7 @@ const updateScoreAtStart = async (score) => {
 			});
 		scoreBeingUpdated.value = response.data
 	} catch (error) {
-		console.error('Error creating score:', error.message);
+		console.error('Error updating score:', error.message);
 	}
 }
 
@@ -239,7 +250,7 @@ const updateScoreAtFinish = async (score) => {
 				}
 			});
 	} catch (error) {
-		console.error('Error creating score:', error.message);
+		console.error('Error updating score:', error.message);
 	}
 	await scoreStore.fetchScores()
 }
@@ -273,35 +284,25 @@ const stopQuestionnaire = async () => {
 	router.push({ name: "Home" })
 }
 
-const selectScore = (domain) => { return domain === 'Droit Naturel' ? scoreStore.getScore.droitNaturel : scoreStore.getScore.ecoleAutrichienne }
+const selectScore = (domain) => {
+	return domain === 'Droit Naturel' ? scoreStore.getScore.droitNaturel : scoreStore.getScore.ecoleAutrichienne
+}
 
-const closeModal = (event) => {
-	if (event) {
-		event.stopPropagation();
-	}
-
-	try {
-		isModalVisible.value = false;
-	} catch (error) {
-		console.error('Error in closeModal:', error.message);
-	}
-};
+const closeModal = () => {
+	isModalVisible.value = false;
+}
 
 const openModal = (domain, button) => {
 	if (isModalVisible.value) {
 		return;
 	}
 
-	try {
-		selectedDomain.value = domain;
-		selectedButton.value = button;
-		isModalVisible.value = true;
-	} catch (error) {
-		console.error('Error in openModal:', error.message);
-	}
-};
+	selectedDomain.value = domain;
+	selectedButton.value = button;
+	isModalVisible.value = true;
+}
 
 const modalTitle = computed(() => {
-	return `"${selectedDomain.value}, ${selectedButton.value}"`
+	return `${selectedDomain.value}, ${selectedButton.value}`
 })
 </script>
