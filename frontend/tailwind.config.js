@@ -12,8 +12,10 @@ module.exports = {
 				'anarcapYellow': '#fdfd00',
 				'blueLogoLight': '#0089d1',
 				'blueLogoDark': '#0162af',
-				'orangeLogo': '#fc3f1f',
-				'yellowLogo': '#fddd00'
+				'orangeLogo': '#f4741b',
+				'orangeLogoDark': '#fc3f1f',
+				'yellowLogo': '#fddd00',
+				'blackLogo': '#14191d'
 			},
 			textShadow: {
 				'DEFAULT': '0 0 5px rgba(0, 0, 0, 0.5)',

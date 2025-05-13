@@ -1,22 +1,24 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/pages/Home.vue'
-import Questionnaire from '@/pages/Questionnaire.vue'
-import Login from '@/pages/Login.vue'
-import SignUp from '@/pages/SignUp.vue'
-import AccountCreationRequest from '@/pages/AccountCreationRequest.vue'
-import NewQuestion from '@/pages/NewQuestion.vue'
-import ModifyQuestion from '@/pages/ModifyQuestion.vue'
-import QuestionnaireParams from '@/pages/QuestionnaireParams.vue'
-import UploadNewQuestions from '@/pages/UploadNewQuestions.vue'
-import EmailConfirmation from '@/pages/EmailConfirmation.vue'
-import UsersScores from '@/pages/UsersScores.vue'
-import UnconfirmedUsers from '@/pages/UnconfirmedUsers.vue'
-import EditProfile from '@/pages/EditProfile.vue'
-import NewPost from '@/pages/NewPost.vue'
-import ShowPostsIndex from '@/pages/ShowPostsIndex.vue'
-import HomePublic from '@/pages/HomePublic.vue'
-import UsersResults from '@/pages/UsersResults.vue'
 import { useSessionStore } from '@/stores/modules/sessionStore'
+
+// Import all route components
+const Home = () => import('@/pages/Home.vue')
+const Questionnaire = () => import('@/pages/Questionnaire.vue')
+const Login = () => import('@/pages/Login.vue')
+const SignUp = () => import('@/pages/SignUp.vue')
+const AccountCreationRequest = () => import('@/pages/AccountCreationRequest.vue')
+const NewQuestion = () => import('@/pages/NewQuestion.vue')
+const ModifyQuestion = () => import('@/pages/ModifyQuestion.vue')
+const QuestionnaireParams = () => import('@/pages/QuestionnaireParams.vue')
+const UploadNewQuestions = () => import('@/pages/UploadNewQuestions.vue')
+const EmailConfirmation = () => import('@/pages/EmailConfirmation.vue')
+const UsersScores = () => import('@/pages/UsersScores.vue')
+const UnconfirmedUsers = () => import('@/pages/UnconfirmedUsers.vue')
+const EditProfile = () => import('@/pages/EditProfile.vue')
+const NewPost = () => import('@/pages/NewPost.vue')
+const ShowPostsIndex = () => import('@/pages/ShowPostsIndex.vue')
+const HomePublic = () => import('@/pages/HomePublic.vue')
+const UsersResults = () => import('@/pages/UsersResults.vue')
 
 const routes = [
 	// Public routes
@@ -89,18 +91,18 @@ const routes = [
 		meta: { requiresAuth: true }
 	},
 	{
-		path: '/utilisateurs',
-		name: 'UsersScores',
-		component: UsersScores,
-		meta: { requiresAuth: true }
-	},
-	{
 		path: '/utilisateurs-non-confirmes',
 		name: 'UnconfirmedUsers',
 		component: UnconfirmedUsers,
 		meta: { requiresAuth: true }
 	},
-
+	// PP-only routes
+	{
+		path: '/utilisateurs',
+		name: 'UsersScores',
+		component: UsersScores,
+		meta: { requiresAuth: true, requiresPP: true }
+	},
 	// Admin-only routes
 	{
 		path: '/new-post',
@@ -131,28 +133,49 @@ const routes = [
 		name: 'UploadNewQuestions',
 		component: UploadNewQuestions,
 		meta: { requiresAuth: true, requiresAdmin: true }
+	},
+
+	// Catch-all route
+	{
+		path: '/:pathMatch(.*)*',
+		name: 'NotFound',
+		component: HomePublic,
+		meta: { requiresAuth: false }
 	}
 ]
 
 const router = createRouter({
 	history: createWebHistory(),
-	routes
+	routes,
+	scrollBehavior(to, from, savedPosition) {
+		// Always scroll to top on route change
+		return { top: 0 }
+	}
 })
 
 router.beforeEach(async (to, from, next) => {
 	const store = useSessionStore();
 	const isAuthenticated = store.getAuthToken !== null;
 	const isAdmin = store.isAdmin;
+	const isPP = store.getUserCertification === 'PP'
 
 	// Check if route requires authentication
 	if (to.meta.requiresAuth && !isAuthenticated) {
+		console.warn('Unauthorized access attempt, redirecting to Login')
 		next('/Login');
 		return;
 	}
 
 	// Check if route requires admin privileges
 	if (to.meta.requiresAdmin && !isAdmin) {
-		// Redirect to home or show unauthorized page
+		console.warn('Unauthorized admin access attempt, redirecting to home')
+		next('/');
+		return;
+	}
+
+	// Check if route requires PP privileges
+	if (to.meta.requiresPP && !isPP) {
+		console.warn('Unauthorized PP access attempt, redirecting to home')
 		next('/');
 		return;
 	}
@@ -161,10 +184,9 @@ router.beforeEach(async (to, from, next) => {
 	if (to.name === 'SignUp' && to.params.token) {
 		try {
 			const response = await fetch(`/api/validate_signup_token/${to.params.token}`);
-			// const data = await response.json();
 
-			if (!response) {
-				console.error('Invalid signup token');
+			if (!response.ok) {
+				console.error('Invalid signup token')
 				next('/');
 				return;
 			}
@@ -177,6 +199,13 @@ router.beforeEach(async (to, from, next) => {
 
 	// If all checks pass, proceed to route
 	next();
+})
+
+// Global error handler for async route components
+router.onError((error) => {
+	console.error('Router navigation error:', error)
+	// Optionally redirect to an error page or home
+	router.push('/')
 })
 
 export default router

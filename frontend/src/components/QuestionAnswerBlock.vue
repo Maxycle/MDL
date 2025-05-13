@@ -1,5 +1,5 @@
 <template>
-	<div class="relative">
+	<div class="relative text-yellowLogo">
 		<div class="flex flex-col items-center mb-6">
 			<div class="flex items-center">
 				<div v-if="sessionStore.isAdmin && question" class="mr-4">difficulté: {{ question.difficulty }}</div>
@@ -14,12 +14,12 @@
 				</div>
 			</div>
 		</div>
-		<v-pagination v-model="page" :length="questionsList.length" :total-visible="5" prev-icon="mdi-menu-left"
+		<v-pagination v-model="page" :length="questionsList.length" :total-visible="5" prev-icon="mdi-menu-left" class="text-orangeLogo"
 			next-icon="mdi-menu-right" @page="onPageChange"></v-pagination>
 
 		<button  v-if="page < questionsList.length" class="absolute -right-28 bottom-36 transition hover:scale-125 duration-300">
 			<div
-				class="font-extrabold text-xl text-whyte rounded-lg flex items-center justify-center p-4 w-24"
+				class="font-extrabold text-xl rounded-lg flex items-center justify-center p-4 w-24 text-blackLogo bg-blueLogoLight"
 				@click="goToNextPage">
 				<font-awesome-icon icon="fa-solid fa-arrow-left" class="h-12 mx-4 z-10 rotate-180" />
 				
@@ -28,7 +28,7 @@
 
 		<button v-if="page > 1" class="absolute -left-28 bottom-36 transition hover:scale-125 duration-300">
 			<div
-				class="font-extrabold text-xl text-white rounded-lg flex items-center justify-center p-4 w-24"
+				class="font-extrabold text-xl rounded-lg flex items-center justify-center p-4 w-24 text-blackLogo bg-blueLogoLight"
 				@click="goToPreviousPage">
 				<font-awesome-icon icon="fa-solid fa-arrow-left" class="h-12 mx-4 z-10" />
 				

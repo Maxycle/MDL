@@ -1,6 +1,6 @@
 <template>
 	<button class="p-4 text-nowrap hover:w-full" :class="{
-		'transition hover:text-blueLogoLight hover:z-20 duration-300': !isActive,
+		'transition hover:text-orangeLogoDark hover:z-20 duration-300': !isActive,
 		'text-blueLogoLight font-extrabold bg-blue-100 w-full': isActive
 	}">
 		<slot></slot>

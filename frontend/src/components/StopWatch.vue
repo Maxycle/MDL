@@ -1,5 +1,5 @@
 <template>
-  <div class="font-extrabold text-3xl text-red-500 rounded-lg p-4">
+  <div class="font-extrabold text-3xl text-orangeLogo rounded-lg p-4">
     {{ formattedTime }}
     <div v-if="store.user.admin" class="buttons">
       <button @click="start">Start</button><br/>
