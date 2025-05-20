@@ -36,6 +36,13 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
+  # Frontend URL for development
+  config.frontend_url = ENV['FRONTEND_URL'] || 'http://localhost:5173'
+ 
+	config.action_mailer.default_url_options = { host: ENV['MAILER_HOST'] || 'localhost', port: ENV['MAILER_PORT'] || 3000 }
+	config.action_mailer.perform_deliveries = true
+	config.action_mailer.raise_delivery_errors = true
+
 	# config/environments/development.rb
 	config.action_mailer.delivery_method = :smtp
 	config.action_mailer.smtp_settings = {
@@ -64,7 +71,6 @@ Rails.application.configure do
 
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
-
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true

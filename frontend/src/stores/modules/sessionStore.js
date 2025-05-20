@@ -47,7 +47,7 @@ export const useSessionStore = defineStore({
 
 		isLoggedIn() {
 			const loggedOut = this.authToken === null || this.authToken === JSON.stringify(null)
-			return !loggedOut && this.user.confirmed_by_admin_id !== null
+			return !loggedOut
 		}
 	},
 
@@ -175,7 +175,7 @@ export const useSessionStore = defineStore({
 				console.log(`An error occured while logging out: ${error}`) // eslint-disable-line no-console
 			}
 		},
-
+    
 		reset() {
 			this.$reset()
 			localStorage.removeItem("authToken")

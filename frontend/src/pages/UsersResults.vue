@@ -8,7 +8,7 @@
 						<div class="h-full overflow-y-auto overscroll-contain pb-4">
 							<div v-for="(user, index) in filteredUsers" :key="index"
 								class="py-2 text-orangeLogo cursor-pointer hover:text-blueLogoLight transition duration-300"
-								:class="{ 'bg-blueLogoDark px-2 rounded-lg  text-yellowLogo font-extrabold': userSelected?.id === user.id }"
+								:class="{ 'bg-blueLogoDark px-2 rounded-lg text-yellowLogo font-extrabold': userSelected?.id === user.id }"
 								@click="selectUser(user)">
 								<div v-if="user.certification_is_public" class="flex justify-between items-center">
 									<div>
@@ -31,7 +31,7 @@
 					<div class="flex-1 overflow-y-auto">
 						<div class="flex items-center justify-center">
 							<div
-								class="rounded-xl bg-blueLogoDark p-4 border-2 border-orangeLogo text-5xl text-yellowLogo font-extrabold mx-4 italic">
+								class="rounded-xl bg-blueLogoDark p-4 text-5xl text-yellowLogo font-extrabold mx-4 italic">
 								{{ selectedUserInfo.username }}
 							</div>
 						</div>
