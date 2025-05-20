@@ -115,7 +115,7 @@ module Api
 
 			def configure_permitted_parameters
 				devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :username, :first_name, :last_name, :intro])
-				devise_parameter_sanitizer.permit(:account_update, keys: [:username, :first_name, :last_name, :certification_is_public, :email, :password, :password_confirmation, :current_password, :wantsToBecomePP])
+				devise_parameter_sanitizer.permit(:account_update, keys: [:username, :first_name, :last_name, :certification_is_public, :email, :intro, :current_password, :wantsToBecomePP])
 			end
 
 			def generate_validation_token

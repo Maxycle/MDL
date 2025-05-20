@@ -17,7 +17,9 @@
 				class="bg-stone-300 text-black rounded p-2 cursor-pointer shadow-md shadow-stone-600"
 				@click="router.push('/account-creation-request')">Demande d'ouverture de compte</div>
 		</div>
-		<slot></slot>
+		<div class="pt-28 sm:pt-16 2xl:pt-0">
+			<slot></slot>
+		</div>
 	</div>
 </template>
 

@@ -49,10 +49,12 @@
 import { ref, onMounted } from "vue"
 import { useRouter, useRoute } from "vue-router"
 import Container from "@/components/Container.vue"
+import { useSessionStore } from '@/stores/modules/sessionStore'
 import axios from "axios"
 
 const router = useRouter()
 const route = useRoute()
+const sessionStore = useSessionStore();
 const token = ref("")
 const email = ref("")
 const password = ref("")
@@ -65,10 +67,6 @@ onMounted(() => {
   // Get the token and email from the URL
   token.value = route.query.token
   email.value = route.query.email
-  
-  if (!token.value) {
-    errors.value.push("Token de réinitialisation invalide ou manquant.")
-  }
 })
 
 const resetPassword = async () => {
@@ -92,9 +90,10 @@ const resetPassword = async () => {
     
     const response = await axios.post('/api/passwords/reset', {
       token: token.value,
-      email: email.value,
+      email: email.value || sessionStore.getUserEmail,
       password: password.value,
-      password_confirmation: passwordConfirmation.value
+      password_confirmation: passwordConfirmation.value,
+			not_forgotten: token.value ? false : true
     })
     
     if (response.status === 200) {
