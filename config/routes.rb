@@ -8,7 +8,8 @@ Rails.application.routes.draw do
       registration: 'signup'
     }, controllers: {
       sessions: 'api/users/sessions',
-      registrations: 'api/users/registrations'
+      registrations: 'api/users/registrations',
+    	passwords: 'api/users/passwords'
     }, skip: [:confirmations]
 
 		namespace :admin do
@@ -55,6 +56,8 @@ Rails.application.routes.draw do
 			end
 		end
 
+		post 'passwords/forgot', to: 'passwords#forgot'
+    post 'passwords/reset', to: 'passwords#reset'
     get "/questionnaire-params", to: 'questionnaire_params#index'
     put "/questionnaire-params", to: 'questionnaire_params#update'
     get "/uzer-scores", to: 'scores#user_scores'

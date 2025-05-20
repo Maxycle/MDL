@@ -4,8 +4,8 @@ import { useSessionStore } from '@/stores/modules/sessionStore'
 // Import all route components
 const Home = () => import('@/pages/Home.vue')
 const Questionnaire = () => import('@/pages/Questionnaire.vue')
-const Login = () => import('@/pages/Login.vue')
-const SignUp = () => import('@/pages/SignUp.vue')
+const Login = () => import('@/pages/authentication/Login.vue')
+const SignUp = () => import('@/pages/authentication/SignUp.vue')
 const AccountCreationRequest = () => import('@/pages/AccountCreationRequest.vue')
 const NewQuestion = () => import('@/pages/NewQuestion.vue')
 const ModifyQuestion = () => import('@/pages/ModifyQuestion.vue')
@@ -19,6 +19,8 @@ const NewPost = () => import('@/pages/NewPost.vue')
 const ShowPostsIndex = () => import('@/pages/ShowPostsIndex.vue')
 const HomePublic = () => import('@/pages/HomePublic.vue')
 const UsersResults = () => import('@/pages/UsersResults.vue')
+const ForgotPassword = () => import('@/pages/authentication/ForgotPassword.vue')
+const ResetPassword = () => import('@/pages/authentication/ResetPassword.vue')
 
 const routes = [
 	// Public routes
@@ -38,6 +40,18 @@ const routes = [
 	{
 		path: '/SignUp', // Original signup path now redirects to home
 		redirect: '/',
+		meta: { requiresAuth: false }
+	},
+	{
+		path: '/forgot-password',
+		name: 'ForgotPassword',
+		component: ForgotPassword,
+		meta: { requiresAuth: false }
+	},
+	{
+		path: '/reset-password',
+		name: 'ResetPassword',
+		component: ResetPassword,
 		meta: { requiresAuth: false }
 	},
 	{

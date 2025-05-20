@@ -18,9 +18,10 @@
 						</div>
 						<div class="flex h-1/2">
 							<button v-for="(button, index) in buttonsQuestionaires" :key="button"
-								class="bg-blue-100 text-orangeLogo hover:text-orangeLogoDark hover:bg-yellowLogo rounded-lg p-2 disabled:opacity-40 hover:scale-105 transition duration-300"
-								:class="{ 'mr-2': index === 0 }" @click="openModal(domain, button)"
-								:disabled="isDisabled(domain, button)">
+								class=" text-blueLogoDark hover:text-green-800 rounded-lg p-2 disabled:opacity-40 hover:scale-110 transition duration-300"
+								:class="[{'mr-3': index === 0}, {'bg-gradient-to-l from-orangeLogo to-yellowLogo': index % 2 === 0 }, {'bg-gradient-to-r from-orangeLogo to-yellowLogo': index % 2 === 1 }]"
+								:disabled="isDisabled(domain, button)"
+								@click="openModal(domain, button)">
 								<div>
 									<div class="font-extrabold">{{ button }}</div>
 									<div class="italic">{{ buttonTextAndApiUrl(domain, button).text }}</div>

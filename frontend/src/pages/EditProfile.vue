@@ -31,6 +31,11 @@
 					</div>
 
 					<div>
+						<label for="intro">Intro</label>
+						<textarea v-model="intro" @focus="clearErrors" name="intro" rows="4" class="intro-textarea"></textarea>
+					</div>
+
+					<div>
 						<label for="certification_public" class="flex items-center gap-2">
 							<input v-model="isCertificationPublic" @focus="clearErrors" type="checkbox" id="certification_public"
 								name="certification_public">
@@ -39,48 +44,16 @@
 					</div>
 
 					<div>
-						<label for="password">New Password</label>
+						<label for="password">Mot de passe</label>
 
 						<div v-if="isHidden" class="password">
-							<input v-model="password" @focus="clearErrors" type="password" placeholder="your new password"
+							<input v-model="currentPassword" @focus="clearErrors" type="password" placeholder="votre mot de passe"
 								name="password">
 							<font-awesome-icon icon="fa-solid fa-eye" @click="toggleHidden" class="text-white" />
 						</div>
 
 						<div v-else class="password">
-							<input v-model="password" @focus="clearErrors" type="text" placeholder="your new password"
-								name="password">
-							<font-awesome-icon icon="fa-solid fa-eye-slash" @click="toggleHidden" class="text-white" />
-						</div>
-					</div>
-
-					<div>
-						<label for="password">Password confirmation</label>
-
-						<div v-if="isHidden" class="password">
-							<input v-model="passwordConfirmation" @focus="clearErrors" type="password"
-								placeholder="confirm your new password" name="password">
-							<font-awesome-icon icon="fa-solid fa-eye" @click="toggleHidden" class="text-white" />
-						</div>
-
-						<div v-else class="password">
-							<input v-model="passwordConfirmation" type="text" @focus="clearErrors"
-								placeholder="confirm your new password" name="password">
-							<font-awesome-icon icon="fa-solid fa-eye-slash" @click="toggleHidden" class="text-white" />
-						</div>
-					</div>
-
-					<div>
-						<label for="password">Current password</label>
-
-						<div v-if="isHidden" class="password">
-							<input v-model="currentPassword" @focus="clearErrors" type="password" placeholder="your current password"
-								name="password">
-							<font-awesome-icon icon="fa-solid fa-eye" @click="toggleHidden" class="text-white" />
-						</div>
-
-						<div v-else class="password">
-							<input v-model="currentPassword" @focus="clearErrors" type="text" placeholder="your current password"
+							<input v-model="currentPassword" @focus="clearErrors" type="text" placeholder="votre mot de passe"
 								name="password">
 							<font-awesome-icon icon="fa-solid fa-eye-slash" @click="toggleHidden" class="text-white" />
 						</div>
@@ -101,12 +74,11 @@ import { useSessionStore } from "@/stores/modules/sessionStore"
 const router = useRouter()
 const sessionStore = useSessionStore()
 const email = ref("")
-const password = ref("")
-const passwordConfirmation = ref("")
 const currentPassword = ref("")
 const username = ref("")
 const firstname = ref("")
 const lastname = ref("")
+const intro = ref("")
 const isHidden = ref(true)
 const isCertificationPublic = ref(true)
 
@@ -115,17 +87,17 @@ onMounted(() => {
 	username.value = sessionStore.getUserDetails.username
 	firstname.value = sessionStore.getUserDetails.first_name
 	lastname.value = sessionStore.getUserDetails.last_name
+	intro.value = sessionStore.getUserDetails.intro
 	isCertificationPublic.value = sessionStore.getUserDetails.certification_is_public
 })
 
 const update = async () => {
 	const params = {
 		email: email.value,
-		password_confirmation: passwordConfirmation.value,
-		password: password.value,
 		username: username.value,
 		first_name: firstname.value,
 		last_name: lastname.value,
+		intro: intro.value,
 		certification_is_public: isCertificationPublic.value,
 		current_password: currentPassword.value
 	}
@@ -163,7 +135,8 @@ form {
 	overflow: hidden;
 
 	button,
-	input {
+	input,
+	textarea {
 		color: inherit;
 	}
 
@@ -191,6 +164,7 @@ form {
 	}
 
 	input,
+	textarea,
 	label {
 		background-color: transparent;
 		border: none;
@@ -208,6 +182,17 @@ form {
 		&:-webkit-autofill:focus {
 			transition: background-color 600000s 0s, color 600000s 0s;
 		}
+	}
+
+	textarea.intro-textarea {
+		min-height: 80px;
+		resize: vertical;
+		color: #a6fa09aa;
+		overflow-y: auto;
+		line-height: 1.4;
+		border: 1px solid #42b883aa;
+		border-radius: 4px;
+		padding: 0.5rem;
 	}
 
 	label {

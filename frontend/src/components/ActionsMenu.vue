@@ -29,9 +29,16 @@ onMounted(() => {
 		items.value.push({ route: '/utilisateurs', text: 'Membres' },
 			{ route: '/utilisateurs-non-confirmes', text: 'Demandes d\'ouverture de compte' },
 			{ route: '/account-creation-request', text: 'Coopter un candidat' },
-			{ route: '/new-post', text: 'Ecrire un article' })
+			{ route: '/new-post', text: 'Ecrire un article' },
+			{ route: '/reset-password', text: 'Changer votre mot de passe' },
+			{ route: '/edit-profile', text: 'Modifier votre profile' })
 	} else if (sessionStore.getUserCertification === 'MC') {
-		items.value.push({ route: '/account-creation-request', text: 'Coopter un candidat' })
+		items.value.push({ route: '/account-creation-request', text: 'Coopter un candidat' },
+		{ route: '/reset-password', text: 'Changer votre mot de passe' },
+		{ route: '/edit-profile', text: 'Modifier votre profile' })
+	} else if (sessionStore.getUserCertification === 'SM') {
+		items.value.push({ route: '/reset-password', text: 'Changer votre mot de passe' },
+		{ route: '/edit-profile', text: 'Modifier votre profile' })
 	}
 
 	if (sessionStore.isAdmin) {

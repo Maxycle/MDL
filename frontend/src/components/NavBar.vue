@@ -16,13 +16,10 @@
 			<NavBarButton :isActive="isRouteActive('/questionnaire')">
 				<span class="relative"><router-link to="/questionnaire">Questionnaire</router-link></span>
 			</NavBarButton>
-			<NavBarButton v-if="actionsMenuShowing" :isActive="isRouteActive('/nouvelle-question')" @mouseover="showMenu"
+			<NavBarButton :isActive="isRouteActive('/nouvelle-question')" @mouseover="showMenu"
 				@mouseout="hideMenu" class="relative">
 				<span>Actions</span>
 				<ActionsMenu v-show="showActionsMenu" class="absolute top-12 -left-44 w-fit" />
-			</NavBarButton>
-			<NavBarButton :isActive="isRouteActive('/edit-profile')">
-				<span class="relative"><router-link to="/edit-profile">Modifier le compte</router-link></span>
 			</NavBarButton>
 			<NavBarButton :isActive="isRouteActive('/Blog')">
 				<span class="relative"><router-link to="/Blog">Blog</router-link></span>

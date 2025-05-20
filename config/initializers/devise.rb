@@ -33,10 +33,10 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = 'kebabacool@gmail.com'
+  config.mailer_sender = 'noreply@mouvement-des-libertariens.org'
 
   # Configure the class responsible to send e-mails.
-  config.mailer = 'UserMailer'
+  config.mailer = 'DeviseMailer'
 
   # Configure the parent class responsible to send e-mails.
   # config.parent_mailer = 'ActionMailer::Base'
@@ -199,6 +199,11 @@ Devise.setup do |config|
   # The time you want to timeout the user session without activity. After this
   # time the user will be asked for credentials again. Default is 30 minutes.
   # config.timeout_in = 30.minutes
+
+ # Configure the URL options for the mailer
+  # This should be set in your environment config files too (development.rb, production.rb, etc.)
+  # But we're adding it here for reference
+  # config.action_mailer.default_url_options = { host: ENV['FRONTEND_URL'] || 'localhost:3000' }
 
   # ==> Configuration for :lockable
   # Defines which strategy will be used to lock an account.
