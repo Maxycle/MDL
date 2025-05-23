@@ -1,6 +1,5 @@
 <template>
 	<Container>
-
 		<div class="relative">
 			<div v-if="answerStore.getQuestionnaireDetails.domain"
 				class="absolute font-bold text-orangeLogoDark bg-yellowLogo px-1 rounded w-fit left-6 top-6">
@@ -19,7 +18,7 @@
 						<div class="flex h-1/2">
 							<button v-for="(button, index) in buttonsQuestionaires" :key="button"
 								class=" text-blueLogoDark hover:text-green-800 rounded-lg p-2 disabled:opacity-40 hover:scale-110 transition duration-300"
-								:class="[{'mr-3': index === 0}, {'bg-gradient-to-l from-orangeLogo to-yellowLogo': index % 2 === 0 }, {'bg-gradient-to-r from-orangeLogo to-yellowLogo': index % 2 === 1 }]"
+								:class="[{'mr-3': index === 0}, {'bg-gradient-to-l from-orangeLogo to-yellowLogo': index % 2 === 0 }, {'bg-gradient-to-r from-orangeLogo to-yellowLogo hover:bg-orangeLogoDark ': index % 2 === 1 }]"
 								:disabled="isDisabled(domain, button)"
 								@click="openModal(domain, button)">
 								<div>

@@ -13,40 +13,41 @@
 
 <script setup>
 import NavBarButton from "@/components/buttons/NavBarButton.vue"
-import { ref, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute, useRouter } from "vue-router"
 import { useSessionStore } from "@/stores/modules/sessionStore"
 
 const router = useRouter()
 const route = useRoute();
-
 const sessionStore = useSessionStore();
-
 const items = ref([])
 
-onMounted(() => {
-	if (sessionStore.getUserCertification === 'PP') {
+const isRouteActive = (path) => {
+	return route.path === path;
+}
+
+watch(() => sessionStore.getUserCertification, (newValue) => {
+	if (newValue === 'PP') {
 		items.value.push({ route: '/utilisateurs', text: 'Membres' },
 			{ route: '/utilisateurs-non-confirmes', text: 'Demandes d\'ouverture de compte' },
 			{ route: '/account-creation-request', text: 'Coopter un candidat' },
 			{ route: '/new-post', text: 'Ecrire un article' },
 			{ route: '/reset-password', text: 'Changer votre mot de passe' },
 			{ route: '/edit-profile', text: 'Modifier votre profile' })
-	} else if (sessionStore.getUserCertification === 'MC') {
+	} else if (newValue === 'MC') {
 		items.value.push({ route: '/account-creation-request', text: 'Coopter un candidat' },
-		{ route: '/reset-password', text: 'Changer votre mot de passe' },
-		{ route: '/edit-profile', text: 'Modifier votre profile' })
-	} else if (sessionStore.getUserCertification === 'SM') {
+			{ route: '/reset-password', text: 'Changer votre mot de passe' },
+			{ route: '/edit-profile', text: 'Modifier votre profile' })
+	} else if (newValue === 'SM') {
 		items.value.push({ route: '/reset-password', text: 'Changer votre mot de passe' },
-		{ route: '/edit-profile', text: 'Modifier votre profile' })
+			{ route: '/edit-profile', text: 'Modifier votre profile' })
 	}
 
 	if (sessionStore.isAdmin) {
-		items.value.push({ route: '/upload-nouvelles-questions', text: 'Upload nouvelle liste de questions' }, { route: '/questionnaire-paramètres', text: 'Changer les paramèetres de questionnaire' })
+		items.value.push({ route: '/upload-nouvelles-questions', text: 'Upload nouvelle liste de questions' }, { route: '/questionnaire-paramètres', text: 'Changer les paramètres de questionnaire' })
 	}
+}, {
+	deep: true,
+	immediate: true
 })
-
-const isRouteActive = (path) => {
-	return route.path === path;
-}
 </script>

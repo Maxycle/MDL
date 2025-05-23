@@ -41,36 +41,41 @@
 			<div class="w-full flex justify-center">
 
 				<div class="w-1/12">
-					<Logo :certification="scoresInitials" />
+					<Logo :scores="scoresInitials" :certification="data.certification"/>
 				</div>
 			</div>
 
 			<div class="mt-4 flex flex-col items-center">
-				<div v-if="newCertification"
+				<div v-if="dialogBoxOpen"
 					class="flex justify-center items-center bg-yellow-200 rounded-lg p-2 shadow-lg shadow-stone-600">
-					<div>Modifier certification à: <span class="text-2xl text-green-800">{{
-						newCertification }}</span></div>
-					<div class="text-black">
+					<div class="flex text-black items-center">
+						<div>{{ sentenceForActionButton }}</div>
+						<button
+							class="rounded-lg bg-green-300 p-2 ml-4 hover:scale-105 hover:bg-orange-600 hover:text-white transition duration-300"
+							@click="dialogBoxOpen = false">Annuler</button>
 						<button
 							class="rounded-lg bg-orange-300 p-2 ml-4 hover:scale-105 hover:bg-orange-600 hover:text-white transition duration-300"
-							@click="updateCertification()">Valider</button>
+							@click="updateUser()">Valider</button>
 					</div>
 				</div>
+
 				<div class="flex justify-center space-x-10 text-black mt-4">
 					<button
 						class="rounded-lg bg-orange-300 p-4 text-3xl hover:scale-105 hover:bg-red-600 hover:text-white transition duration-300 shadow-lg shadow-stone-600"
-						@click="destroyAccount(data.id)">Détruire
+						@click="openButtonDialogBox('destruction')">Détruire
 						compte</button>
+
 					<div class="relative" @mouseover="showMenu()" @mouseout="hideMenu()">
 						<div class="rounded-lg bg-green-700 text-white shadow-lg shadow-stone-600 text-3xl p-4">Changer
 							certification</div>
 						<Menu v-show="hovered" class="absolute -bottom-13 z-10"
 							:options="{ content: [{ text: 'Simple Membre', symbol: 'SM' }, { text: 'Membre Certrifié', symbol: 'MC' }, { text: 'Porte Parole', symbol: 'PP' }] }"
-							@optionSelected="(optionSelected) => newCertification = optionSelected" />
+							@optionSelected="newCertificationReceived" />
 					</div>
+
 					<button
 						class="rounded-lg bg-blue-300 p-4 text-3xl hover:scale-105 hover:bg-orange-600 hover:text-white transition duration-300 shadow-lg shadow-stone-600"
-						@click="changeAdminStatus">
+						@click="openButtonDialogBox('admin')">
 						{{ adminButtonText }}
 					</button>
 				</div>
@@ -81,7 +86,7 @@
 
 <script setup>
 import axios from 'axios'
-import { ref, computed} from "vue"
+import { ref, computed } from "vue"
 import { useScoreStore } from '@/stores/modules/scoreStore'
 import { useSessionStore } from '@/stores/modules/sessionStore'
 import Menu from '../components/Menu.vue'
@@ -92,6 +97,9 @@ const scoreStore = useScoreStore()
 const hovered = ref(false)
 const newCertification = ref('')
 const updatedCertification = ref('')
+const dialogBoxOpen = ref(false)
+const sentenceForActionButton = ref('')
+const actionToPerform = ref('')
 
 const props = defineProps({
 	data: {
@@ -131,9 +139,41 @@ const emit = defineEmits(['userUpdated'])
 
 const handleScoreDelete = async (scoreId) => {
 	await scoreStore.deleteScore(scoreId)
-	await updateCertification('SM')
 
 	emit('userUpdated', props.data.id) // Emit event to update parent
+}
+
+const newCertificationReceived = (option) => {
+	newCertification.value = option
+	openButtonDialogBox('certification')
+}
+
+const openButtonDialogBox = (actionOrNewCertification) => {
+	actionToPerform.value = actionOrNewCertification
+	dialogBoxOpen.value = true
+	switch (actionOrNewCertification) {
+		case 'destruction':
+			sentenceForActionButton.value = `Detruire le compte de ${props.data.username}`
+			break
+		case 'admin':
+			sentenceForActionButton.value = adminButtonText.value === 'Donner status admin' ? `Rendre ${props.data.username} admin` : `Enlever ${props.data.username} le statut admin`
+			break
+		case 'certification':
+			sentenceForActionButton.value = `Changer la certification de ${props.data.username} à ${newCertification.value}`
+			break
+	}
+}
+
+const updateUser = async () => {
+	if (actionToPerform.value === 'destruction') {
+		await destroyAccount()
+	} else if (actionToPerform.value === 'admin') {
+		await changeAdminStatus()
+	} else {
+		await updateCertification()
+	}
+	dialogBoxOpen.value = false
+	emit('userUpdated', props.data.id)
 }
 
 const updateCertification = async () => {
@@ -155,9 +195,9 @@ const updateCertification = async () => {
 	}
 }
 
-const destroyAccount = async (id) => {
+const destroyAccount = async () => {
 	try {
-		await axios.delete(`/api/admin/users/${id}`,
+		await axios.delete(`/api/admin/users/${props.data.id}`,
 			{
 				headers: {
 					Authorization: `${sessionStore.getAuthToken}`
