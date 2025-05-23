@@ -1,7 +1,8 @@
 <template>
 	<div class="flex justify-between px-4 items-center bg-blueLogoLight">
-		<div class="italic text-yellowLogo font-extrabold text-xl">{{ paramsStore.getParams.welcome_start }} {{ store.getUserUsername }}{{
-			paramsStore.getParams.welcome_end }}
+		<div class="italic text-yellowLogo font-extrabold text-xl">{{ paramsStore.getParams.welcome_start }} {{
+			store.getUserUsername }}{{
+				paramsStore.getParams.welcome_end }}
 		</div>
 		<div class="flex justify-end space-x-2">
 			<NavBarButton :isActive="isRouteActive('/')">
@@ -16,8 +17,8 @@
 			<NavBarButton :isActive="isRouteActive('/questionnaire')">
 				<span class="relative"><router-link to="/questionnaire">Questionnaire</router-link></span>
 			</NavBarButton>
-			<NavBarButton :isActive="isRouteActive('/nouvelle-question')" @mouseover="showMenu"
-				@mouseout="hideMenu" class="relative">
+			<NavBarButton :isActive="isRouteActive('/nouvelle-question')" @mouseover="showMenu" @mouseout="hideMenu"
+				class="relative">
 				<span>Actions</span>
 				<ActionsMenu v-show="showActionsMenu" class="absolute top-12 -left-44 w-fit" />
 			</NavBarButton>
@@ -38,13 +39,11 @@
 import NavBarButton from './buttons/NavBarButton.vue'
 import ActionsMenu from './ActionsMenu.vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useSessionStore } from '@/stores/modules/sessionStore'
-import { useAnswerStore } from '@/stores/modules/answerStore'
 import { useParamsStore } from '@/stores/modules/paramsStore'
 
 const paramsStore = useParamsStore()
-const answerStore = useAnswerStore()
 const store = useSessionStore();
 const router = useRouter();
 const route = useRoute();
@@ -54,10 +53,6 @@ onMounted(async () => {
 	if (!paramsStore.getIsLoaded) {
 		await paramsStore.fetchParams()
 	}
-})
-
-const actionsMenuShowing = computed(() => {
-	return !(store.getUserCertification === "SM" && !store.isAdmin)
 })
 
 const isRouteActive = (path) => {

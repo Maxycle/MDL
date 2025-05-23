@@ -5,16 +5,21 @@
  
  <script setup>
  import { computed } from 'vue'
- 
+
  const props = defineProps({
-	 certification: {
+	 scores: {
 		 type: String,
 		 default: 'PP'
+	 },
+	 certification: {
+		 type: String,
+		 default: 'SM'
 	 }
  })
  
  const logoSource = computed(() => {
-	 switch (props.certification) {
+	if (props.certification === 'PP') return 'MDLlogoPP.jpg'
+	 switch (props.scores) {
 		 case 'beginner beginner':
 			 return 'MDLlogo1.jpg'
 		 case 'beginner BA':

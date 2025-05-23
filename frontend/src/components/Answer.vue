@@ -1,14 +1,13 @@
 <template>
 	<div
 		class="flex text-2xl font-bold p-1 items-center hover:bg-blueLogoLight rounded-full cursor-pointer transition duration-300 px-4">
-		<div v-if="!showTick" class="border-2 border-yellowLogo w-4 h-4 mr-2" />
-		<Logo v-else class="w-10 mr-2"/>
+		<div v-if="!showTick" class="border-2 border-yellowLogo w-4 h-4 mr-2 hover:rotate-spin" />
+		<Logo v-else class="w-12 mr-2 hover:animate-spin rounded-full"/>
 		{{ data.content }}
 	</div>
 </template>
 
 <script setup>
-import AnarcapTick from './AnarcapTick.vue';
 import { computed } from 'vue';
 import { useAnswerStore } from '@/stores/modules/answerStore';
 import Logo from "@/components/Logo.vue"

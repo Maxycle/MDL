@@ -57,17 +57,12 @@
 <script setup>
 import { ref, onErrorCaptured, markRaw, watch, Suspense, TransitionGroup } from 'vue'
 import NavBar from '@/components/NavBar.vue'
-import Hero from '@/components/Hero.vue'
 import Hero2logos from '@/components/Hero2logos.vue'
 import { useSessionStore } from "@/stores/modules/sessionStore"
 import { useRoute } from 'vue-router'
 
 const sessionStore = useSessionStore();
 const route = useRoute();
-
-// Use ref for components
-const randomHero = ref(null);
-const randomNavbar = ref(false);
 
 // Error handling method
 const handleComponentError = (error) => {
@@ -99,28 +94,4 @@ onErrorCaptured((err, instance, info) => {
   });
   return false;
 });
-
-// Memoize hero components to prevent unnecessary re-renders
-const heroComponents = [
-  markRaw(Hero),
-  markRaw(Hero2logos)
-];
-
-// Function to randomly select a hero component
-const selectRandomHero = () => {
-  const randomHeroIndex = Math.floor(Math.random() * heroComponents.length);
-  const randomNavbarBool = Math.random() < 0.5;
-
-  randomHero.value = heroComponents[randomHeroIndex];
-  randomNavbar.value = randomNavbarBool;
-};
-
-// Watch for route changes and select a new random hero each time
-watch(
-  () => route.path,
-  () => {
-    selectRandomHero();
-  },
-  { immediate: true }
-);
 </script>

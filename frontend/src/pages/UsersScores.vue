@@ -25,7 +25,7 @@
 							user.username }} ({{ user.first_name }} {{ user.last_name }})</div>
 				</div>
 			</div>
-			<UserInfo v-if="Object.entries(userSelected).length" :data="userSelected" @user-updated="updateSelectedUser" />
+			<UserInfo v-if="Object.entries(userSelected).length" :data="userSelected" @user-updated="updateUsers" />
 		</div>
 	</div>
 </template>
@@ -129,16 +129,8 @@ const downloadUsers = async () => {
 	}
 }
 
-const updateSelectedUser = async (userId) => {
-	try {
-		const response = await axios.get(`/api/users/${userId}`, {
-			headers: {
-				Authorization: `${sessionStore.getAuthToken}`
-			}
-		});
-		userSelected.value = response.data;
-	} catch (error) {
-		console.error('Error updating user:', error);
-	}
+const updateUsers = async (id) => {
+  await fetchUsers()
+	userSelected.value = users.value.find((item) => item.id === id)
 }
 </script>

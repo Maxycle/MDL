@@ -18,7 +18,7 @@
 										<div>({{ user.username }})</div>
 									</div>
 									<div v-if="userSelected?.id === user.id" class="w-1/6">
-										<Logo :certification="scoresInitials" />
+										<Logo :scores="scoresInitials" :certification="selectedUserInfo.certification"/>
 									</div>
 								</div>
 							</div>
@@ -40,12 +40,12 @@
 						<div class="py-2">Intro: <span class="text-yellowLogo">{{ selectedUserInfo.intro }}</span></div>
 						<div class="w-full flex justify-center items-center">
 							<div class="w-1/12">
-								<Logo :certification="scoresInitials" />
+								<Logo :scores="scoresInitials" :certification="selectedUserInfo.certification"/>
 							</div>
 							<div class="text-orangeLogo italic text-5xl border-2 border-blueLogoDark rounded-lg p-2 mx-8">{{
 								certificationSentence }}</div>
 							<div class="w-1/12">
-								<Logo :certification="scoresInitials" />
+								<Logo :scores="scoresInitials" :certification="selectedUserInfo.certification"/>
 							</div>
 						</div>
 					</div>

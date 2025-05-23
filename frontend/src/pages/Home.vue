@@ -1,14 +1,13 @@
 <template>
 	<div class="w-full relative bg-blackLogo h-screen">
 		<div class="absolute top-2 right-10 flex flex-col items-center">
-			<div class="text-white pb-2">Votre profile est {{ sessionStore.getUserDetails.certification_is_public ?
-				'publique'
+			<div class="text-white pb-2">Votre profil est {{ sessionStore.getUserDetails.certification_is_public ?
+				'public'
 				:
 				'privé' }}</div>
-			<button class="rounded bg-blue-200 p-2 text-blue-900" @click="onPrivacyOrPPdemandClick('privacy')">Rendre profil
-				{{
-					!sessionStore.getUserDetails.certification_is_public ? 'publique' :
-						'privé' }}</button>
+			<button class="rounded bg-blueLogoDark p-2 text-yellowLogo" @click="onPrivacyOrPPdemandClick('privacy')">rendre 
+				<span :class="{'font-extrabold': !sessionStore.getUserDetails.certification_is_public }">public</span>/<span :class="{'font-extrabold': sessionStore.getUserDetails.certification_is_public }">privé</span>
+			</button>
 			<div v-if="privacyBoxOpen" class="bg-orange-200 rounded px-2 py-1 mt-2">
 				<div v-if="isHidden" class="password">
 					<input v-model="currentPassword" type="password" placeholder="mot de passe" name="password">
@@ -24,22 +23,22 @@
 		<div class="flex flex-col items-center w-full">
 			<p class=" w-2/3 text-white pt-4 px-8 text-center">{{ storeParams.getParams.intro }}
 			</p>
-			<div v-if="hasScoreData('droitNaturel')" class="text-2xl text-green-500 pt-12">En
-				<span class="font-extrabold italic">"Droit
-					Naturel"</span> vous avez le niveau <span class="font-extrabold">"{{
+			<div v-if="hasScoreData('droitNaturel')" class="text-2xl pt-12 text-orangeLogo">En
+				<span class="font-extrabold italic text-yellowLogo">"Droit
+					Naturel"</span> vous avez le niveau <span class="font-extrabold text-yellowLogo">"{{
 						translateInitialsIntoFullWords(scoreStore.getScore.droitNaturel.level) }}"</span>
 			</div>
 			<div v-else class="text-2xl text-red-600 pt-12">Vous n'avez pas encore répondu au questionnaire "Droit Naturel"
 			</div>
-			<div v-if="hasScoreData('ecoleAutrichienne')" class="text-2xl text-green-500">
-				En <span class="font-extrabold italic">"Ecole
-					Autrichienne"</span> vous avez le niveau <span class="font-extrabold">"{{
+			<div v-if="hasScoreData('ecoleAutrichienne')" class="text-2xl text-orangeLogo">
+				En <span class="font-extrabold italic text-yellowLogo">"Ecole
+					Autrichienne"</span> vous avez le niveau <span class="font-extrabold text-yellowLogo">"{{
 						translateInitialsIntoFullWords(scoreStore.getScore.ecoleAutrichienne.level)
 					}}"</span></div>
 			<div v-else class="text-2xl text-red-600">Vous n'avez pas encore répondu au questionnaire "Ecole Autrichienne"
 			</div>
 			<div class="w-1/6">
-				<Logo :certification="scoresInitials" />
+				<Logo :scores="scoresInitials" :certification="sessionStore.getUserCertification"/>
 			</div>
 			<div class="font-extrabold italic text-5xl text-orangeLogo mb-10">{{ certificationSentence }}</div>
 			<p v-if="sessionStore.getUserCertification === 'MC' && sessionStore.getUserDetails.wantsToBecomePP === false"
@@ -49,7 +48,7 @@
 			</p>
 			<div class="grid grid-cols-2 gap-4 w-1/2">
 				<div
-					class="rounded-2xl text-2xl p-4 cursor-pointer font-bold text-blueLogoDark text-center hover:scale-105 transition duration-300 hover:border-green-500 hover:border-2 bg-gradient-to-r from-orangeLogo to-yellowLogo hover:bg-blue-900"
+					class="rounded-2xl text-3xl p-4 cursor-pointer font-bold text-blueLogoDark text-center hover:scale-105 transition duration-300 hover:border-green-500 hover:border-2 bg-gradient-to-r from-orangeLogo to-yellowLogo hover:bg-blue-900"
 					:class="{ 'col-span-2': sessionStore.getUserCertification !== 'MC' }"
 					@click="router.push('/questionnaire')">
 					Aller au questionnaire
@@ -165,13 +164,13 @@ const scoresInitials = computed(() => {
 const certificationSentence = computed(() => {
 	switch (sessionStore.getUserCertification) {
 		case 'SM':
-			return `Vous êtes est un Simple Membre`
+			return `Vous êtes un Simple Membre`
 		case 'MC':
-			return `Vous êtes est un Membre Certifié`
+			return `Vous êtes un Membre Certifié`
 		case 'PP':
-			return `Vous êtes est un Porte Parole`
+			return `Vous êtes un Porte Parole`
 		default:
-			return `Vous êtes est une chèvre`
+			return `Vous êtes une chèvre`
 	}
 })
 </script>
