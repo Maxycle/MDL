@@ -1,6 +1,6 @@
 <template>
 	<div class="flex justify-between px-4 items-center bg-blueLogoLight">
-		<div class="italic text-yellowLogo font-extrabold text-xl">{{ paramsStore.getParams.welcome_start }} {{
+		<div class="italic text-yellowLogo font-extrabold text-sm lg:text-lg xl:text-xl">{{ paramsStore.getParams.welcome_start }} {{
 			store.getUserUsername }}{{
 				paramsStore.getParams.welcome_end }}
 		</div>

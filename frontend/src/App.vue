@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { ref, onErrorCaptured, markRaw, watch, Suspense, TransitionGroup } from 'vue'
+import { onErrorCaptured, Suspense, TransitionGroup } from 'vue'
 import NavBar from '@/components/NavBar.vue'
 import Hero2logos from '@/components/Hero2logos.vue'
 import { useSessionStore } from "@/stores/modules/sessionStore"

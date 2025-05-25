@@ -7,9 +7,9 @@ class QuestionnaireParamsController < ApplicationController
 
 	# PATCH/PUT /questionnaire_params/1
 	def update
-		@questionnaire_params = QuestionnaireParam.all
+		@questionnaire_params = QuestionnaireParam.first
     if @questionnaire_params.update(questionnaire_param_params)
-      render json: @questionnaire_params, notice: 'Questionnaire param was successfully updated.'
+      render json: @questionnaire_params, status: 200
     else
       render :edit
     end

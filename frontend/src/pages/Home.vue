@@ -38,7 +38,7 @@
 			<div v-else class="text-2xl text-red-600">Vous n'avez pas encore répondu au questionnaire "Ecole Autrichienne"
 			</div>
 			<div class="w-1/6">
-				<Logo :scores="scoresInitials" :certification="sessionStore.getUserCertification"/>
+				<Logo :scores="scoresInitials" :certification="sessionStore.getUserCertification" class="hover:animate-spin"/>
 			</div>
 			<div class="font-extrabold italic text-5xl text-orangeLogo mb-10">{{ certificationSentence }}</div>
 			<p v-if="sessionStore.getUserCertification === 'MC' && sessionStore.getUserDetails.wantsToBecomePP === false"

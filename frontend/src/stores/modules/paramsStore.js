@@ -20,9 +20,6 @@ export const useParamsStore = defineStore({
   
   actions: {
     async fetchParams() {
-      // If already loaded, don't fetch again
-      if (this.isLoaded) return
-      
       const sessionStore = useSessionStore()
       try {
         const response = await axios.get('/api/questionnaire-params', {
