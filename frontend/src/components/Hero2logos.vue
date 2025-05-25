@@ -1,14 +1,15 @@
 <template>
-	<div class="bg-blackLogo flex items-center justify-around">
-		<img src="/MDLlogoPP.jpg" alt="yellow and black triangles"
-			class="w-1/12 md:w-1/10 lg:w-1/12 rotate-180 rounded-full" />
-		<div class="flex items-center">
-			<h1 class="text-blueLogoLight text-7xl font-extrabold italic">M</h1>
-			<img src="/MDLlogoPP.jpg" alt="yellow and black triangles"
-				class="w-1/12 md:w-1/10 lg:w-16 hover:animate-spin rounded-full pt-3" />
-			<h1 class="text-blueLogoLight text-7xl font-extrabold italic">uvement des Libertariens</h1>
+	<div class="bg-blackLogo flex items-center justify-around text-2xl md:text-3xl lg:text-5xl xl:text-6xl w-full">
+		<div class="w-8 md:w-10 lg:w-20 xl:w-28 rounded-full rotate-180">
+			<Logo class="h-full w-full" />
 		</div>
-		<img src="/MDLlogoPP.jpg" alt="yellow and black triangles"
-			class="w-1/12 md:w-1/10 lg:w-1/12 hover:animate-spin rounded-full" />
+		<div class="text-blueLogoLight font-extrabold italic">Mouvement des Libertariens</div>
+		<div class="w-8 md:w-10 lg:w-20 xl:w-28 rounded-full">
+			<Logo class="h-full w-full" />
+		</div>
 	</div>
 </template>
+
+<script setup>
+import Logo from "@/components/Logo.vue"
+</script>

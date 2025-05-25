@@ -2,7 +2,9 @@
 	<div
 		class="flex text-2xl font-bold p-1 items-center hover:bg-blueLogoLight rounded-full cursor-pointer transition duration-300 px-4">
 		<div v-if="!showTick" class="border-2 border-yellowLogo w-4 h-4 mr-2 hover:rotate-spin" />
-		<Logo v-else class="w-12 mr-2 hover:animate-spin rounded-full"/>
+		<div v-else class="w-12 mr-2 hover:animate-spin">
+			<Logo />
+		</div>
 		{{ data.content }}
 	</div>
 </template>
