@@ -3,14 +3,14 @@
 		<div class="flex w-full text-blueLogoLight pt-8" style="height: calc(100vh - 200px);">
 			<div class="w-1/4 h-full">
 				<div class="h-full px-8 flex flex-col">
-					<AutocompleteUsers :options="users" class="py-4" @user-selected="selectUser" />
+					<AutocompleteUsers :options="filteredUsers" class="py-4" @user-selected="selectUser" />
 					<div class="flex-1 overflow-hidden">
 						<div class="h-full overflow-y-auto overscroll-contain pb-4">
 							<div v-for="(user, index) in filteredUsers" :key="index"
 								class="py-2 text-orangeLogo cursor-pointer hover:text-blueLogoLight transition duration-300"
 								:class="{ 'bg-blueLogoDark px-2 rounded-lg text-yellowLogo font-extrabold': userSelected?.id === user.id }"
 								@click="selectUser(user)">
-								<div v-if="user.certification_is_public" class="flex justify-between items-center">
+								<div class="flex justify-between items-center">
 									<div>
 										<div>
 											{{ user.first_name }} {{ user.last_name }}
@@ -81,7 +81,7 @@ const fetchUsers = async () => {
 	try {
 		const response = await axios.get('/api/users')
 		users.value = response.data
-		filteredUsers.value = users.value
+		filteredUsers.value = users.value.filter((user) => user.certification_is_public === true)
 	} catch (error) {
 		console.error('Error fetching options:', error)
 	}

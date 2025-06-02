@@ -27,20 +27,20 @@ export const useParamsStore = defineStore({
             Authorization: `${sessionStore.getAuthToken}`
           }
         });
-        
+        console.log('responssse', response)
         this.params = {
-          cycleLength: response.data[0].cycle_length,
-          tryLength: response.data[0].try_length,
-          numberOfTriesPermitted: response.data[0].tries_permitted,
-          succeedThreshold: response.data[0].threshold,
-          welcome_start: response.data[0].welcome_start,
-          welcome_end: response.data[0].welcome_end,
-          intro: response.data[0].intro,
-          nb_questions_per_questionnaire: response.data[0].nb_questions_per_questionnaire,
-          questionnaire_time_limit: response.data[0].questionnaire_time_limit,
-          low_threshold: response.data[0].low_threshold,
-          mid_threshold: response.data[0].mid_threshold,
-          high_threshold: response.data[0].high_threshold
+          cycleLength: response.data.cycle_length,
+          tryLength: response.data.try_length,
+          numberOfTriesPermitted: response.data.tries_permitted,
+          succeedThreshold: response.data.threshold,
+          welcome_start: response.data.welcome_start,
+          welcome_end: response.data.welcome_end,
+          intro: response.data.intro,
+          nb_questions_per_questionnaire: response.data.nb_questions_per_questionnaire,
+          questionnaire_time_limit: response.data.questionnaire_time_limit,
+          low_threshold: response.data.low_threshold,
+          mid_threshold: response.data.mid_threshold,
+          high_threshold: response.data.high_threshold
         }
         
         this.isLoaded = true

@@ -3,6 +3,10 @@
 		<div class="w-full flex justify-center text-6xl font-extrabold text-green-800 font-serif">
 			{{ data.username }} {{ adminButtonText === 'Enlever status admin' ? '(admin)' : '' }}
 		</div>
+		<div class="w-full flex justify-center text-md">{{ data.certification_is_public ? `(${data.username} a rendu sa
+			certification publique)` : `(${data.username}
+			n'a
+			pas rendu sa certification publique)` }}</div>
 		<div class="pl-20 text-xl">
 			<div class="flex space-x-4">
 				<div>Prénom:</div>
@@ -14,10 +18,10 @@
 			</div>
 			<div class="flex space-x-4">
 				<div>email:</div>
-				<div class="text-green-800">{{ data.email }}</div>
+				<div class="text-green-800 pb-8">{{ data.email }}</div>
 			</div>
-			<template v-for="score in data.scores" :key="score?.id">
-				<div v-if="score" class="flex items-center space-x-4 space-y-4">
+			<template v-for="score in data.scores" :key="score?.id" class="">
+				<div v-if="score" class="flex items-center justify-between py-2 w-2/3 ">
 					<div class="flex space-x-4 text-3xl">
 						<div>"{{ fullWord(score.domain) }}":</div>
 						<div class="text-green-800">{{ fullWord(score.level) }}</div>
@@ -31,54 +35,59 @@
 					</div>
 				</div>
 			</template>
+			<div class="text-3xl pb-8">
+				<div v-if="!hasDNScore" class="">"Droit Naturel": <span class="text-green-800">{{ data.username }} n'a pas
+						encore
+						répondu au questionnaire."</span></div>
+				<div v-if="!hasEAScore">"Ecole Autrichienne": <span class="text-green-800">{{ data.username }} n'a pas
+						encore
+						répondu au questionnaire.</span></div>
+			</div>
 			<div class="flex space-x-4 text-3xl">
-				<div>certification:</div>
-				<div class="text-green-800">{{ updatedCertification ? updatedCertification : data.certification }}</div>
+				<div>Statut:</div>
+				<div class="text-green-800">{{ fullWord(data.certification) }}</div>
 			</div>
-			<div>{{ data.certification_is_public ? `${data.username} a rendu sa certification publique` : `${data.username}
-				n'a
-				pas rendu sa certification publique` }}</div>
-			<div class="w-full flex justify-center">
+		</div>
+		<div class="w-full flex justify-center">
 
-				<div class="w-1/12">
-					<Logo :scores="scoresInitials" :certification="data.certification"/>
+			<div class="w-1/12">
+				<Logo :scores="scoresInitials" :certification="data.certification" />
+			</div>
+		</div>
+
+		<div class="mt-4 flex flex-col items-center">
+			<div v-if="dialogBoxOpen"
+				class="flex justify-center items-center bg-yellow-200 rounded-lg p-2 shadow-lg shadow-stone-600">
+				<div class="flex text-black items-center">
+					<div>{{ sentenceForActionButton }}</div>
+					<button
+						class="rounded-lg bg-green-300 p-2 ml-4 hover:scale-105 hover:bg-orange-600 hover:text-white transition duration-300"
+						@click="dialogBoxOpen = false">Annuler</button>
+					<button
+						class="rounded-lg bg-orange-300 p-2 ml-4 hover:scale-105 hover:bg-orange-600 hover:text-white transition duration-300"
+						@click="updateUser()">Valider</button>
 				</div>
 			</div>
 
-			<div class="mt-4 flex flex-col items-center">
-				<div v-if="dialogBoxOpen"
-					class="flex justify-center items-center bg-yellow-200 rounded-lg p-2 shadow-lg shadow-stone-600">
-					<div class="flex text-black items-center">
-						<div>{{ sentenceForActionButton }}</div>
-						<button
-							class="rounded-lg bg-green-300 p-2 ml-4 hover:scale-105 hover:bg-orange-600 hover:text-white transition duration-300"
-							@click="dialogBoxOpen = false">Annuler</button>
-						<button
-							class="rounded-lg bg-orange-300 p-2 ml-4 hover:scale-105 hover:bg-orange-600 hover:text-white transition duration-300"
-							@click="updateUser()">Valider</button>
-					</div>
+			<div class="flex justify-center space-x-10 text-black mt-4">
+				<button
+					class="rounded-lg bg-orange-300 p-4 text-3xl hover:scale-105 hover:bg-red-600 hover:text-white transition duration-300 shadow-lg shadow-stone-600"
+					@click="openButtonDialogBox('destruction')">Détruire
+					compte</button>
+
+				<div class="relative" @mouseover="showMenu()" @mouseout="hideMenu()">
+					<div class="rounded-lg bg-green-700 text-white shadow-lg shadow-stone-600 text-3xl p-4">Changer
+						certification</div>
+					<Menu v-show="hovered" class="absolute -bottom-13 z-10"
+						:options="{ content: [{ text: 'Simple Membre', symbol: 'SM' }, { text: 'Membre Certrifié', symbol: 'MC' }, { text: 'Porte Parole', symbol: 'PP' }] }"
+						@optionSelected="newCertificationReceived" />
 				</div>
 
-				<div class="flex justify-center space-x-10 text-black mt-4">
-					<button
-						class="rounded-lg bg-orange-300 p-4 text-3xl hover:scale-105 hover:bg-red-600 hover:text-white transition duration-300 shadow-lg shadow-stone-600"
-						@click="openButtonDialogBox('destruction')">Détruire
-						compte</button>
-
-					<div class="relative" @mouseover="showMenu()" @mouseout="hideMenu()">
-						<div class="rounded-lg bg-green-700 text-white shadow-lg shadow-stone-600 text-3xl p-4">Changer
-							certification</div>
-						<Menu v-show="hovered" class="absolute -bottom-13 z-10"
-							:options="{ content: [{ text: 'Simple Membre', symbol: 'SM' }, { text: 'Membre Certrifié', symbol: 'MC' }, { text: 'Porte Parole', symbol: 'PP' }] }"
-							@optionSelected="newCertificationReceived" />
-					</div>
-
-					<button
-						class="rounded-lg bg-blue-300 p-4 text-3xl hover:scale-105 hover:bg-orange-600 hover:text-white transition duration-300 shadow-lg shadow-stone-600"
-						@click="openButtonDialogBox('admin')">
-						{{ adminButtonText }}
-					</button>
-				</div>
+				<button
+					class="rounded-lg bg-blue-300 p-4 text-3xl hover:scale-105 hover:bg-orange-600 hover:text-white transition duration-300 shadow-lg shadow-stone-600"
+					@click="openButtonDialogBox('admin')">
+					{{ adminButtonText }}
+				</button>
 			</div>
 		</div>
 	</div>
@@ -96,7 +105,6 @@ const sessionStore = useSessionStore()
 const scoreStore = useScoreStore()
 const hovered = ref(false)
 const newCertification = ref('')
-const updatedCertification = ref('')
 const dialogBoxOpen = ref(false)
 const sentenceForActionButton = ref('')
 const actionToPerform = ref('')
@@ -132,10 +140,27 @@ const fullWord = ((initials) => {
 		case 'EA':
 			return 'Ecole Autrichienne'
 			break
+		case 'SM':
+			return 'Simple Membre'
+			break
+		case 'MC':
+			return 'Membre Certifié'
+			break
+		case 'PP':
+			return 'Porte Parole'
+			break
 	}
 })
 
 const emit = defineEmits(['userUpdated'])
+
+const hasDNScore = computed(() =>
+	props.data.scores?.some(score => score?.domain === 'DN') || false
+)
+
+const hasEAScore = computed(() =>
+	props.data.scores?.some(score => score?.domain === 'EA') || false
+)
 
 const handleScoreDelete = async (scoreId) => {
 	await scoreStore.deleteScore(scoreId)
