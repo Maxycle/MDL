@@ -28,6 +28,9 @@
 					<div class="py-2">Nom: <span class="text-yellowLogo">{{ selectedUserInfo.last_name }}</span></div>
 					<div class="py-2">Email: <span class="text-yellowLogo">{{ selectedUserInfo.email }}</span></div>
 					<div class="py-2">Motivations: <span class="text-yellowLogo">{{ selectedUserInfo.motivations }}</span></div>
+					<div v-if="selectedUserInfo.referencer" class="py-2">
+						Coopté par: <span class="text-yellowLogo">{{ selectedUserInfo.referencer.username }} ({{ selectedUserInfo.referencer.certification }})</span>
+					</div>
 				</div>
 				<div v-if="selectedUserInfo" class="flex justify-center space-x-10 text-blueLogoDark">
 					<button
@@ -74,10 +77,39 @@ const fetchAccountCreationRequests = async () => {
 				Authorization: `${sessionStore.getAuthToken}`
 			}
 		})
-		users.value = response.data
+
+		// Enhance users with referencer data
+		const usersWithReferencerInfo = await Promise.all(
+			response.data.map(async (user) => {
+				if (user.referencer) {
+					const referencerData = await fetchReferencer(user.referencer)
+					return {
+						...user,
+						referencer: referencerData
+					}
+				}
+				return user
+			})
+		)
+
+		// users.value = response.data
+		users.value = usersWithReferencerInfo
 		filteredUsers.value = users.value
 	} catch (error) {
 		console.error('Error fetching options:', error)
+	}
+}
+
+const fetchReferencer = async (id) => {
+	try {
+		const response = await axios.get(`/api/users/${id}`, {
+			headers: {
+				Authorization: `${sessionStore.getAuthToken}`
+			}
+		})
+		return response.data
+	} catch (error) {
+		console.error('Error fetching referencer:', error)
 	}
 }
 
