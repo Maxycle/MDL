@@ -1,6 +1,6 @@
 class QuestionnaireParamsController < ApplicationController
   def index
-    @questionnaire_params = QuestionnaireParam.all
+    @questionnaire_params = QuestionnaireParam.first
 
 		render json: @questionnaire_params
   end

@@ -1,5 +1,5 @@
 <template>
-	<div class="min-h-screen text-black px-12 pt-12 bg-gradient-to-r from-neutral-300 to-neutral-600">
+	<div class="min-h-screen text-black px-12 pt-12 bg-neutral-400">
 		<div class="flex justify-start">
 			<div>
 				<div class="border-2 anarcap-border bg-green-500 p-2 rounded mb-4 cursor-pointer" @click="downloadUsers">
