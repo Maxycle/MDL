@@ -21,26 +21,26 @@
 			</div>
 		</div>
 		<div class="flex flex-col items-center w-full">
-			<p class=" w-2/3 text-white pt-4 px-8 text-center">{{ storeParams.getParams.intro }}
+			<p class=" w-2/3 text-orangeLogo pt-4 px-8 text-center">{{ storeParams.getParams.intro }}
 			</p>
 			<div v-if="hasScoreData('droitNaturel')" class="text-2xl pt-12 text-orangeLogo">En
 				<span class="font-extrabold italic text-yellowLogo">"Droit
 					Naturel"</span> vous avez le niveau <span class="font-extrabold text-yellowLogo">"{{
 						translateInitialsIntoFullWords(scoreStore.getScore.droitNaturel.level) }}"</span>
 			</div>
-			<div v-else class="text-2xl text-red-600 pt-12">Vous n'avez pas encore répondu au questionnaire "Droit Naturel"
+			<div v-else class="text-2xl text-blueLogoLight pt-12">Vous n'avez pas encore répondu au questionnaire "Droit Naturel"
 			</div>
 			<div v-if="hasScoreData('ecoleAutrichienne')" class="text-2xl text-orangeLogo">
 				En <span class="font-extrabold italic text-yellowLogo">"Ecole
 					Autrichienne"</span> vous avez le niveau <span class="font-extrabold text-yellowLogo">"{{
 						translateInitialsIntoFullWords(scoreStore.getScore.ecoleAutrichienne.level)
 					}}"</span></div>
-			<div v-else class="text-2xl text-red-600">Vous n'avez pas encore répondu au questionnaire "Ecole Autrichienne"
+			<div v-else class="text-2xl text-blueLogoLight">Vous n'avez pas encore répondu au questionnaire "Ecole Autrichienne"
 			</div>
 			<div class="w-1/6">
 				<Logo :scores="scoresInitials" :certification="sessionStore.getUserCertification" class="hover:animate-spin"/>
 			</div>
-			<div class="font-extrabold italic text-5xl text-orangeLogo mb-10">{{ certificationSentence }}</div>
+			<div class="font-extrabold italic text-5xl text-yellowLogo mb-10">{{ certificationSentence }}</div>
 			<p v-if="sessionStore.getUserCertification === 'MC' && sessionStore.getUserDetails.wantsToBecomePP === false"
 				class="text-white pb-10">
 				Vous pouvez maintenant demander à devenir un porte parole du mouvement des libertariens. En cliquant sur le

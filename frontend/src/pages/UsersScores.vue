@@ -17,8 +17,8 @@
 				<AutocompleteUsers :options="users" class="pb-4" @user-selected="selectUser" />
 				<div v-for="(user, index) in filteredUsers"
 					class="relative justify-start cursor-pointer text-blue-900 underline"
-					:class="{ 'bg-gradient-to-l from-orange-100 to-orange-200 p-2 text-orange-800 rounded': user.id === userSelected.id }" @click="selectUser(user)" @mouseover="showUser(index)"
-					@mouseout="hideUser(index)">
+					:class="{ 'bg-gradient-to-l from-orange-100 to-orange-200 p-2 text-orange-800 rounded': user.id === userSelected.id }"
+					@click="selectUser(user)" @mouseover="showUser(index)" @mouseout="hideUser(index)">
 					{{ user.username }}
 					<div v-if="userToShow === index" @click="selectUser(user)"
 						class="border-2 border-orange-500 rounded p-1 absolute top-2 left-6 text-nowrap bg-orange-100 z-10">{{
@@ -130,7 +130,7 @@ const downloadUsers = async () => {
 }
 
 const updateUsers = async (id) => {
-  await fetchUsers()
-	userSelected.value = users.value.find((item) => item.id === id)
+	await fetchUsers()
+	userSelected.value = id !== 'no id' ? users.value.find((item) => item.id === id) : users.value[0]
 }
 </script>

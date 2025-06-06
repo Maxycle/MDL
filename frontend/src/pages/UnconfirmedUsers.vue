@@ -10,7 +10,11 @@
 						@click="filterCandidates('non cooptés')">{{
 							nonCooptedButtonLabel }}</button>
 				</div>
-				<p class="flex justify-center pt-4 underline">{{ listTitle }} </p>
+				<div class="flex justify-center pt-4">
+					<div class=" border-2 border-green-400 underline p-2 rounded-md text-orangeLogo">
+						{{ listTitle }}
+					</div>
+				</div>
 				<div class="flex-1 overflow-y-auto my-2 px-8">
 					<div v-for="(user, index) in filteredUsers" :key="index"
 						class="py-2 cursor-pointer hover:scale-105 transition duration-300 text-orangeLogo"
@@ -29,7 +33,8 @@
 					<div class="py-2">Email: <span class="text-yellowLogo">{{ selectedUserInfo.email }}</span></div>
 					<div class="py-2">Motivations: <span class="text-yellowLogo">{{ selectedUserInfo.motivations }}</span></div>
 					<div v-if="selectedUserInfo.referencer" class="py-2">
-						Coopté par: <span class="text-yellowLogo">{{ selectedUserInfo.referencer.username }} ({{ selectedUserInfo.referencer.certification }})</span>
+						Coopté par: <span class="text-yellowLogo">{{ selectedUserInfo.referencer.username }} ({{
+							selectedUserInfo.referencer.certification }})</span>
 					</div>
 				</div>
 				<div v-if="selectedUserInfo" class="flex justify-center space-x-10 text-blueLogoDark">
