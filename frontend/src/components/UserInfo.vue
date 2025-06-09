@@ -65,7 +65,7 @@
 						@click="dialogBoxOpen = false">Annuler</button>
 					<button
 						class="rounded-lg bg-orange-300 p-2 ml-4 hover:scale-105 hover:bg-orange-600 hover:text-white transition duration-300"
-						@click="updateUser()">Valider</button>
+						@click="updateUser">Valider</button>
 				</div>
 			</div>
 
@@ -198,7 +198,6 @@ const updateUser = async () => {
 		await updateCertification()
 	}
 	dialogBoxOpen.value = false
-	emit('userUpdated', props.data.id)
 }
 
 const updateCertification = async () => {
@@ -227,8 +226,9 @@ const destroyAccount = async () => {
 				headers: {
 					Authorization: `${sessionStore.getAuthToken}`
 				}
+			}).then(() => {
+				emit('userUpdated', 'no id')
 			})
-
 	} catch (error) {
 		console.error('Error deleting account:', error)
 	}
