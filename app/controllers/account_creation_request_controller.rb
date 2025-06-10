@@ -16,7 +16,9 @@ class AccountCreationRequestController < ApplicationController
     @accountCreationRequest = AccountCreationRequest.new(request_params)
     if @accountCreationRequest.save
 			# Send validation email
-      AccountCreationRequestMailer.email_validation(@accountCreationRequest).deliver_now
+			unless request_params[:validated]
+  			AccountCreationRequestMailer.email_validation(@accountCreationRequest).deliver_now
+			end
       render json: @accountCreationRequest, status: :created
     else
       render json: @accountCreationRequest.errors, status: :unprocessable_entity
