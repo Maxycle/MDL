@@ -24,7 +24,10 @@ class AccountCreationRequestMailer < ApplicationMailer
 
     @validation_url = "#{frontend_url}/api/account_creation_request/#{@account_creation_request.id}/validate_email/#{@account_creation_request.validation_token}"
     
-    mail(to: @account_creation_request.email, subject: 'Please Validate Your Email for MDL Account Request')
+    	mail(
+			to: @account_creation_request.email, 
+			subject: 'Please Validate Your Email for MDL Account Request'
+		)
   end
 
 	private
