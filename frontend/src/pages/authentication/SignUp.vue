@@ -154,8 +154,11 @@ const register = async () => {
 	isSubmitting.value = true;
 	registrationError.value = null;
 
-	const response = await sessionStore.registerUser(user, props.token)
-	console.log('ze response', response)
+	const isRegistered = await sessionStore.registerUser(user, props.token)
+	if (isRegistered) {
+		 sessionStore.clearErrors()
+		 router.push({ name: "Login" })
+	 }
 };
 
 const togglePasswordVisibility = () => {

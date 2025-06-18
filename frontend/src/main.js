@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import router from './router.js'
 import App from './App.vue'
+import axios from 'axios'
 import './assets/main.css'
 import { useSessionStore } from "./stores/modules/sessionStore"
 import 'vuetify/styles'
@@ -12,6 +13,9 @@ import * as directives from 'vuetify/directives'
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 import { faEyeSlash, faEye, faPaperPlane, faEnvelope, faPenFancy, faMusic, faArrowLeft } from "@fortawesome/free-solid-svg-icons"
+
+// Set axios defaults
+axios.defaults.withCredentials = true
 
 // Create Pinia store
 const pinia = createPinia()
