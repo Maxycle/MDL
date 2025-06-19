@@ -30,6 +30,22 @@ class AccountCreationRequestMailer < ApplicationMailer
 		)
   end
 
+	def pp_email_notification(account_creation_request, pp_user)
+		@account_creation_request = account_creation_request
+		@account_creation_requests_url = "#{frontend_url}/utilisateurs-non-confirmes"
+
+		mail(
+      to: pp_user.email,
+      subject: 'Nouvelle demande d\'ouverture de compte dans libertarien.net'
+    )
+	end
+
+	def self.send_pp_notifications(account_creation_request)
+    User.pp_users.find_each do |pp_user|
+      pp_email_notification(account_creation_request, pp_user).deliver_now
+    end
+  end
+
 	private
   
   def frontend_url

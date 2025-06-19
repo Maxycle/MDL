@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p><%= @account_creation_request.first_name%> <%= @account_creation_request.last_name%> a fait une demande de création de compte.</p>
+		<p>Ses motivations sont:</p>
+		<p><%= @account_creation_request.motivations%></p>
+    <p><%= link_to 'Admettre ou refuser la demande', @account_creation_requests_url %></p>
+  </body>
+</html>
