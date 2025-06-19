@@ -15,6 +15,8 @@ class AccountCreationRequestController < ApplicationController
   def create
     @accountCreationRequest = AccountCreationRequest.new(request_params)
     if @accountCreationRequest.save
+			# send notification email to pp users
+			AccountCreationRequestMailer.send_pp_notifications(@accountCreationRequest)
 			# Send validation email
 			unless request_params[:validated]
   			AccountCreationRequestMailer.email_validation(@accountCreationRequest).deliver_now
