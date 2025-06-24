@@ -44,8 +44,8 @@
 						@click="acceptOrRefuseCandidate('refuse', selectedUserInfo.id)"
 						:disabled="validationStatus === 'Validées'">Refuser</button>
 				</div>
-				<div class="flex pt-8">
-					<div class="text-xl p-8">Membres n'ayant pas encore décidé:</div>
+				<div class="flex pt-8 pl-8">
+					<div class="pr-8">Membres n'ayant pas encore décidé:</div>
 					<div>
 						<div v-for="(pp, index) in undecidedPPs" :key="index" class="text-yellowLogo">
 							{{ pp.username }} ({{ pp.first_name }} {{ pp.last_name }})
