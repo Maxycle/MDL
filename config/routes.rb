@@ -51,8 +51,7 @@ Rails.application.routes.draw do
     resources :scores
     resources :users, only: [:index, :show] do
 			collection do
-				get 'unconfirmed', to: 'users#index_unconfirmed'
-				get 'index_admin', to: 'users#index_admin'
+				get 'index_pp', to: 'users#index_pp'
 			end
 		end
 

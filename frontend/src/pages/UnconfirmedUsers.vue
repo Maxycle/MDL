@@ -2,17 +2,14 @@
 	<Container>
 		<div class="h-full flex w-full text-blueLogoLight">
 			<div class="flex flex-col h-full w-1/4">
-				<div class="flex justify-around mt-10 px-28 text-orangeLogoDark">
-					<button class="rounded-lg bg-green-400 px-2 shadow-md shadow-stone-600 mr-2"
-						@click="filterCandidates('cooptés')">{{
-							cooptedButtonLabel }}</button>
-					<button class="rounded-lg bg-green-400  px-2 shadow-md shadow-stone-600"
-						@click="filterCandidates('non cooptés')">{{
-							nonCooptedButtonLabel }}</button>
-				</div>
-				<div class="flex justify-center pt-4">
-					<div class=" border-2 border-green-400 underline p-2 rounded-md text-orangeLogo">
-						{{ listTitle }}
+				<div class="flex justify-around py-8">
+					<div v-for="(menuOptions, index) in menuAccountRequests" :key="index" class="">
+						<div class="relative" @mouseover="showMenu(menuOptions.text)" @mouseout="hideMenu()">
+							<div class="border-4 anarcap-border rounded-lg bg-green-700 text-white p-2">{{ menuOptions.text }}</div>
+							<Menu v-show="hovered === menuOptions.text" class="absolute -bottom-13 -left-10 z-10"
+								:options="menuOptions"
+								@optionSelected="(optionSelected) => addFilter(menuOptions.target, optionSelected)" />
+						</div>
 					</div>
 				</div>
 				<div class="flex-1 overflow-y-auto my-2 px-8">
@@ -37,32 +34,45 @@
 							selectedUserInfo.referencer.certification }})</span>
 					</div>
 				</div>
-				<div v-if="selectedUserInfo" class="flex justify-center space-x-10 text-blueLogoDark">
+				<div v-if="selectedUserInfo && showButton" class="flex justify-center space-x-10 text-blueLogoDark">
 					<button
 						class="rounded-lg bg-blue-400 p-4 text-3xl hover:scale-105 hover:bg-blue-700 hover:text-white transition duration-300 hover:shadow-lg hover:shadow-yellowLogo"
-						@click="acceptOrRefuseCandidate('accept', selectedUserInfo.id)">Admettre</button>
+						@click="acceptOrRefuseCandidate('accept', selectedUserInfo.id)"
+						:disabled="validationStatus === 'Validées'">Admettre</button>
 					<button
 						class="rounded-lg bg-red-400 p-4 text-3xl hover:scale-105 hover:bg-red-500 hover:text-white transition duration-300 hover:shadow-lg hover:shadow-blueLogoLight"
-						@click="acceptOrRefuseCandidate('refuse', selectedUserInfo.id)">Refuser</button>
+						@click="acceptOrRefuseCandidate('refuse', selectedUserInfo.id)"
+						:disabled="validationStatus === 'Validées'">Refuser</button>
+				</div>
+				<div class="flex pt-8">
+					<div class="text-xl p-8">Membres n'ayant pas encore décidé:</div>
+					<div>
+						<div v-for="(pp, index) in undecidedPPs" :key="index" class="text-yellowLogo">
+							{{ pp.username }} ({{ pp.first_name }} {{ pp.last_name }})
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</Container>
 </template>
-
 <script setup>
 import axios from 'axios'
 import { ref, onMounted, computed } from "vue"
 import { useSessionStore } from '@/stores/modules/sessionStore'
 import Container from "@/components/Container.vue"
+import Menu from "@/components/Menu.vue"
+import { menuAccountRequests } from "@/helpers/constants.js"
 
 const sessionStore = useSessionStore()
 const userSelected = ref(null) // Initialize with null instead of empty object
 const filteredUsers = ref(null)
 const users = ref(null)
-const listTitle = ref('tous les candidats')
-const cooptedButtonLabel = ref('Cooptés')
-const nonCooptedButtonLabel = ref('Non cooptés')
+const validationStatus = ref(false)
+const cooptationStatus = ref('Toutes les demandes')
+const hovered = ref('')
+const pps = ref(null)
+const undecidedPPs = ref(null)
 
 // Add computed property to help track changes
 const selectedUserInfo = computed(() => {
@@ -72,12 +82,13 @@ const selectedUserInfo = computed(() => {
 
 onMounted(async () => {
 	await fetchAccountCreationRequests()
+	await fetchPP()
 	userSelected.value = users.value[0]
 })
 
 const fetchAccountCreationRequests = async () => {
 	try {
-		const response = await axios.get('/api/account_creation_request?pending_approval=true', {
+		const response = await axios.get('/api/account_creation_request', {
 			headers: {
 				Authorization: `${sessionStore.getAuthToken}`
 			}
@@ -87,7 +98,7 @@ const fetchAccountCreationRequests = async () => {
 		const usersWithReferencerInfo = await Promise.all(
 			response.data.map(async (user) => {
 				if (user.referencer) {
-					const referencerData = await fetchReferencer(user.referencer)
+					const referencerData = await fetchUser(user.referencer)
 					return {
 						...user,
 						referencer: referencerData
@@ -97,7 +108,6 @@ const fetchAccountCreationRequests = async () => {
 			})
 		)
 
-		// users.value = response.data
 		users.value = usersWithReferencerInfo
 		filteredUsers.value = users.value
 	} catch (error) {
@@ -105,7 +115,7 @@ const fetchAccountCreationRequests = async () => {
 	}
 }
 
-const fetchReferencer = async (id) => {
+const fetchUser = async (id) => {
 	try {
 		const response = await axios.get(`/api/users/${id}`, {
 			headers: {
@@ -118,40 +128,42 @@ const fetchReferencer = async (id) => {
 	}
 }
 
+const fetchPP = async () => {
+	try {
+		const response = await axios.get('/api/users/index_pp', {
+			headers: {
+				Authorization: `${sessionStore.getAuthToken}`
+			}
+		})
+		console.log('response fetchPP', response.data)
+		pps.value = response.data
+	} catch (error) {
+		console.error('Error fetching PPs:', error)
+	}
+}
+
 const selectUser = (user) => {
 	userSelected.value = { ...user }
+	undecidedPPs.value = pps.value.filter(item => !user.approval_ids.includes(item.id))
 }
 
-// Refactored filter function
-const filterCandidates = (filterType) => {
-	// Reset to initial state if clicking the same filter that's already active
-	if (listTitle.value === `Candidats ${filterType}`) {
-		filteredUsers.value = users.value
-		listTitle.value = 'Tous les candidats'
-		cooptedButtonLabel.value = 'cooptés'
-		nonCooptedButtonLabel.value = 'non cooptés'
-		return
+const filterCandidates = () => {
+	let filtered = users.value
+	const userId = sessionStore.getUserId
+
+	if (validationStatus.value === 'Non validées') {
+		filtered = filtered.filter(user => !user.approval_ids.includes(userId))
+	} else if (validationStatus.value === 'Validées') {
+		filtered = filtered.filter(user => user.approval_ids.includes(userId))
 	}
 
-	// Apply the appropriate filter
-	if (filterType === 'cooptés') {
-		filteredUsers.value = users.value.filter((user) => user.referencer !== null)
-	} else if (filterType === 'non cooptés') {
-		filteredUsers.value = users.value.filter((user) => user.referencer === null)
+	if (cooptationStatus.value === 'Cooptées') {
+		filtered = filtered.filter(user => user.referencer !== null)
+	} else if (cooptationStatus.value === 'Non cooptées') {
+		filtered = filtered.filter(user => user.referencer === null)
 	}
 
-	// Update UI elements
-	listTitle.value = `Candidats ${filterType}`
-	cooptedButtonLabel.value = filterType === 'cooptés' ? 'tous les candidats' : 'cooptés'
-	nonCooptedButtonLabel.value = filterType === 'non cooptés' ? 'tous les candidats' : 'non cooptés'
-}
-
-const filterCandidatesAfterAcceptingOrRefusing = () => {
-	if (listTitle.value === 'Candidats cooptés') {
-		filteredUsers.value = users.value.filter((user) => user.referencer !== null)
-	} else if (listTitle.value === 'Candidats non cooptés') {
-		filteredUsers.value = users.value.filter((user) => user.referencer === null)
-	}
+	filteredUsers.value = filtered
 }
 
 const acceptOrRefuseCandidate = async (action, id) => {
@@ -164,10 +176,27 @@ const acceptOrRefuseCandidate = async (action, id) => {
 				}
 			})
 		await fetchAccountCreationRequests()
-		filterCandidatesAfterAcceptingOrRefusing()
 		userSelected.value = filteredUsers.value[0]
 	} catch (error) {
 		console.error('Error refusing account:', error)
 	}
 }
+
+const showMenu = (option) => {
+	hovered.value = option
+}
+
+const hideMenu = () => {
+	hovered.value = ''
+}
+
+const addFilter = (target, optionSelected) => {
+	if (target === 'validation') { validationStatus.value = optionSelected }
+	else if (target === 'cooptation') { cooptationStatus.value = optionSelected }
+	filterCandidates()
+}
+
+const showButton = computed(() => {
+	return !userSelected.value.approval_ids.includes(sessionStore.getUserId)
+})
 </script>

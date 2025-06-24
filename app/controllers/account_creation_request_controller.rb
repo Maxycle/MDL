@@ -4,11 +4,8 @@ class AccountCreationRequestController < ApplicationController
 
   def index
 		@accountCreationRequests = AccountCreationRequest.all
-		
-		if params[:pending_approval]
-			@accountCreationRequests = @accountCreationRequests.active.not_refused.not_approved_by(current_user.id)
-		end
-		
+		@accountCreationRequests = @accountCreationRequests.active.not_refused.email_not_sent
+
 		render json: @accountCreationRequests.as_json
 	end
 

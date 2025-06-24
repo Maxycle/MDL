@@ -9,7 +9,9 @@ class AccountCreationRequest < ApplicationRecord
   scope :not_refused, -> { where(refused: false) }
   scope :active, -> { where(validated: true) }
   scope :inactive, -> { where(validated: false) }
+	scope :email_not_sent, -> { where(email_sent: false) }
   scope :not_approved_by, ->(user_id) { where.not("? = ANY(approval_ids)", user_id) }
+  scope :approved_by, ->(user_id) { where("? = ANY(approval_ids)", user_id) }
 
 	# Set token expiration time (e.g., 24 hours)
   TOKEN_EXPIRATION = 24.hours
