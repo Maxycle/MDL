@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-	skip_before_action :authenticate_user!, only: [:index, :index_admin]
-	before_action :authenticate_user!, except: [:index, :index_admin] # Ensure the user is authenticated
+	skip_before_action :authenticate_user!, only: [:index]
+	before_action :authenticate_user!, except: [:index] # Ensure the user is authenticated
 	before_action :set_user, only: [:show, :destroy]
 
   def index
@@ -8,8 +8,8 @@ class UsersController < ApplicationController
 		render json: @users.as_json(include: :scores)
   end
 	
-	def index_admin
-		@users = User.where(admin: true)
+	def index_pp
+		@users = User.pp_users
 		render json: @users.as_json(only: [:id, :first_name, :last_name, :username])
 	end
 
