@@ -17,8 +17,8 @@
 						</div>
 						<div class="flex h-1/2">
 							<button v-for="(button, index) in buttonsQuestionaires" :key="button"
-								class=" text-blueLogoDark hover:text-green-800 rounded-lg p-2 disabled:opacity-40 hover:scale-110 transition duration-300"
-								:class="[{'mr-3': index === 0}, {'bg-gradient-to-l from-orangeLogo to-yellowLogo': index % 2 === 0 }, {'bg-gradient-to-r from-orangeLogo to-yellowLogo hover:bg-orangeLogoDark ': index % 2 === 1 }]"
+								class=" text-orangeLogo bg-blue-200 hover:text-yellowLogo hover:bg-orangeLogo rounded-lg p-2 disabled:opacity-40 hover:scale-110 transition duration-300"
+								:class="{'mr-8': index === 0}"
 								:disabled="isDisabled(domain, button)"
 								@click="openModal(domain, button)">
 								<div>
@@ -138,7 +138,7 @@ const isDisabledByTiming = (domain) => {
 			if (isMoreThanTryLength) {
 				return true
 			} else {
-				return score.step >= paramsStore.getParams.numberOfTriesPermitted - 1
+				return score.step >= paramsStore.getParams.numberOfTriesPermitted
 			}
 		}
 	}
@@ -209,7 +209,7 @@ const updateScoreAtStart = async (score) => {
 		const response = await axios.patch(`/api/scores/${score.id}`,
 			{
 				score: {
-					step: score.step >= paramsStore.getParams.numberOfTriesPermitted ? 0 : score.step + 1,
+					step: isMoreThanCycleLength ? 1 : score.step + 1,
 					try_date: isMoreThanCycleLength ? currentDate : score.try_date
 				}
 			},
@@ -239,9 +239,7 @@ const updateScoreAtFinish = async (score) => {
 		const response = await axios.patch(`/api/scores/${score.id}`,
 			{
 				score: {
-					level: success ? nextLevel : score.level,
-					step: success ? -1 : score.step,
-					try_date: success ? currentDate : score.try_date
+					level: success ? nextLevel : score.level
 				}
 			},
 			{

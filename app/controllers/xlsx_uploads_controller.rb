@@ -84,7 +84,7 @@ class XlsxUploadsController < ApplicationController
 
       users.each do |user|
         # Join all the scores into a single string
-				scores = user.scores.map { |score| "#{score.domain} (#{score.level}) - étape #{score.step} le #{score.try_date.strftime('%Y-%m-%d')}" }.join('; ')
+				scores = user.scores.map { |score| "#{score.domain}: #{score.level}, fait le #{score.try_date.strftime('%Y-%m-%d')} - éssai numéro #{score.step}" }.join("\n")
         # Add a row for each user
         sheet.add_row [
           user.id,
