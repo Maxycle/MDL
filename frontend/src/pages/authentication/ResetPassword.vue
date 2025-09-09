@@ -1,8 +1,8 @@
 <template>
   <Container>
-    <div class="flex flex-col items-center bg-gradient-to-b from-[#14191d] to-blueLogoLight w-full min-h-screen pt-40">
-      <div class="w-[450px] text-center">
-        <h2 class="text-2xl bg-[#42b883] rounded-t-lg px-4 pt-4 shadow-md text-orange-700 shadow-black/50">
+    <div class="flex flex-col items-center bg-gradient-to-b from-[#14191d] to-blueLogoLight w-full min-h-screen">
+      <div class="w-2/3 md:w-1/3 text-center">
+        <h2 class="text-lg sm:text-2xl bg-[#42b883] rounded-t-lg px-4 pt-4 shadow-md text-orange-700 shadow-black/50">
           Réinitialisation du mot de passe
         </h2>
         <!-- Same SVG wave -->
@@ -19,14 +19,14 @@
               <div class="flex flex-col gap-1.5 py-2.5">
                 <label for="password" class="text-sm text-[#e65edfaa]">Nouveau mot de passe</label>
                 <input v-model="password" type="password" placeholder="Entrez un nouveau mot de passe" name="password" required
-                       class="bg-transparent border-b border-transparent py-2 focus:border-[#42b883aa] focus:outline-none transition-colors duration-300">
+                       class="text-xs sm:text-lg bg-transparent border-b border-transparent py-2 focus:border-[#42b883aa] focus:outline-none transition-colors duration-300">
               </div>
               
               <div class="flex flex-col gap-1.5 py-2.5">
                 <label for="password_confirmation" class="text-sm text-[#e65edfaa]">Confirmation du mot de passe</label>
                 <input v-model="passwordConfirmation" type="password" placeholder="Confirmez votre nouveau mot de passe" 
                        name="password_confirmation" required
-                       class="bg-transparent border-b border-transparent py-2 focus:border-[#42b883aa] focus:outline-none transition-colors duration-300">
+                       class="text-xs sm:text-lg bg-transparent border-b border-transparent py-2 focus:border-[#42b883aa] focus:outline-none transition-colors duration-300">
               </div>
             </div>
             <button

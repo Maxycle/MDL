@@ -2,11 +2,11 @@
 	<Container>
 		<div class="flex flex-col grow text-orangeLogo">
 			<div class="flex justify-center w-full mb-4">
-				<div class="text-center text-yellowLogo text-5xl p-4 border-2 border-orangeLogo bg-blueLogoDark font-extrabold italic rounded-lg mt-2">Derniers articles</div>
+				<div class="text-center text-yellowLogo text-xl sm:text-5xl p-4 border-2 border-orangeLogo bg-blueLogoDark font-extrabold italic rounded-lg mt-2">Derniers articles</div>
 			</div>
-			<div v-if="posts.length" class="post">
+			<div v-if="posts.length" class="">
 				<div v-for="(post, postIndex) in posts" :key="postIndex" class="">
-					<div class="post-content px-20">
+					<div class="px-4 sm:px-20">
 						<div v-if="!post.showFullContent" @click="expandPost(postIndex)" class="flex items-center">
 							<PostCard :data="processContent(post.content_html)" :title="post.title" :author="post.author"
 								:created="formattedDate(post.created)" class="cursor-pointer hover:shadow-lg hover:shadow-yellowLogo" />
@@ -60,7 +60,7 @@ const processContent = (html) => {
 
 	// Create return object
 	const processedContent = {
-		text: text.length > 200 ? `${text.slice(0, 250)}...` : text,
+		text: text.length > 200 ? `${text.slice(0, 150)}...` : text,
 		image: firstImage ? firstImage.getAttribute('src') : null
 	}
 	return processedContent
