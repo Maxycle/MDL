@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-screen font-lora">
+  <div class="flex flex-col h-screen font-lora w-screen max-w-full overflow-x-hidden">
     <!-- Header section -->
     <header class="flex-none">
       <Hero2logos />

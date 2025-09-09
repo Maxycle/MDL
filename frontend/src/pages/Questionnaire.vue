@@ -1,6 +1,6 @@
 <template>
 	<Container>
-		<div class="relative">
+		<div class="relative w-full overflow-hidden">
 			<div v-if="answerStore.getQuestionnaireDetails.domain"
 				class="absolute font-bold text-orangeLogoDark bg-yellowLogo px-1 rounded w-fit left-6 top-6">
 				<div>domaine: <span class="font-extrabold italic">{{
@@ -9,18 +9,16 @@
 					answerStore.getQuestionnaireDetails.button }}</span></div>
 			</div>
 			<div class="flex flex-col items-center pt-20">
-				<div v-if="!questionnaireStarted" class="flex space-x-4 mb-4">
+				<div v-if="!questionnaireStarted" class="md:flex mb-4">
 					<div v-for="domain in questionnaireDomain" :key="domain"
-						class="rounded-lg bg-gradient-to-r from-blueLogoDark to-blueLogoLight p-4 flex flex-col items-center">
+						class="rounded-lg bg-gradient-to-r from-blueLogoDark to-blueLogoLight p-4 m-2 lg:m-8 xl:m-12 flex flex-col items-center">
 						<div class="bg-blue-100 rounded-md p-2 mb-10 z-10 text-blue-900 text-xl font-extrabold">
 							{{ domain }}
 						</div>
-						<div class="flex h-1/2">
+						<div class="flex h-1/2 space-x-8">
 							<button v-for="(button, index) in buttonsQuestionaires" :key="button"
 								class=" text-orangeLogo bg-blue-200 hover:text-yellowLogo hover:bg-orangeLogo rounded-lg p-2 disabled:opacity-40 hover:scale-110 transition duration-300"
-								:class="{'mr-8': index === 0}"
-								:disabled="isDisabled(domain, button)"
-								@click="openModal(domain, button)">
+								:disabled="isDisabled(domain, button)" @click="openModal(domain, button)">
 								<div>
 									<div class="font-extrabold">{{ button }}</div>
 									<div class="italic">{{ buttonTextAndApiUrl(domain, button).text }}</div>
@@ -32,9 +30,7 @@
 					</div>
 				</div>
 				<div v-if="questionnaireStarted" class="flex flex-col items-center">
-					<div>
-						<QuestionAnswerBlock :questionsList="questionsList" />
-					</div>
+					<QuestionAnswerBlock :questionsList="questionsList" />
 					<button
 						class="rounded bg-blueLogoLight p-1 text-blackLogo text-xl flex items-center px-4 mt-12 transition hover:scale-125 duration-300"
 						@click="stopQuestionnaire">

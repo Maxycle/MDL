@@ -1,46 +1,26 @@
 <template>
-	<div class="w-full relative bg-blackLogo h-screen">
-		<div class="absolute top-2 right-10 flex flex-col items-center">
-			<div class="text-white pb-2">Votre profil est {{ sessionStore.getUserDetails.certification_is_public ?
-				'public'
-				:
-				'privé' }}</div>
-			<button class="rounded bg-blueLogoDark p-2 text-yellowLogo" @click="onPrivacyOrPPdemandClick('privacy')">rendre 
-				<span :class="{'font-extrabold': !sessionStore.getUserDetails.certification_is_public }">public</span>/<span :class="{'font-extrabold': sessionStore.getUserDetails.certification_is_public }">privé</span>
-			</button>
-			<div v-if="privacyBoxOpen" class="bg-orange-200 rounded px-2 py-1 mt-2">
-				<div v-if="isHidden" class="password">
-					<input v-model="currentPassword" type="password" placeholder="mot de passe" name="password">
-					<font-awesome-icon icon="fa-solid fa-eye" @click="toggleHidden" class="text-white" />
-				</div>
-
-				<div v-else class="password">
-					<input v-model="currentPassword" type="text" placeholder="your current password" name="password">
-					<font-awesome-icon icon="fa-solid fa-eye-slash" @click="toggleHidden" class="text-white" />
-				</div>
-			</div>
-		</div>
+	<div class="w-full relative bg-blackLogo h-screen px-2">
 		<div class="flex flex-col items-center w-full">
-			<p class=" w-2/3 text-orangeLogo pt-4 px-8 text-center">{{ storeParams.getParams.intro }}
+			<p class=" w-3/4 text-sm sm:text-lg text-orangeLogo pt-4 px-8 text-center">{{ storeParams.getParams.intro }}
 			</p>
-			<div v-if="hasScoreData('droitNaturel')" class="text-2xl pt-12 text-orangeLogo">En
+			<div v-if="hasScoreData('droitNaturel')" class="text-md sm:text-lg md:text-2xl pt-12 text-orangeLogo mb-4">En
 				<span class="font-extrabold italic text-yellowLogo">"Droit
 					Naturel"</span> vous avez le niveau <span class="font-extrabold text-yellowLogo">"{{
 						translateInitialsIntoFullWords(scoreStore.getScore.droitNaturel.level) }}"</span>
 			</div>
-			<div v-else class="text-2xl text-blueLogoLight pt-12">Vous n'avez pas encore répondu au questionnaire "Droit Naturel"
+			<div v-else class="text-md sm:text-lg md:text-2xl text-blueLogoLight pt-12">Vous n'avez pas encore répondu au questionnaire "Droit Naturel"
 			</div>
-			<div v-if="hasScoreData('ecoleAutrichienne')" class="text-2xl text-orangeLogo">
+			<div v-if="hasScoreData('ecoleAutrichienne')" class="text-md sm:text-lg md:text-2xl text-orangeLogo">
 				En <span class="font-extrabold italic text-yellowLogo">"Ecole
 					Autrichienne"</span> vous avez le niveau <span class="font-extrabold text-yellowLogo">"{{
 						translateInitialsIntoFullWords(scoreStore.getScore.ecoleAutrichienne.level)
 					}}"</span></div>
-			<div v-else class="text-2xl text-blueLogoLight">Vous n'avez pas encore répondu au questionnaire "Ecole Autrichienne"
+			<div v-else class="text-md sm:text-lg md:text-2xl text-blueLogoLight">Vous n'avez pas encore répondu au questionnaire "Ecole Autrichienne"
 			</div>
 			<div class="w-1/6">
 				<Logo :scores="scoresInitials" :certification="sessionStore.getUserCertification" class="hover:animate-spin"/>
 			</div>
-			<div class="font-extrabold italic text-5xl text-yellowLogo mb-10">{{ certificationSentence }}</div>
+			<div class="font-extrabold italic text-md sm:text-2xl md:text-5xl text-yellowLogo mb-10">{{ certificationSentence }}</div>
 			<p v-if="sessionStore.getUserCertification === 'MC' && sessionStore.getUserDetails.wantsToBecomePP === false"
 				class="text-white pb-10">
 				Vous pouvez maintenant demander à devenir un porte parole du mouvement des libertariens. En cliquant sur le
@@ -48,7 +28,7 @@
 			</p>
 			<div class="grid grid-cols-2 gap-4 w-1/2">
 				<div
-					class="rounded-2xl text-3xl p-4 cursor-pointer font-bold text-blueLogoDark text-center hover:scale-105 transition duration-300 hover:border-green-500 hover:border-2 bg-gradient-to-r from-orangeLogo to-yellowLogo hover:bg-blue-900"
+					class="rounded-2xl text-xs sm:text-3xl p-4 cursor-pointer font-bold text-blueLogoDark text-center hover:scale-105 transition duration-300 hover:border-green-500 hover:border-2 bg-gradient-to-r from-orangeLogo to-yellowLogo hover:bg-blue-900"
 					:class="{ 'col-span-2': sessionStore.getUserCertification !== 'MC' }"
 					@click="router.push('/questionnaire')">
 					Aller au questionnaire
@@ -70,6 +50,26 @@
 					</div>
 				</div>
 			</div>
+			<div class="flex flex-col items-center">
+			<div class="text-white pb-2">Votre profil est {{ sessionStore.getUserDetails.certification_is_public ?
+				'public'
+				:
+				'privé' }}</div>
+			<button class="rounded bg-blueLogoDark p-2 text-yellowLogo" @click="onPrivacyOrPPdemandClick('privacy')">rendre 
+				<span :class="{'font-extrabold': !sessionStore.getUserDetails.certification_is_public }">public</span>/<span :class="{'font-extrabold': sessionStore.getUserDetails.certification_is_public }">privé</span>
+			</button>
+			<div v-if="privacyBoxOpen" class="bg-orange-200 rounded px-2 py-1 mt-2">
+				<div v-if="isHidden" class="password">
+					<input v-model="currentPassword" type="password" placeholder="mot de passe" name="password">
+					<font-awesome-icon icon="fa-solid fa-eye" @click="toggleHidden" class="text-white" />
+				</div>
+
+				<div v-else class="password">
+					<input v-model="currentPassword" type="text" placeholder="your current password" name="password">
+					<font-awesome-icon icon="fa-solid fa-eye-slash" @click="toggleHidden" class="text-white" />
+				</div>
+			</div>
+		</div>
 		</div>
 	</div>
 </template>

@@ -1,37 +1,35 @@
 <template>
-	<div class="relative text-yellowLogo">
-		<div class="flex flex-col items-center mb-6">
-			<div class="flex items-center">
-				<div v-if="sessionStore.isAdmin && question" class="mr-4">difficulté: {{ question.difficulty }}</div>
-				<Question :text="question.content" class="my-8 text-3xl font-bold max-w-7xl text-center" />
+	<div class="grid grid-cols-12 place-content-center text-yellowLogo px-4">
+		<button v-if="page > 1" class="transition hover:scale-125 duration-300">
+			<div
+				class="font-extrabold text-xl rounded-lg flex items-center justify-center p-4 text-blackLogo bg-blueLogoLight"
+				@click="goToPreviousPage">
+				<font-awesome-icon icon="fa-solid fa-arrow-left" class="h-4 sm:h-12 mx-4 z-10" />
 			</div>
-			<div class="">
+		</button>
+		<div class="col-span-10 lg:px-8">
+			<div class="mb-6">
+				<div class="flex items-center">
+					<div v-if="sessionStore.isAdmin && question" class="mr-4">difficulté: {{ question.difficulty }}</div>
+					<Question :text="question.content"
+						class="my-4 sm:my-8 text-lg md:text-3xl lg:text-5xl font-bold text-center" />
+				</div>
 				<div v-for="(answer, indexAnswer) in answers" :key="indexAnswer">
 					<div class="flex items-center">
 						<div v-if="sessionStore.isAdmin" class="mr-4">points: {{ answer.value }}</div>
-						<Answer :data="answer" @click="selectAnswer(answer)" class="max-w-7xl"/>
+						<Answer :data="answer" @click="selectAnswer(answer)" class="" />
 					</div>
 				</div>
 			</div>
+			<v-pagination v-model="page" :length="questionsList.length" :total-visible="5" prev-icon="mdi-menu-left"
+				class="text-orangeLogo" next-icon="mdi-menu-right" @page="onPageChange"></v-pagination>
 		</div>
-		<v-pagination v-model="page" :length="questionsList.length" :total-visible="5" prev-icon="mdi-menu-left" class="text-orangeLogo"
-			next-icon="mdi-menu-right" @page="onPageChange"></v-pagination>
-
-		<button  v-if="page < questionsList.length" class="absolute -right-28 bottom-36 transition hover:scale-125 duration-300">
+		<button v-if="page < questionsList.length" class="transition hover:scale-125 duration-300">
 			<div
-				class="font-extrabold text-xl rounded-lg flex items-center justify-center p-4 w-24 text-blackLogo bg-blueLogoLight"
+				class="font-extrabold text-xl rounded-lg flex items-center justify-center p-4 text-blackLogo bg-blueLogoLight"
 				@click="goToNextPage">
-				<font-awesome-icon icon="fa-solid fa-arrow-left" class="h-12 mx-4 z-10 rotate-180" />
-				
-			</div>
-		</button>
+				<font-awesome-icon icon="fa-solid fa-arrow-left" class="h-4 sm:h-12 mx-4 z-10 rotate-180" />
 
-		<button v-if="page > 1" class="absolute -left-28 bottom-36 transition hover:scale-125 duration-300">
-			<div
-				class="font-extrabold text-xl rounded-lg flex items-center justify-center p-4 w-24 text-blackLogo bg-blueLogoLight"
-				@click="goToPreviousPage">
-				<font-awesome-icon icon="fa-solid fa-arrow-left" class="h-12 mx-4 z-10" />
-				
 			</div>
 		</button>
 	</div>

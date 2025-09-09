@@ -22,6 +22,9 @@ const pinia = createPinia()
 
 // Create Vuetify instance
 const vuetify = createVuetify({
+	theme: {
+    defaultTheme: 'light'
+  },
   components,
   directives
 })
