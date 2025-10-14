@@ -101,7 +101,7 @@ const selectedUserInfo = computed(() => {
 
 onMounted(async () => {
 	await fetchUsers()
-	userSelected.value = users.value[0]
+	userSelected.value = filteredUsers.value[0]
 })
 
 const fetchUsers = async () => {
