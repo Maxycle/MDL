@@ -21,7 +21,7 @@ import { useSessionStore } from '@/stores/modules/sessionStore'
 const router = useRouter();
 const session = useSessionStore();
 const route = useRoute();
-const boutonData = [{ path: '/Blog', text: 'Blog' }, { path: '/users-results', text: 'Membres de MDL' }, { path: '/', text: 'Accueuil' }, { path: '/Login', text: 'Login' }, { path: '/account-creation-request', text: 'Demande d\'ouverture de compte' }]
+const boutonData = [{ path: '/Blog', text: 'Blog' }, { path: '/users-results', text: 'Membres de MDL' }, { path: '/', text: 'Accueil' }, { path: '/Login', text: 'Login' }, { path: '/account-creation-request', text: 'Demande d\'ouverture de compte' }]
 const isRouteActive = (path) => {
 	return route.path === path;
 }

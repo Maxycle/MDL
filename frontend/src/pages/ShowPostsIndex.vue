@@ -2,7 +2,9 @@
 	<Container>
 		<div class="flex flex-col grow text-orangeLogo">
 			<div class="flex justify-center w-full mb-4">
-				<div class="text-center text-yellowLogo text-xl sm:text-5xl p-4 border-2 border-orangeLogo bg-blueLogoDark font-extrabold italic rounded-lg mt-2">Derniers articles</div>
+				<div
+					class="text-center text-yellowLogo text-xl sm:text-5xl p-4 border-2 border-orangeLogo bg-blueLogoDark font-extrabold italic rounded-lg mt-2">
+					Derniers articles</div>
 			</div>
 			<div v-if="posts.length" class="">
 				<div v-for="(post, postIndex) in posts" :key="postIndex" class="">
@@ -66,8 +68,14 @@ const processContent = (html) => {
 	return processedContent
 }
 
-// Expand post
 const expandPost = (index) => {
+	// Close all other posts first
+	posts.value.forEach((post, i) => {
+		if (i !== index) {
+			post.showFullContent = false
+		}
+	})
+	// Open the clicked post
 	posts.value[index].showFullContent = true
 	posts.value[index].content_html = postStore.getPosts[index].content_html // Full content
 }
