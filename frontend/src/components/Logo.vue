@@ -1,6 +1,5 @@
-<!-- Logo.vue -->
 <template>
-	<img ref="imageRef" :src="logoSource" alt="MDL logo" class="h-full w-full object-fill rounded-full" />
+	<img :src="logoSource" alt="MDL logo" class="object-fill rounded-full" />
 </template>
 
 <script setup>

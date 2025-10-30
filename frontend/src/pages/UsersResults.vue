@@ -35,20 +35,18 @@
 					<div class="flex-1 overflow-hidden">
 						<div class="h-full overflow-y-auto overscroll-contain text-xs sm:text-sm md:text-lg lg:text-3xl pb-4">
 							<div v-for="(user, index) in filteredUsers" :key="index"
-								class="py-2 text-orangeLogo cursor-pointer hover:text-blueLogoLight transition duration-300"
+								class="py-2 text-orangeLogo cursor-pointer hover:text-blueLogoLight transition duration-300 h-fit flex justify-between items-center"
 								:class="{ 'bg-blueLogoDark px-2 rounded-lg text-yellowLogo font-extrabold': userSelected?.id === user.id }"
 								@click="selectUser(user)">
-								<div class="flex justify-between items-center">
 									<div>
 										<div>
-											{{ user.first_name }} {{ user.last_name }}
+											{{ user.username }}
 										</div>
-										<div>({{ user.username }})</div>
+										<div class="text-xs md:text-sm xl:text-lg">({{ user.first_name }} {{ user.last_name }})</div>
 									</div>
-									<div v-if="userSelected?.id === user.id" class="w-1/6">
-										<Logo :scores="scoresInitials" :certification="selectedUserInfo.certification" />
+									<div v-if="userSelected?.id === user.id" class="w-1/3 lg:w-1/4 xl:w-1/6 px-1">
+										<Logo :scores="scoresInitials" :certification="selectedUserInfo.certification"  class=""/>
 									</div>
-								</div>
 							</div>
 						</div>
 					</div>
@@ -68,12 +66,12 @@
 						<div class="py-2">Nom: <span class="text-yellowLogo">{{ selectedUserInfo.last_name }}</span></div>
 						<div class="py-2">Intro: <span class="text-yellowLogo">{{ selectedUserInfo.intro }}</span></div>
 						<div class="w-full flex justify-center items-center">
-							<Logo :scores="scoresInitials" :certification="selectedUserInfo.certification" />
+							<Logo :scores="scoresInitials" :certification="selectedUserInfo.certification" class="w-16 h-16 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-40 lg:h-40"/>
 							<div
 								class="text-orangeLogo italic text-center lg:text-5xl border-2 border-blueLogoDark rounded-lg p-2 mx-8 mt-2">
 								{{
 									certificationSentence }}</div>
-							<Logo :scores="scoresInitials" :certification="selectedUserInfo.certification" />
+							<Logo :scores="scoresInitials" :certification="selectedUserInfo.certification" class="w-16 h-16 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-40 lg:h-40"/>
 						</div>
 					</div>
 				</div>

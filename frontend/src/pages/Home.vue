@@ -17,7 +17,7 @@
 					}}"</span></div>
 			<div v-else class="text-md sm:text-lg md:text-2xl text-blueLogoLight">Vous n'avez pas encore répondu au questionnaire "Ecole Autrichienne"
 			</div>
-			<div class="w-1/6">
+			<div class="flex w-1/6 justify-center">
 				<Logo :scores="scoresInitials" :certification="sessionStore.getUserCertification" class="hover:animate-spin"/>
 			</div>
 			<div class="font-extrabold italic text-md sm:text-2xl md:text-5xl text-yellowLogo mb-10">{{ certificationSentence }}</div>
