@@ -1,15 +1,16 @@
-const { defineConfig, loadEnv } = require('vite');
-const vue = require('@vitejs/plugin-vue');
-const { resolve } = require('path');
-const tailwindcss = require('tailwindcss');
-const autoprefixer = require('autoprefixer');
+import { defineConfig, loadEnv } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import { resolve } from 'path';
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
 
-module.exports = defineConfig(({ mode }) => {
+export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
+
   return {
     plugins: [vue()],
     build: {
-      outDir: "../public",
+      outDir: "../public", // your Rails public folder
       emptyOutDir: true,
       rollupOptions: {
         external: ['Flag_of_Anarcho-capitalism.png']
@@ -34,7 +35,8 @@ module.exports = defineConfig(({ mode }) => {
         }
       }
     }
-  }
+  };
 });
+
 
 
