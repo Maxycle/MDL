@@ -15,23 +15,22 @@ class Post < ApplicationRecord
     markdown.render(content)
   end
 
+	def image_urls
+    images.attached? ? images.map { |img| Rails.application.routes.url_helpers.rails_blob_url(img, only_path: false) } : []
+  end
+
+	  # For JSON serialization
+  def as_json(options = {})
+    super(options.merge(
+      methods: [:content_html, :image_urls]
+    ))
+  end
+
   private
 
   def user_must_be_admin
     unless user&.admin?
       errors.add(:user, "must be an admin to create a post")
     end
-  end
-
-  # For JSON serialization
-  def as_json(options = {})
-    super(options.merge(
-      methods: [:content_html],
-      include: {
-        images: {
-          methods: [:url]
-        }
-      }
-    ))
   end
 end

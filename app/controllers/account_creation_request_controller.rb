@@ -12,8 +12,6 @@ class AccountCreationRequestController < ApplicationController
   def create
     @accountCreationRequest = AccountCreationRequest.new(request_params)
     if @accountCreationRequest.save
-			# send notification email to pp users
-			AccountCreationRequestMailer.send_pp_notifications(@accountCreationRequest)
 			# Send validation email
 			unless request_params[:validated]
   			AccountCreationRequestMailer.email_validation(@accountCreationRequest).deliver_now
@@ -26,6 +24,8 @@ class AccountCreationRequestController < ApplicationController
 
   def validate_email
     if @accountCreationRequest && @accountCreationRequest.validate_with_token(params[:token])
+			# send notification email to pp users
+			AccountCreationRequestMailer.send_pp_notifications(@accountCreationRequest)
       redirect_to "#{frontend_url}/confirmation?status=success&email=#{CGI.escape(@accountCreationRequest.email)}"
     else
       redirect_to "#{frontend_url}/confirmation?status=error&message=#{CGI.escape('Invalid or expired token')}"

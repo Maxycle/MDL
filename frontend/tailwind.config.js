@@ -32,6 +32,9 @@ module.exports = {
 				},
 				{ values: theme('textShadow') }
 			)
-		}
+		},
+
+    // 📰 Tailwind Typography plugin (adds the "prose" class)
+    require('@tailwindcss/typography')
 	]
 }

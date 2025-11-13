@@ -1,6 +1,6 @@
 <template>
 	<Container>
-		<div class="flex flex-col grow text-orangeLogo">
+		<div class="flex flex-col grow text-orangeLogo px-8">
 			<div class="flex justify-center w-full mb-4">
 				<div
 					class="text-center text-yellowLogo text-xl sm:text-5xl p-4 border-2 border-orangeLogo bg-blueLogoDark font-extrabold italic rounded-lg mt-2">
@@ -8,17 +8,24 @@
 			</div>
 			<div v-if="posts.length" class="">
 				<div v-for="(post, postIndex) in posts" :key="postIndex" class="">
-					<div class="px-4 sm:px-20">
+					<div class="px-4 sm:px-20 text-orangeLogo">
 						<div v-if="!post.showFullContent" @click="expandPost(postIndex)" class="flex items-center">
 							<PostCard :data="processContent(post.content_html)" :title="post.title" :author="post.author"
 								:created="formattedDate(post.created)" class="cursor-pointer hover:shadow-lg hover:shadow-yellowLogo" />
-							<div v-if="sessionStore.isAdmin"
-								class="rounded-lg p-2 ml-8 text-yellowLogo bg-red-700 h-1/3 hover:scale-105 transition duration-300 cursor-pointer"
-								@click.stop="confirmDelete(post.id, postIndex)">
-								Détruire "{{ post.title }}"
+							<div v-if="sessionStore.isAdmin" class="space-y-2">
+								<div
+									class="rounded-lg p-2 ml-8 text-yellowLogo bg-red-700 h-1/3 hover:scale-105 transition duration-300 cursor-pointer"
+									@click.stop="confirmDelete(post.id, postIndex)">
+									Détruire "{{ post.title }}"
+								</div>
+								<div v-if="post.author.id === sessionStore.getUserId"
+									class="rounded-lg p-2 ml-8 text-yellowLogo bg-red-700 h-1/3 hover:scale-105 transition duration-300 cursor-pointer"
+									@click.stop="editArticle(post.id)">
+									Modifier "{{ post.title }}"
+								</div>
 							</div>
 						</div>
-						<div v-else>
+						<div v-else class="prose prose-lg max-w-none hover:prose-a:text-green-500 prose-a:text-blue-500 prose-h1:text-orangeLogo prose-h2:text-orangeLogo prose-h3:text-orangeLogo text-orangeLogo">
 							<div class="text-3xl text-center font-bold font-plain">{{ post.title }}</div>
 							<div class="text-xs italic text-center font-plain py-2 pl-1">{{ formattedDate(post.created) }}, par {{
 								post.author.username }}</div>
@@ -44,11 +51,13 @@ import { useSessionStore } from "@/stores/modules/sessionStore"
 import PostCard from "@/components/PostCard.vue"
 import Container from "@/components/Container.vue"
 import axios from 'axios'
+import { useRouter } from "vue-router"
 
 // Manage posts and expand state
 const posts = ref([])
 const postStore = usePostStore()
 const sessionStore = useSessionStore()
+const router = useRouter()
 
 // Truncate function
 const processContent = (html) => {
@@ -98,6 +107,10 @@ const formattedDate = (date) => {
 		month: 'long',
 		day: 'numeric'
 	})
+}
+
+const editArticle = (id) => {
+  router.push(`/posts/${id}/edit`)
 }
 
 const confirmDelete = (id, postIndex) => {

@@ -34,7 +34,7 @@
 					Aller au questionnaire
 				</div>
 				<div v-if="sessionStore.getUserCertification === 'MC'"
-					class="rounded-2xl text-2xl cursor-pointer p-4 font-bold text-blueLogoDark text-center hover:scale-105 transition duration-300 hover:border-green-500 hover:border-2 bg-gradient-to-l from-orangeLogo to-yellowLogo hover:bg-orange-900"
+					class="rounded-2xl text-xs sm:text-3xl cursor-pointer p-4 font-bold text-blueLogoDark text-center hover:scale-105 transition duration-300 hover:border-green-500 hover:border-2 bg-gradient-to-l from-orangeLogo to-yellowLogo hover:bg-orange-900"
 					@click="onPrivacyOrPPdemandClick('PPdemand')">
 					{{ sessionStore.getUserDetails.wantsToBecomePP === false ? 'Devenir porte parole' : 'annuler la demande de certification porte parole' }}
 				</div>

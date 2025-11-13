@@ -49,3 +49,20 @@
 [v-cloak] {
   display: none;
 }
+
+/* Allow TinyMCE's inline alignment styles to take effect */
+.prose img {
+  display: inline-block;
+  margin: auto;
+}
+
+.prose p[style*="text-align:center"],
+.prose div[style*="text-align:center"] {
+  text-align: center !important;
+}
+
+.prose img[style*="margin-left:auto"][style*="margin-right:auto"] {
+  display: block;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}

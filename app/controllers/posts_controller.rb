@@ -22,6 +22,30 @@ class PostsController < ApplicationController
 		}
 	end
 
+	def show
+		@post = Post.with_attached_images.includes(:user).find_by(id: params[:id])
+
+		if @post
+			render json: {
+				id: @post.id,
+				title: @post.title,
+				content: @post.content,
+				content_html: @post.content_html,
+				created: @post.created_at,
+				author: {
+					id: @post.user.id,
+					username: @post.user.username,
+					email: @post.user.email,
+					first_name: @post.user.first_name,
+					last_name: @post.user.last_name
+				},
+				images: @post.images.map { |img| rails_blob_url(img, disposition: "inline") }
+			}
+		else
+			render json: { error: 'Post not found' }, status: :not_found
+		end
+	end
+
   def create
     # Ensure only admin users can create posts
     return render json: { error: 'Unauthorized' }, status: :unauthorized unless current_user&.admin?
@@ -81,6 +105,28 @@ class PostsController < ApplicationController
 		end
 	end
 	
+	def update
+		@post = Post.find(params[:id])
+		
+		return render json: { error: 'Unauthorized' }, status: :unauthorized unless current_user&.admin?
+
+		if @post.update(post_params)
+			process_tiny_mce_images if @post.content.present?
+
+			render json: {
+				id: @post.id,
+				title: @post.title,
+				content: @post.content,
+				content_html: @post.content_html,
+				images: @post.image_urls # uses the safe helper
+			}
+		else
+			render json: { errors: @post.errors.full_messages }, status: :unprocessable_entity
+		end
+	end
+
+
+
   private
 
   def post_params

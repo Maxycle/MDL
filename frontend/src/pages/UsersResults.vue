@@ -12,9 +12,8 @@
 								<div class="flex justify-between items-center">
 									<div>
 										<div>
-											{{ user.first_name }} {{ user.last_name }}
+											{{ user.last_name }} {{ user.first_name }}
 										</div>
-										<div>({{ user.username }})</div>
 									</div>
 									<div v-if="userSelected?.id === user.id" class="w-1/6">
 										<Logo :scores="scoresInitials" :certification="selectedUserInfo.certification" />
@@ -39,10 +38,7 @@
 								:class="{ 'bg-blueLogoDark px-2 rounded-lg text-yellowLogo font-extrabold': userSelected?.id === user.id }"
 								@click="selectUser(user)">
 									<div>
-										<div>
-											{{ user.username }}
-										</div>
-										<div class="text-xs md:text-sm xl:text-lg">({{ user.first_name }} {{ user.last_name }})</div>
+										<div class="text-xs md:text-sm xl:text-lg">{{ user.last_name }} {{ user.first_name }}</div>
 									</div>
 									<div v-if="userSelected?.id === user.id" class="w-1/3 lg:w-1/4 xl:w-1/6 px-1">
 										<Logo :scores="scoresInitials" :certification="selectedUserInfo.certification"  class=""/>
@@ -56,15 +52,13 @@
 			<div class="sm:w-3/4 h-full">
 				<div v-if="selectedUserInfo" class="p-4 text-xs sm:text-xl md:text-2xl lg:text-3xl w-full flex flex-col">
 					<div class="flex-1 overflow-y-auto">
-						<div class="flex items-center justify-center">
+						<div class="flex items-center justify-center mb-4">
 							<div
 								class="rounded-xl bg-blueLogoDark p-2 lg:p-4 text-sm sm:text-3xl lg:text-5xl text-center text-yellowLogo font-extrabold mx-4 italic">
-								{{ selectedUserInfo.username }}
+								{{ selectedUserInfo.first_name }} {{ selectedUserInfo.last_name }}
 							</div>
 						</div>
-						<div class="py-2">Prénom: <span class="text-yellowLogo">{{ selectedUserInfo.first_name }}</span></div>
-						<div class="py-2">Nom: <span class="text-yellowLogo">{{ selectedUserInfo.last_name }}</span></div>
-						<div class="py-2">Intro: <span class="text-yellowLogo">{{ selectedUserInfo.intro }}</span></div>
+						<div class="py-2 text-yellowLogo">{{ selectedUserInfo.intro }}</div>
 						<div class="w-full flex justify-center items-center">
 							<Logo :scores="scoresInitials" :certification="selectedUserInfo.certification" class="w-16 h-16 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-40 lg:h-40"/>
 							<div
@@ -106,7 +100,7 @@ const fetchUsers = async () => {
 	try {
 		const response = await axios.get('/api/users')
 		users.value = response.data
-		filteredUsers.value = users.value.filter((user) => user.certification_is_public === true)
+		filteredUsers.value = users.value.filter((user) => user.certification_is_public === true).sort((a, b) => a.last_name.localeCompare(b.last_name))
 	} catch (error) {
 		console.error('Error fetching options:', error)
 	}

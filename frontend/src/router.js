@@ -15,12 +15,12 @@ const EmailConfirmation = () => import('@/pages/EmailConfirmation.vue')
 const UsersScores = () => import('@/pages/UsersScores.vue')
 const UnconfirmedUsers = () => import('@/pages/UnconfirmedUsers.vue')
 const EditProfile = () => import('@/pages/EditProfile.vue')
-const NewPost = () => import('@/pages/NewPost.vue')
 const ShowPostsIndex = () => import('@/pages/ShowPostsIndex.vue')
 const HomePublic = () => import('@/pages/HomePublic.vue')
 const UsersResults = () => import('@/pages/UsersResults.vue')
 const ForgotPassword = () => import('@/pages/authentication/ForgotPassword.vue')
 const ResetPassword = () => import('@/pages/authentication/ResetPassword.vue')
+const PostEditor = () => import('@/pages/PostEditor.vue')
 
 const routes = [
 	// Public routes
@@ -119,10 +119,16 @@ const routes = [
 	},
 	// Admin-only routes
 	{
-		path: '/new-post',
-		name: 'NewPost',
-		component: NewPost,
-		meta: { requiresAuth: true, requiresAdmin: true }
+		path: "/posts/new",
+		name: "PostNew",
+		component: PostEditor,
+		meta: { requiresAuth: true, requiresAdmin: true },
+	},
+	{
+		path: "/posts/:id/edit",
+		name: "PostEdit",
+		component: PostEditor,
+		meta: { requiresAuth: true, requiresAdmin: true },
 	},
 	{
 		path: '/nouvelle-question',
