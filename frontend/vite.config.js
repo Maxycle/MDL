@@ -12,9 +12,7 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: "../public", // your Rails public folder
       emptyOutDir: true,
-      rollupOptions: {
-        external: ['Flag_of_Anarcho-capitalism.png']
-      }
+			base: '/'
     },
     css: {
       postcss: {
