@@ -19,6 +19,7 @@ const sessionStore = useSessionStore();
 
 const file = ref(null);
 const isLoading = ref(false);
+const deletedResponseMessage = ref('')
 
 const onFileChange = (event) => {
 	file.value = event.target.files[0];
@@ -52,7 +53,6 @@ const uploadFile = async () => {
 			headers: {
 				'Content-Type': 'multipart/form-data',
 				Authorization: `${sessionStore.getAuthToken}` // Ensure this is correct for your app
-				// Authorization: `Bearer ${sessionStore.getAuthToken()}` // Ensure this is correct for your app
 			},
 		});
 		alert(response.data.message);

@@ -31,7 +31,7 @@ watch(() => sessionStore.getUserCertification, (newValue) => {
 		items.value.push({ route: '/utilisateurs', text: 'Membres' },
 			{ route: '/utilisateurs-non-confirmes', text: 'Demandes d\'ouverture de compte' },
 			{ route: '/account-creation-request', text: 'Coopter un candidat' },
-			{ route: '/new-post', text: 'Ecrire un article' },
+			{ route: '/posts/new', text: 'Ecrire un article' },
 			{ route: '/reset-password', text: 'Changer votre mot de passe' },
 			{ route: '/edit-profile', text: 'Modifier votre profile' })
 	} else if (newValue === 'MC') {
