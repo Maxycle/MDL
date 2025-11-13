@@ -1,12 +1,19 @@
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
+const { defineConfig, loadEnv } = require('vite');
+const vue = require('@vitejs/plugin-vue');
+const { resolve } = require('path');
+const tailwindcss = require('tailwindcss');
+const autoprefixer = require('autoprefixer');
 
+module.exports = defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
   return {
-    base: '/', // <--- ensures SPA routes work correctly
     plugins: [vue()],
     build: {
       outDir: "../public",
-      emptyOutDir: true
+      emptyOutDir: true,
+      rollupOptions: {
+        external: ['Flag_of_Anarcho-capitalism.png']
+      }
     },
     css: {
       postcss: {
@@ -28,5 +35,6 @@ export default defineConfig(({ mode }) => {
       }
     }
   }
-})
+});
+
 
