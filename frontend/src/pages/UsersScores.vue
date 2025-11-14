@@ -19,10 +19,10 @@
 					class="relative justify-start cursor-pointer text-blue-900 underline"
 					:class="{ 'bg-gradient-to-l from-orange-100 to-orange-200 p-2 text-orange-800 rounded': user.id === userSelected.id }"
 					@click="selectUser(user)" @mouseover="showUser(index)" @mouseout="hideUser(index)">
-					{{ user.username }}
+					{{ user.last_name.toUpperCase() }} {{ user.first_name }}
 					<div v-if="userToShow === index" @click="selectUser(user)"
-						class="border-2 border-orange-500 rounded p-1 absolute top-2 left-6 text-nowrap bg-orange-100 z-10">{{
-							user.username }} ({{ user.first_name }} {{ user.last_name }})</div>
+						class="border-2 border-orange-500 rounded p-1 absolute top-2 left-6 text-nowrap bg-orange-100 z-10">({{
+							user.username }})</div>
 				</div>
 			</div>
 			<UserInfo v-if="Object.entries(userSelected).length" :data="userSelected" @user-updated="updateUsers" />
@@ -37,6 +37,7 @@ import AutocompleteUsers from '@/components/AutocompleteUsers.vue';
 import { ref, onMounted, computed } from "vue"
 import Menu from '../components/Menu.vue'
 import { useSessionStore } from '@/stores/modules/sessionStore'
+import { useUserStore } from '@/stores/modules/userStore'
 import { menuData } from '@/helpers/constants.js'
 
 const hovered = ref('')
@@ -46,9 +47,10 @@ const domain = ref('')
 const users = ref([])
 const sessionStore = useSessionStore()
 const userSelected = ref({});
+const userStore = useUserStore()
 
-onMounted(async () => {
-	await fetchUsers()
+onMounted(() => {
+	users.value = userStore.getUsers
 	userSelected.value = users.value[0]
 })
 

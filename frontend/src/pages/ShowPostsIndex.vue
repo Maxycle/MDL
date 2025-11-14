@@ -7,15 +7,15 @@
 					Derniers articles</div>
 			</div>
 			<div v-if="posts.length" class="">
-				<div v-for="(post, postIndex) in posts" :key="postIndex" class="">
+				<div v-for="(post, postIndex) in posts" :key="post.id" class="">
 					<div class="px-4 sm:px-20 text-orangeLogo">
-						<div v-if="!post.showFullContent" @click="expandPost(postIndex)" class="flex items-center">
+						<div v-if="!expandedPosts.has(post.id)" @click="expandPost(post.id)" class="flex items-center">
 							<PostCard :data="processContent(post.content_html)" :title="post.title" :author="post.author"
 								:created="formattedDate(post.created)" class="cursor-pointer hover:shadow-lg hover:shadow-yellowLogo" />
 							<div v-if="sessionStore.isAdmin" class="space-y-2">
 								<div
 									class="rounded-lg p-2 ml-8 text-yellowLogo bg-red-700 h-1/3 hover:scale-105 transition duration-300 cursor-pointer"
-									@click.stop="confirmDelete(post.id, postIndex)">
+									@click.stop="confirmDelete(post.id)">
 									Détruire "{{ post.title }}"
 								</div>
 								<div v-if="post.author.id === sessionStore.getUserId"
@@ -30,7 +30,7 @@
 							<div class="text-xs italic text-center font-plain py-2 pl-1">{{ formattedDate(post.created) }}, par {{
 								post.author.username }}</div>
 							<div v-html="post.content_html" class="font-plain"></div>
-							<button @click="reducePost(postIndex)" class="text-blueLogoLight mt-2">
+							<button @click="reducePost(post.id)" class="text-blueLogoLight mt-2">
 								Fermer l'article
 							</button>
 						</div>
@@ -38,85 +38,52 @@
 				</div>
 			</div>
 			<div v-else>
-				Loading post...
+				Loading posts...
 			</div>
 		</div>
 	</Container>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { usePostStore } from "@/stores/modules/postStore"
 import { useSessionStore } from "@/stores/modules/sessionStore"
 import PostCard from "@/components/PostCard.vue"
 import Container from "@/components/Container.vue"
 import axios from 'axios'
-import { useRouter, useRoute } from "vue-router"
+import { useRouter } from "vue-router"
 
-console.log('ShowPostsIndex component script loaded')
-
-const posts = ref([])
 const postStore = usePostStore()
 const sessionStore = useSessionStore()
 const router = useRouter()
-const route = useRoute()
 
-const loadPosts = async () => {
-	console.log('loadPosts called')
-	console.log('Store before fetch:', postStore.getPosts.length, 'posts')
-	
-	await postStore.fetchPosts()
-	
-	console.log('Store after fetch:', postStore.getPosts.length, 'posts')
-	
-	posts.value = postStore.getPosts.map(post => ({
-		...post,
-		showFullContent: false,
-	}))
-	
-	console.log('Local posts.value:', posts.value.length, 'posts')
-}
+// Track which posts are expanded (UI state stays in component)
+const expandedPosts = ref(new Set())
 
+// Get posts directly from store (reactive)
+const posts = computed(() => postStore.getPosts)
+
+// Truncate function
 const processContent = (html) => {
 	const parser = new DOMParser()
 	const doc = parser.parseFromString(html, 'text/html')
 	const firstImage = doc.querySelector('img')
 	const text = doc.body.textContent
 
-	const processedContent = {
+	return {
 		text: text.length > 200 ? `${text.slice(0, 150)}...` : text,
 		image: firstImage ? firstImage.getAttribute('src') : null
 	}
-	return processedContent
 }
 
-const expandPost = (index) => {
-	posts.value.forEach((post, i) => {
-		if (i !== index) {
-			post.showFullContent = false
-		}
-	})
-	posts.value[index].showFullContent = true
-	posts.value[index].content_html = postStore.getPosts[index].content_html
+const expandPost = (postId) => {
+	expandedPosts.value.clear()
+	expandedPosts.value.add(postId)
 }
 
-const reducePost = (index) => {
-	posts.value[index].showFullContent = false
+const reducePost = (postId) => {
+	expandedPosts.value.delete(postId)
 }
-
-onMounted(async () => {
-	console.log('onMounted hook running')
-	await loadPosts()
-	console.log('onMounted complete')
-})
-
-watch(() => route.path, async (newPath, oldPath) => {
-	console.log('Route changed from', oldPath, 'to', newPath)
-	if (newPath === '/Blog') {
-		console.log('Reloading posts for /Blog route')
-		await loadPosts()
-	}
-})
 
 const formattedDate = (date) => {
 	return new Date(date).toLocaleDateString('fr-FR', {
@@ -127,16 +94,16 @@ const formattedDate = (date) => {
 }
 
 const editArticle = (id) => {
-  router.push(`/posts/${id}/edit`)
+	router.push(`/posts/${id}/edit`)
 }
 
-const confirmDelete = (id, postIndex) => {
+const confirmDelete = (id) => {
 	if (window.confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
-		destroyPost(id, postIndex)
+		destroyPost(id)
 	}
 }
 
-const destroyPost = async (id, postIndex) => {
+const destroyPost = async (id) => {
 	try {
 		await axios.delete(`/api/posts/${id}`, {
 			headers: {
@@ -144,7 +111,7 @@ const destroyPost = async (id, postIndex) => {
 			}
 		})
 
-		posts.value = posts.value.filter((_, index) => index !== postIndex)
+		// Refresh the posts from the store
 		await postStore.fetchPosts()
 
 	} catch (error) {

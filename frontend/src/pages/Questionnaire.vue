@@ -57,7 +57,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue"
+import { ref, computed } from "vue"
 import { useRouter } from "vue-router"
 import { useSessionStore } from "@/stores/modules/sessionStore"
 import { useAnswerStore } from '@/stores/modules/answerStore'
@@ -85,12 +85,12 @@ const selectedDomain = ref(null)
 const selectedButton = ref(null)
 const difficultyOrder = { LOW: 1, MID: 2, HIGH: 3 }
 
-onMounted(async () => {
-	await scoreStore.fetchScores()
-	if (!paramsStore.getIsLoaded) {
-		await paramsStore.fetchParams()
-	}
-})
+// onMounted(async () => {
+// 	await scoreStore.fetchScores()
+// 	if (!paramsStore.getIsLoaded) {
+// 		await paramsStore.fetchParams()
+// 	}
+// })
 
 const buttonTextAndApiUrl = (domain, button) => {
 	let domainParam = domain === 'Droit Naturel' ? 'DN' : 'EA'

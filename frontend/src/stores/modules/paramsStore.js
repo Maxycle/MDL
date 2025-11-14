@@ -27,7 +27,6 @@ export const useParamsStore = defineStore({
             Authorization: `${sessionStore.getAuthToken}`
           }
         });
-        console.log('responssse', response)
         this.params = {
           cycleLength: response.data.cycle_length,
           tryLength: response.data.try_length,

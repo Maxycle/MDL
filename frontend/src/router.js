@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useSessionStore } from '@/stores/modules/sessionStore'
+import { usePostStore } from '@/stores/modules/postStore'
+import { useScoreStore } from '@/stores/modules/scoreStore'
+import { useUserStore } from '@/stores/modules/userStore'
 
 // Import all route components
 const Home = () => import('@/pages/Home.vue')
@@ -174,10 +177,11 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-	const store = useSessionStore();
-	const isAuthenticated = store.getAuthToken !== null;
-	const isAdmin = store.isAdmin;
-	const isPP = store.getUserCertification === 'PP'
+	const sessionStore = useSessionStore();
+
+	const isAuthenticated = sessionStore.getAuthToken !== null;
+	const isAdmin = sessionStore.isAdmin;
+	const isPP = sessionStore.getUserCertification === 'PP'
 
 	// Check if route requires authentication
 	if (to.meta.requiresAuth && !isAuthenticated) {
@@ -215,6 +219,23 @@ router.beforeEach(async (to, from, next) => {
 			next('/');
 			return;
 		}
+	}
+
+	// Prefetch data for Blog route
+	if (to.path === '/Blog') {
+		const postStore = usePostStore();
+		await postStore.fetchPosts();
+	}
+
+	// Prefetch data for home route
+	if (to.path === '/home-questionnaire' || to.path === '/questionnaire') {
+		const scores = useScoreStore()
+		await scores.fetchScores()
+	}
+
+	if (to.path === '/users-results' || to.path === '/utilisateurs') {
+		const users = useUserStore()
+		await users.fetchUsers()
 	}
 
 	// If all checks pass, proceed to route

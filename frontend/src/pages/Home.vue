@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from "vue"
+import { ref, computed } from "vue"
 import { useRouter } from "vue-router"
 import { useSessionStore } from "@/stores/modules/sessionStore"
 import { useScoreStore } from "@/stores/modules/scoreStore"
@@ -90,13 +90,6 @@ const privacyBoxOpen = ref(false)
 const PPdemandBoxOpen = ref(false)
 const isHidden = ref(true)
 const currentPassword = ref("")
-
-onMounted(async () => {
-	if (sessionStore.isLoggedIn) {
-		await scoreStore.fetchScores()
-	}
-	await storeParams.fetchParams()
-})
 
 const onPrivacyOrPPdemandClick = (field) => {
 	if (field === 'privacy') {
