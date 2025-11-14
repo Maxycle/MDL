@@ -53,23 +53,30 @@ import Container from "@/components/Container.vue"
 import axios from 'axios'
 import { useRouter, useRoute } from "vue-router"
 
-// Manage posts and expand state
+console.log('ShowPostsIndex component script loaded')
+
 const posts = ref([])
 const postStore = usePostStore()
 const sessionStore = useSessionStore()
 const router = useRouter()
 const route = useRoute()
 
-// Function to load posts (extracted so we can reuse it)
 const loadPosts = async () => {
+	console.log('loadPosts called')
+	console.log('Store before fetch:', postStore.getPosts.length, 'posts')
+	
 	await postStore.fetchPosts()
+	
+	console.log('Store after fetch:', postStore.getPosts.length, 'posts')
+	
 	posts.value = postStore.getPosts.map(post => ({
 		...post,
 		showFullContent: false,
 	}))
+	
+	console.log('Local posts.value:', posts.value.length, 'posts')
 }
 
-// Truncate function
 const processContent = (html) => {
 	const parser = new DOMParser()
 	const doc = parser.parseFromString(html, 'text/html')
@@ -97,14 +104,16 @@ const reducePost = (index) => {
 	posts.value[index].showFullContent = false
 }
 
-// Load posts on mount
 onMounted(async () => {
+	console.log('onMounted hook running')
 	await loadPosts()
+	console.log('onMounted complete')
 })
 
-// CRITICAL: Watch for route changes and reload data
-watch(() => route.path, async (newPath) => {
+watch(() => route.path, async (newPath, oldPath) => {
+	console.log('Route changed from', oldPath, 'to', newPath)
 	if (newPath === '/Blog') {
+		console.log('Reloading posts for /Blog route')
 		await loadPosts()
 	}
 })
