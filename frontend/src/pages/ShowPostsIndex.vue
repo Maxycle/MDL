@@ -25,12 +25,16 @@
 								</div>
 							</div>
 						</div>
-						<div v-else class="prose prose-lg max-w-none hover:prose-a:text-green-500 prose-a:text-blue-500 prose-h1:text-orangeLogo prose-h2:text-orangeLogo prose-h3:text-orangeLogo text-orangeLogo">
-							<div class="text-3xl text-center font-bold font-plain">{{ post.title }}</div>
-							<div class="text-xs italic text-center font-plain py-2 pl-1">{{ formattedDate(post.created) }}, par {{
-								post.author.username }}</div>
-							<div v-html="post.content_html" class="font-plain"></div>
-							<button @click="reducePost(post.id)" class="text-blueLogoLight mt-2">
+						<div v-else>
+							<div
+								class="prose prose-lg [&_*]:text-blue-300 max-w-none hover:prose-a:text-green-500 prose-a:text-blue-500">
+								<div class="text-3xl text-center font-bold font-plain">{{ post.title }}</div>
+								<div class="text-xs italic text-center font-plain py-2 pl-1">{{ formattedDate(post.created) }}, par {{
+									post.author.first_name }} {{ post.author.last_name }}</div>
+								<div v-html="post.content_html" class="font-plain"></div>
+							</div>
+
+							<button @click="reducePost(post.id)" class="text-orangeLogo mt-2">
 								Fermer l'article
 							</button>
 						</div>
