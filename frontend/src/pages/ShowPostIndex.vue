@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { usePostStore } from "@/stores/modules/postStore"
 import { useSessionStore } from "@/stores/modules/sessionStore"
 import PostCard from "@/components/PostCard.vue"
