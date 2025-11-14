@@ -4,13 +4,17 @@
 			{{ isEditMode ? "Modifier l'article" : "Créer un nouvel article" }}
 		</h2>
 
-		<input v-model="title" type="text" class="w-full p-2 border rounded mb-4 text-white text-center" placeholder="Titre de l'article" />
+		<input v-model="title" type="text" class="w-full p-2 border rounded mb-4 text-white text-center"
+			placeholder="Titre de l'article" />
 
 		<Editor v-model="content" api-key="rswtyqhzskmtotpree0s4snu5gez565mcte77w2c0iv9o73v" :init="editorConfig" />
 
-		<div class="flex justify-center mt-4">
+		<div class="flex justify-center mt-4 space-x-4">
 			<button @click="savePost" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
 				{{ isEditMode ? 'Mettre à jour' : 'Publier' }}
+			</button>
+			<button @click="cancel" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+				Annuler
 			</button>
 		</div>
 	</div>
@@ -22,6 +26,7 @@ import { useRoute, useRouter } from "vue-router"
 import axios from "axios"
 import Editor from "@tinymce/tinymce-vue"
 import { useSessionStore } from "@/stores/modules/sessionStore"
+import { usePostStore } from '@/stores/modules/postStore'
 
 const route = useRoute()
 const router = useRouter()
@@ -31,6 +36,7 @@ const content = ref("")
 const isEditMode = ref(false)
 const postId = route.params.id
 const sessionStore = useSessionStore()
+const posts = usePostStore()
 
 // Modified image upload handler
 const imageUploadHandler = (blobInfo, progress) => {
@@ -154,11 +160,15 @@ const savePost = async () => {
 			})
 			alert("Article créé avec succès")
 		}
-
+		posts.fetchPosts()
 		router.push("/blog")
 	} catch (error) {
 		console.error("Erreur d'enregistrement :", error)
 		alert("Impossible d'enregistrer l'article")
 	}
+}
+
+const cancel = () => {
+	router.push("/blog")
 }
 </script>

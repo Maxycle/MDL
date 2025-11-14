@@ -7,7 +7,7 @@
 			</div>
 
 			<div class="pl-4">
-				<div class="text-xs italic py-2 pl-1">{{ props.created }}, par {{ author.username }}</div>
+				<div class="text-xs italic py-2 pl-1">{{ props.created }}, par {{ author.first_name }} {{ author.last_name }}</div>
 				<p class="text-center text-lg md:text-3xl font-medium pb-4 pt-2 wrap-break-word">{{ title }}</p>
 				<p class="italic text-xs sm:text-md md:text-base pr-1">{{ data.text }}</p>
 				<div class="text-orangeLogo pt-4 text-center">Lire l'article</div>
