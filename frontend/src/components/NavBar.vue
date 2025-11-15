@@ -1,12 +1,12 @@
 <template>
-	<div class="flex md:block lg:flex justify-between px-4 items-center bg-blueLogoLight">
-		<div class="italic text-yellowLogo font-extrabold px-2 text-center text-sm lg:text-lg xl:text-xl">{{
+	<div class="flex md:block lg:flex justify-between px-4 items-center bg-blueLogoDark text-yellowLogo">
+		<div class="italic font-extrabold px-2 text-center text-sm lg:text-lg xl:text-xl">{{
 			paramsStore.getParams.welcome_start }} {{
 				store.getUserUsername }}{{
 				paramsStore.getParams.welcome_end }}
 		</div>
 		<div class="hidden md:block">
-			<div class="flex justify-end space-x-2">
+			<div class="flex justify-end space-x-2 font-bold">
 				<NavBarButton :isActive="isRouteActive('/')">
 					<span class="relative"><router-link to="/">Accueil</router-link></span>
 				</NavBarButton>
