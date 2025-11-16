@@ -3,19 +3,23 @@
 		<div class="flex flex-col items-center w-full">
 			<p class=" w-3/4 text-sm sm:text-lg text-orangeLogo pt-4 px-8 text-center">{{ storeParams.getParams.intro }}
 			</p>
-			<div v-if="hasScoreData('droitNaturel')" class="text-md sm:text-lg md:text-2xl pt-12 text-orangeLogo mb-4">En
-				<span class="font-extrabold italic text-yellowLogo">"Droit
-					Naturel"</span> vous avez le niveau <span class="font-extrabold text-yellowLogo">"{{
-						translateInitialsIntoFullWords(scoreStore.getScore.droitNaturel.level) }}"</span>
+			<div v-if="hasScoreData('droitNaturel')" class="text-md sm:text-lg md:text-2xl pt-20 text-orangeLogo mb-4">
+				<span class="font-extrabold italic text-yellowLogo">
+					{{ formattedDate(scoreStore.getScore.droitNaturel.updated_at)}}</span> vous avez fait le questionnaire <span class="font-extrabold italic text-yellowLogo">"Droit
+					Naturel"</span>. Votre niveau est <span class="font-extrabold text-yellowLogo">"{{
+						translateInitialsIntoFullWords(scoreStore.getScore.droitNaturel.level) }}"</span>.
 			</div>
-			<div v-else class="text-md sm:text-lg md:text-2xl text-blueLogoLight pt-12">Vous n'avez pas encore répondu au questionnaire "Droit Naturel"
+			<div v-else class="text-md sm:text-lg md:text-2xl text-blueLogoLight pt-20">Vous n'avez pas encore répondu au questionnaire "Droit Naturel"
 			</div>
-			<div v-if="hasScoreData('ecoleAutrichienne')" class="text-md sm:text-lg md:text-2xl text-orangeLogo">
-				En <span class="font-extrabold italic text-yellowLogo">"Ecole
-					Autrichienne"</span> vous avez le niveau <span class="font-extrabold text-yellowLogo">"{{
-						translateInitialsIntoFullWords(scoreStore.getScore.ecoleAutrichienne.level)
-					}}"</span></div>
-			<div v-else class="text-md sm:text-lg md:text-2xl text-blueLogoLight">Vous n'avez pas encore répondu au questionnaire "Ecole Autrichienne"
+
+			<div v-if="hasScoreData('ecoleAutrichienne')" class="text-md sm:text-lg md:text-2xl pt-2 text-orangeLogo mb-4">
+				<span class="font-extrabold italic text-yellowLogo">
+					{{ formattedDate(scoreStore.getScore.ecoleAutrichienne.updated_at)}}</span> vous avez fait le questionnaire <span class="font-extrabold italic text-yellowLogo">"Ecole
+					Autrichienne"</span>. Votre niveau est <span class="font-extrabold text-yellowLogo">"{{
+						translateInitialsIntoFullWords(scoreStore.getScore.ecoleAutrichienne.level) }}"</span>.
+			</div>
+			<div v-else class="text-md sm:text-lg md:text-2xl text-blueLogoLight pt-2">Vous n'avez pas encore répondu au questionnaire "Ecole
+					Autrichienne"
 			</div>
 			<div class="flex w-1/6 justify-center">
 				<Logo :scores="scoresInitials" :certification="sessionStore.getUserCertification" class="hover:animate-spin"/>
@@ -112,6 +116,19 @@ const onPrivacyOrPPdemandClick = (field) => {
 		}
 	}
 }
+
+
+const formattedDate = (dateString) => {
+  const date = new Date(dateString);
+
+  const formatted = date.toLocaleDateString("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+	return formatted.charAt(0).toUpperCase() + formatted.slice(1)
+};
 
 const update = async (field) => {
 	const params = field === "privacy" ? {

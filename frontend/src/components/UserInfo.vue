@@ -21,10 +21,10 @@
 				<div class="text-green-800 pb-8">{{ data.email }}</div>
 			</div>
 			<template v-for="score in data.scores" :key="score?.id" class="">
-				<div v-if="score" class="flex items-center justify-between py-2 w-2/3 ">
+				<div v-if="score" class="flex items-center justify-between py-2 w-5/6 ">
 					<div class="flex space-x-4 text-3xl">
 						<div>"{{ fullWord(score.domain) }}":</div>
-						<div class="text-green-800">{{ fullWord(score.level) }}</div>
+						<div class="text-green-800">{{ fullWord(score.level) }} <span class="text-sm">(fait le {{ formattedDate(score.updated_at) }})</span></div>
 					</div>
 					<div class="text-black">
 						<button
@@ -161,6 +161,18 @@ const hasDNScore = computed(() =>
 const hasEAScore = computed(() =>
 	props.data.scores?.some(score => score?.domain === 'EA') || false
 )
+
+const formattedDate = (dateString) => {
+  const date = new Date(dateString);
+
+  const formatted = date.toLocaleDateString("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+	return formatted.charAt(0).toUpperCase() + formatted.slice(1)
+};
 
 const handleScoreDelete = async (scoreId) => {
 	await scoreStore.deleteScore(scoreId)
