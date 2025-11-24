@@ -13,13 +13,11 @@ export const usePostStore = defineStore({
   },
   actions: {
     async fetchPosts() {
-      console.log('Store: fetchPosts called')
       try {
         const response = await axios.get('/api/posts')
         this.posts = response.data
       } catch (error) {
         console.error('Store: Error fetching posts:', error)
-        console.error('Store: Error response:', error.response)
       }
     }
   }

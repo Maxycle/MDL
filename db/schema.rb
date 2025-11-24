@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_07_25_135526) do
+ActiveRecord::Schema[7.0].define(version: 2025_11_18_222955) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -114,6 +114,15 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_25_135526) do
     t.text "difficulty"
   end
 
+  create_table "resources", force: :cascade do |t|
+    t.string "url"
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_resources_on_user_id"
+  end
+
   create_table "scores", force: :cascade do |t|
     t.string "domain"
     t.string "level", default: "beginner"
@@ -151,5 +160,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_25_135526) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "answers", "questions"
   add_foreign_key "posts", "users"
+  add_foreign_key "resources", "users"
   add_foreign_key "scores", "users"
 end

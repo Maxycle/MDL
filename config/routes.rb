@@ -25,12 +25,12 @@ Rails.application.routes.draw do
 		end
 
 		resources :account_creation_request, only: [:index, :create] do
-		member do
-			post 'accept_candidate'
-			post 'refuse_candidate'
-			get '/validate_email/:token', to: 'account_creation_request#validate_email'
+			member do
+				post 'accept_candidate'
+				post 'refuse_candidate'
+				get '/validate_email/:token', to: 'account_creation_request#validate_email'
+			end
 		end
-	end
 
     get 'questions/export', to: 'xlsx_uploads#export_questions'
     get 'users/export', to: 'xlsx_uploads#export_users'
@@ -49,6 +49,7 @@ Rails.application.routes.draw do
 		
     resources :answers, only: [:show, :update, :destroy]
     resources :scores
+		resources :resources
     resources :users, only: [:index, :show] do
 			collection do
 				get 'index_pp', to: 'users#index_pp'

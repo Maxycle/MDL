@@ -6,8 +6,8 @@
 					class="text-center text-yellowLogo text-xl sm:text-5xl p-4 border-2 border-orangeLogo bg-blueLogoDark font-extrabold italic rounded-lg mt-2">
 					Derniers articles</div>
 			</div>
-			<div v-if="posts.length" class="">
-				<div v-for="(post, postIndex) in posts" :key="post.id" class="">
+			<div v-if="posts.length">
+				<div v-for="(post, postIndex) in posts" :key="post.id" :id="'post-' + post.id" class="">
 					<div class="px-4 sm:px-20 text-orangeLogo">
 						<div v-if="!expandedPosts.has(post.id)" @click="expandPost(post.id)" class="flex items-center">
 							<PostCard :data="processContent(post.content_html)" :title="post.title" :author="post.author"
@@ -49,23 +49,45 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { usePostStore } from "@/stores/modules/postStore"
 import { useSessionStore } from "@/stores/modules/sessionStore"
 import PostCard from "@/components/PostCard.vue"
 import Container from "@/components/Container.vue"
 import axios from 'axios'
 import { useRouter } from "vue-router"
+import { useRoute } from 'vue-router'
 
 const postStore = usePostStore()
 const sessionStore = useSessionStore()
 const router = useRouter()
+const route = useRoute()
 
 // Track which posts are expanded (UI state stays in component)
 const expandedPosts = ref(new Set())
 
 // Get posts directly from store (reactive)
 const posts = computed(() => postStore.getPosts)
+
+onMounted(() => {
+  const expandId = Number(route.query.expand)
+
+  if (expandId) {
+    // Expand it
+    expandedPosts.value.clear()
+    expandedPosts.value.add(expandId)
+
+    // Scroll after DOM updates
+    nextTick(() => scrollToPost(expandId))
+  }
+})
+
+const scrollToPost = (postId) => {
+  const el = document.getElementById(`post-${postId}`)
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth", block: "start" })
+  }
+}
 
 // Truncate function
 const processContent = (html) => {
@@ -83,6 +105,7 @@ const processContent = (html) => {
 const expandPost = (postId) => {
 	expandedPosts.value.clear()
 	expandedPosts.value.add(postId)
+	nextTick(() => scrollToPost(postId))
 }
 
 const reducePost = (postId) => {
