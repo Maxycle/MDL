@@ -40,7 +40,7 @@ import { useRouter } from "vue-router"
 const router = useRouter()
 
 const goToArticleInBlog = () => {
-  router.push({ path: "/Blog", query: { expand: 2 } })
+  router.push({ path: "/Blog", query: { expand: 15 } })
 }
 
 </script>
