@@ -17,7 +17,7 @@ export const useResourceStore = defineStore({
         const response = await axios.get('/api/resources')
         this.resources = response.data
       } catch (error) {
-        console.error('Store: Error fetching posts:', error)
+        console.error('Store: Error fetching resources:', error)
       }
     }
   }

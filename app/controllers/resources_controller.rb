@@ -4,8 +4,8 @@ class ResourcesController < ApplicationController
 
 	# Private actions (auth required)
 	before_action :authenticate_user!, only: [:create, :update, :destroy]
-	before_action :set_resource, only: [:show]
-	before_action :set_owned_resource, only: [:update, :destroy]
+	before_action :set_resource, only: [:show, :destroy]
+	before_action :set_owned_resource, only: [:update]
 
 	# GET /api/resources
 	# Public: anyone can see all resources
