@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useSessionStore } from '@/stores/modules/sessionStore'
 import { usePostStore } from '@/stores/modules/postStore'
+import { useResourceStore } from '@/stores/modules/resourceStore'
 import { useScoreStore } from '@/stores/modules/scoreStore'
 import { useUserStore } from '@/stores/modules/userStore'
 
@@ -24,6 +25,9 @@ const UsersResults = () => import('@/pages/UsersResults.vue')
 const ForgotPassword = () => import('@/pages/authentication/ForgotPassword.vue')
 const ResetPassword = () => import('@/pages/authentication/ResetPassword.vue')
 const PostEditor = () => import('@/pages/PostEditor.vue')
+const Resources = () => import('@/pages/Resources.vue')
+const ResourceEditor = () => import('@/pages/ResourceEditor.vue')
+
 
 const routes = [
 	// Public routes
@@ -88,6 +92,12 @@ const routes = [
 		meta: { requiresAuth: false }
 	},
 	{
+		path: '/Liens',
+		name: 'Resources',
+		component: Resources,
+		meta: { requiresAuth: false }
+	},
+	{
 		path: '/users-results',
 		name: 'UsersResults',
 		component: UsersResults,
@@ -131,6 +141,18 @@ const routes = [
 		path: "/posts/:id/edit",
 		name: "PostEdit",
 		component: PostEditor,
+		meta: { requiresAuth: true, requiresAdmin: true },
+	},
+	{
+		path: "/resource/new",
+		name: "RessoiurceNew",
+		component: ResourceEditor,
+		meta: { requiresAuth: true, requiresAdmin: true },
+	},
+	{
+		path: "/resources/:id/edit",
+		name: "RessourceEdit",
+		component: ResourceEditor,
 		meta: { requiresAuth: true, requiresAdmin: true },
 	},
 	{
@@ -225,6 +247,12 @@ router.beforeEach(async (to, from, next) => {
 	if (to.path === '/Blog') {
 		const postStore = usePostStore();
 		await postStore.fetchPosts();
+	}
+
+		// Prefetch data for Resource route
+	if (to.path === '/Liens') {
+		const resourceStore = useResourceStore();
+		await resourceStore.fetchResources();
 	}
 
 	// Prefetch data for home route

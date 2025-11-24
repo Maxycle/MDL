@@ -27,6 +27,9 @@
 				<NavBarButton :isActive="isRouteActive('/Blog')">
 					<span class="relative"><router-link to="/Blog">Blog</router-link></span>
 				</NavBarButton>
+				<NavBarButton :isActive="isRouteActive('/Liens')">
+					<span class="relative"><router-link to="/Liens">Liens</router-link></span>
+				</NavBarButton>
 				<NavBarButton v-if="store.isLoggedIn" @click="logout">
 					<span class="relative">Logout</span>
 				</NavBarButton>
@@ -77,6 +80,11 @@
 								<v-list-item link>
 									<NavBarButton :isActive="isRouteActive('/Blog')">
 										<span class="relative"><router-link to="/Blog">Blog</router-link></span>
+									</NavBarButton>
+								</v-list-item>
+								<v-list-item link>
+									<NavBarButton :isActive="isRouteActive('/Liens')">
+										<span class="relative"><router-link to="/Liens">Liens</router-link></span>
 									</NavBarButton>
 								</v-list-item>
 								<v-list-item link>

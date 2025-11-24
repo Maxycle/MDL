@@ -44,7 +44,10 @@ watch(() => sessionStore.getUserCertification, (newValue) => {
 	}
 
 	if (sessionStore.isAdmin) {
-		items.value.push({ route: '/upload-nouvelles-questions', text: 'Upload nouvelle liste de questions' }, { route: '/questionnaire-paramètres', text: 'Changer les paramètres de questionnaire' })
+		items.value.push({ route: '/upload-nouvelles-questions', text: 'Upload nouvelle liste de questions' },
+		 { route: '/questionnaire-paramètres', text: 'Changer les paramètres de questionnaire' },
+		 { route: '/resource/new', text: 'Ajouter un lien' }
+		)
 	}
 }, {
 	deep: true,
