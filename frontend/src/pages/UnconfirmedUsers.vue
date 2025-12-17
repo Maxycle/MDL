@@ -83,7 +83,7 @@ const selectedUserInfo = computed(() => {
 onMounted(async () => {
 	await fetchAccountCreationRequests()
 	await fetchPP()
-	userSelected.value = users.value[0]
+	selectUser(users.value[0])
 })
 
 const fetchAccountCreationRequests = async () => {
