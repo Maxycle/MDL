@@ -66,13 +66,13 @@ import { menuAccountRequests } from "@/helpers/constants.js"
 
 const sessionStore = useSessionStore()
 const userSelected = ref(null) // Initialize with null instead of empty object
-const filteredUsers = ref(null)
-const users = ref(null)
+const filteredUsers = ref([])
+const users = ref([])
 const validationStatus = ref(false)
 const cooptationStatus = ref('Toutes les demandes')
 const hovered = ref('')
-const pps = ref(null)
-const undecidedPPs = ref(null)
+const pps = ref([])
+const undecidedPPs = ref([])
 
 // Add computed property to help track changes
 const selectedUserInfo = computed(() => {
@@ -83,7 +83,10 @@ const selectedUserInfo = computed(() => {
 onMounted(async () => {
 	await fetchAccountCreationRequests()
 	await fetchPP()
-	selectUser(users.value[0])
+
+	if (users.value.length > 0) {
+		selectUser(users.value[0])
+	}
 })
 
 const fetchAccountCreationRequests = async () => {
@@ -135,7 +138,6 @@ const fetchPP = async () => {
 				Authorization: `${sessionStore.getAuthToken}`
 			}
 		})
-		console.log('response fetchPP', response.data)
 		pps.value = response.data
 	} catch (error) {
 		console.error('Error fetching PPs:', error)
@@ -143,6 +145,12 @@ const fetchPP = async () => {
 }
 
 const selectUser = (user) => {
+	if (!user || !Array.isArray(user.approval_ids)) {
+		userSelected.value = null
+		undecidedPPs.value = []
+		return
+	}
+
 	userSelected.value = { ...user }
 	undecidedPPs.value = pps.value.filter(item => !user.approval_ids.includes(item.id))
 }
@@ -197,6 +205,9 @@ const addFilter = (target, optionSelected) => {
 }
 
 const showButton = computed(() => {
+	if (!userSelected.value) return false
+	if (!Array.isArray(userSelected.value.approval_ids)) return false
+
 	return !userSelected.value.approval_ids.includes(sessionStore.getUserId)
 })
 </script>
