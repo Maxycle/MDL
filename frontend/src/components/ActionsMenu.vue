@@ -14,13 +14,13 @@
 <script setup>
 import NavBarButton from "@/components/buttons/NavBarButton.vue"
 import { ref, watch } from 'vue'
-import { useRoute, useRouter } from "vue-router"
+import { useRoute } from "vue-router"
 import { useSessionStore } from "@/stores/modules/sessionStore"
 
-const router = useRouter()
 const route = useRoute();
 const sessionStore = useSessionStore();
-const items = ref([])
+const items = ref([{ route: '/reset-password', text: 'Changer votre mot de passe' },
+			{ route: '/edit-profile', text: 'Modifier votre profil' }])
 
 const isRouteActive = (path) => {
 	return route.path === path;
@@ -31,16 +31,9 @@ watch(() => sessionStore.getUserCertification, (newValue) => {
 		items.value.push({ route: '/utilisateurs', text: 'Membres' },
 			{ route: '/utilisateurs-non-confirmes', text: 'Demandes d\'ouverture de compte' },
 			{ route: '/account-creation-request', text: 'Coopter un candidat' },
-			{ route: '/posts/new', text: 'Ecrire un article' },
-			{ route: '/reset-password', text: 'Changer votre mot de passe' },
-			{ route: '/edit-profile', text: 'Modifier votre profile' })
+			{ route: '/posts/new', text: 'Ecrire un article' })
 	} else if (newValue === 'MC') {
-		items.value.push({ route: '/account-creation-request', text: 'Coopter un candidat' },
-			{ route: '/reset-password', text: 'Changer votre mot de passe' },
-			{ route: '/edit-profile', text: 'Modifier votre profile' })
-	} else if (newValue === 'SM') {
-		items.value.push({ route: '/reset-password', text: 'Changer votre mot de passe' },
-			{ route: '/edit-profile', text: 'Modifier votre profile' })
+		items.value.push({ route: '/account-creation-request', text: 'Coopter un candidat' })
 	}
 
 	if (sessionStore.isAdmin) {
