@@ -56,7 +56,7 @@
 			</div>
 			<div class="flex flex-col items-center">
 			<div class="text-white pb-2">Votre profil est {{ sessionStore.getUserDetails.certification_is_public ?
-				'public'
+				'publique'
 				:
 				'privé' }}</div>
 			<button class="rounded bg-blueLogoDark p-2 text-yellowLogo" @click="onPrivacyOrPPdemandClick('privacy')">rendre 
