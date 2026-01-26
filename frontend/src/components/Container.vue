@@ -2,8 +2,8 @@
 	<div class="bg-blackLogo min-h-screen text-xs sm:text-lg">
 		<div v-if="!session.isLoggedIn" class="flex space-x-2 justify-end p-2">
 			<div v-for="item in boutonData">
-				<div v-if="!isRouteActive(item.path)"
-					class="bg-stone-300 text-black rounded p-2 cursor-pointer shadow-md shadow-stone-600 flex items-center"
+					<div v-if="!isRouteActive(item.path)"
+					class="hover:text-orangeLogo text-blueLogoLight font-extrabold cursor-pointer flex underline px-2"
 					@click="router.push(item.path)">{{ item.text }}</div>
 			</div>
 		</div>
