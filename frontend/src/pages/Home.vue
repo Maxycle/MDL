@@ -56,11 +56,11 @@
 			</div>
 			<div class="flex flex-col items-center">
 			<div class="text-white pb-2">Votre profil est {{ sessionStore.getUserDetails.certification_is_public ?
-				'publique'
+				'public'
 				:
 				'privé' }}</div>
 			<button class="rounded bg-blueLogoDark p-2 text-yellowLogo" @click="onPrivacyOrPPdemandClick('privacy')">rendre 
-				<span :class="{'font-extrabold': !sessionStore.getUserDetails.certification_is_public }">publique</span>/<span :class="{'font-extrabold': sessionStore.getUserDetails.certification_is_public }">privé</span>
+				<span :class="{'font-extrabold': !sessionStore.getUserDetails.certification_is_public }">public</span>/<span :class="{'font-extrabold': sessionStore.getUserDetails.certification_is_public }">privé</span>
 			</button>
 			<div v-if="privacyBoxOpen" class="bg-orange-200 rounded px-2 py-1 mt-2">
 				<div v-if="isHidden" class="password">

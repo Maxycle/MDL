@@ -26,9 +26,8 @@
 			<p>Le Mouvement des Libertariens aspire ainsi &agrave; devenir ce phare reconnu des libertariens francophones.</p>
 		</div>
 		<div class="flex justify-center">
-			<div class="text-center text-yellowLogo sm:text-xl p-2 border-2 border-orangeLogo
-				 bg-blueLogoDark font-extrabold italic rounded-lg mt-2 cursor-pointer hover:border-green-500" @click="goToArticleInBlog">
-				Lire la suite</div>
+				<div class="text-center text-blueLogoLight hover:text-orangeLogo sm:text-xl p-2 font-extrabold italic underline mt-2 cursor-pointer hover:border-green-500" @click="goToArticleInBlog">
+				Lire la suite...</div>
 		</div>
 	</Container>
 </template>
