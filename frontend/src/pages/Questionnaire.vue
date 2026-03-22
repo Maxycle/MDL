@@ -40,7 +40,11 @@
 				</div>
 			</div>
 			<StartModal :isVisible="isModalVisible" :title="modalTitle" @close="closeModal">
-				<p class="text-xs">Quand vous cliquez sur commencer, le questionnaire démarre et cela compte pour un essai. Si
+				<p v-if="saitAnalyserClicked" class="text-xs">Le questionnaire évaluant le niveau "Sait analyser" en Droit
+					naturel / Ecole autrichienne est encore en cours d'élaboration. Bravo si vous avez su arriver jusqu'ici.
+					Revenez dans quelque temps pour tenter votre chance. Merci de votre compréhension.</p>
+				<p v-else class="text-xs">Quand vous cliquez sur commencer, le questionnaire démarre et cela compte pour un
+					essai. Si
 					vous n'êtes pas
 					prêt, fermez cette boite de dialogue.</p>
 				<div class="flex space-x-2 justify-center">
@@ -84,13 +88,8 @@ const isModalVisible = ref(false)
 const selectedDomain = ref(null)
 const selectedButton = ref(null)
 const difficultyOrder = { LOW: 1, MID: 2, HIGH: 3 }
-
-// onMounted(async () => {
-// 	await scoreStore.fetchScores()
-// 	if (!paramsStore.getIsLoaded) {
-// 		await paramsStore.fetchParams()
-// 	}
-// })
+// temporary 
+const saitAnalyserClicked = ref(false)
 
 const buttonTextAndApiUrl = (domain, button) => {
 	let domainParam = domain === 'Droit Naturel' ? 'DN' : 'EA'
@@ -284,12 +283,17 @@ const selectScore = (domain) => {
 
 const closeModal = () => {
 	isModalVisible.value = false;
+	// temporary
+	saitAnalyserClicked.value = false
 }
 
 const openModal = (domain, button) => {
 	if (isModalVisible.value) {
 		return;
 	}
+
+	// temporary
+	saitAnalyserClicked.value = button === 'Sait Analyser' ? true : false
 
 	selectedDomain.value = domain;
 	selectedButton.value = button;
