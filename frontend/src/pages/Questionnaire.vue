@@ -40,10 +40,10 @@
 				</div>
 			</div>
 			<StartModal :isVisible="isModalVisible" :title="modalTitle" @close="closeModal">
-				<p v-if="saitAnalyserClicked" class="text-xs">Le questionnaire évaluant le niveau "Sait analyser" en Droit
+				<p v-if="saitAnalyserClicked" class="text-base">Le questionnaire évaluant le niveau "Sait analyser" en Droit
 					naturel / Ecole autrichienne est encore en cours d'élaboration. Bravo si vous avez su arriver jusqu'ici.
 					Revenez dans quelque temps pour tenter votre chance. Merci de votre compréhension.</p>
-				<p v-else class="text-xs">Quand vous cliquez sur commencer, le questionnaire démarre et cela compte pour un
+				<p v-else class="text-base">Quand vous cliquez sur commencer, le questionnaire démarre et cela compte pour un
 					essai. Si
 					vous n'êtes pas
 					prêt, fermez cette boite de dialogue.</p>
