@@ -51,7 +51,7 @@
 					<button @click="closeModal" class="mt-4 bg-red-600 text-white p-2 rounded-lg font-bold">
 						fermer
 					</button>
-					<button @click="startQuestionnaire" class="mt-4 bg-green-600 text-white p-2 rounded-lg font-bold">
+					<button v-if="!saitAnalyserClicked" @click="startQuestionnaire" class="mt-4 bg-green-600 text-white p-2 rounded-lg font-bold">
 						commencer
 					</button>
 				</div>
