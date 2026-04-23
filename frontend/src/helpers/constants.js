@@ -4,6 +4,8 @@ export const menuData = [
 ]
 
 export const menuAccountRequests = [
-	{ target: 'validation', text: 'demandes en cours', content: [{ text: 'Validées', symbol: 'Validées' }, { text: 'Non validées', symbol: 'Non validées' }] },
+	{ target: 'validation', text: 'validées/non validées (par moi-même)', content: [{ text: 'Validées', symbol: 'Validées' }, { text: 'Non validées', symbol: 'Non validées' }] },
 	{ target: 'cooptation', text: 'cooptation', content: [{ text: 'Cooptées', symbol: 'Cooptées' }, { text: 'Non cooptées', symbol: 'Non cooptées' }] }
 ]
+
+export const accountRequestStatus = { waiting: 0, validated: 1, refused: 2, banned: 3}

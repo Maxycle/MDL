@@ -24,7 +24,7 @@ class AccountCreationRequestMailer < ApplicationMailer
 
     @validation_url = "#{frontend_url}/api/account_creation_request/#{@account_creation_request.id}/validate_email/#{@account_creation_request.validation_token}"
     
-    	mail(
+    mail(
 			to: @account_creation_request.email, 
 			subject: 'Please Validate Your Email for MDL Account Request'
 		)
@@ -37,6 +37,25 @@ class AccountCreationRequestMailer < ApplicationMailer
 		mail(
       to: pp_user.email,
       subject: 'Nouvelle demande d\'ouverture de compte dans libertarien.net'
+    )
+	end
+
+	def ban_candidate_email(account_creation_request)
+    @account_creation_request = account_creation_request
+
+		mail(
+      to: @account_creation_request.email,
+      subject: 'You can\'t apply anymore'
+    )
+	end
+
+	def banned_to_refused_email(account_creation_request)
+    @account_creation_request = account_creation_request
+		@url = "#{frontend_url}/account-creation-request"
+
+		mail(
+      to: @account_creation_request.email,
+      subject: 'You can apply again'
     )
 	end
 

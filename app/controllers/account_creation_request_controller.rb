@@ -1,12 +1,13 @@
 class AccountCreationRequestController < ApplicationController
   skip_before_action :authenticate_user!, only: [:create, :validate_email]
-  before_action :set_account_creation_request, only: [:accept_candidate, :refuse_candidate, :validate_email]
+  before_action :set_account_creation_request, only: [:accept_candidate, :refuse_candidate, :validate_email, :ban_candidate, :banned_to_refused_update]
 
-  def index
+	def index
 		@accountCreationRequests = AccountCreationRequest.all
-		@accountCreationRequests = @accountCreationRequests.active.not_refused.email_not_sent
 
-		render json: @accountCreationRequests.as_json
+		render json: {
+			accountCreationRequests: @accountCreationRequests
+		}
 	end
 
   def create
@@ -50,7 +51,7 @@ class AccountCreationRequestController < ApplicationController
 					AccountCreationRequestMailer.welcome_email(@accountCreationRequest).deliver_now
 
 					# Mark email as sent and record the timestamp
-					@accountCreationRequest.update(email_sent: true, email_sent_at: Time.current)
+					@accountCreationRequest.update(email_sent: true, email_sent_at: Time.current, status: 1)
 				end
 
         render json: @accountCreationRequest, status: :ok
@@ -63,7 +64,7 @@ class AccountCreationRequestController < ApplicationController
   end
 
 	def refuse_candidate
-		if @accountCreationRequest.refused
+		if @accountCreationRequest.status == 2
 			render json: { message: "This candidate has already been refused" }, status: :unprocessable_entity
 			return
 		end
@@ -74,16 +75,43 @@ class AccountCreationRequestController < ApplicationController
 		end
 		
 		# Use update for the first change
-		if @accountCreationRequest.update(refused: true)
+		if @accountCreationRequest.update(status: 2)
 			# Send email
 			AccountCreationRequestMailer.refuse_request_email(@accountCreationRequest).deliver_now
 			
 			# Use update again for the tracking fields
-			@accountCreationRequest.update(email_sent: true, email_sent_at: Time.current)
+			@accountCreationRequest.update(email_sent: true, email_sent_at: Time.current, refused_by: current_user.id)
 			
 			render json: @accountCreationRequest, status: :ok
 		else
 			render json: @accountCreationRequest.errors, status: :unprocessable_entity
+		end
+	end
+
+	def ban_candidate
+		if @accountCreationRequest.status == 3
+			render json: { message: "This candidate has already been banned" }, status: :unprocessable_entity
+			return
+		end
+		
+		if @accountCreationRequest.approval_ids.include?(current_user.id)
+			render json: { message: "You have already approved this candidate" }, status: :unprocessable_entity
+			return
+		end
+
+		if @accountCreationRequest.update(status: 3)
+			AccountCreationRequestMailer.ban_candidate_email(@accountCreationRequest).deliver_now
+			@accountCreationRequest.update(email_sent: true, email_sent_at: Time.current, status: 3, banned_by: current_user.id)
+		else
+			render json: @accountCreationRequest.errors, status: :unprocessable_entity
+		end
+	end
+
+	def banned_to_refused_update
+		if @accountCreationRequest.update(status: 2)
+			# Send email
+			AccountCreationRequestMailer.banned_to_refused_email(@accountCreationRequest).deliver_now
+			@accountCreationRequest.update(email_sent: true, email_sent_at: Time.current, banned_to_refused_by: current_user.id)
 		end
 	end
 

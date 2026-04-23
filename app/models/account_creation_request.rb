@@ -4,11 +4,15 @@ class AccountCreationRequest < ApplicationRecord
   validates :last_name, presence: true
   validates :email, presence: true, uniqueness: true
   validates :motivations, presence: true
+
+	belongs_to :user, optional: true
   
   # Scope to find requests not yet approved by a specific user
-  scope :not_refused, -> { where(refused: false) }
-  scope :active, -> { where(validated: true) }
-  scope :inactive, -> { where(validated: false) }
+  scope :banned, -> { where(status: 3) }
+  scope :refused, -> { where(status: 2) }
+  scope :validated, -> { where(status: 1) }
+	scope :waiting, -> { where(status: 0) }
+	
 	scope :email_not_sent, -> { where(email_sent: false) }
   scope :not_approved_by, ->(user_id) { where.not("? = ANY(approval_ids)", user_id) }
   scope :approved_by, ->(user_id) { where("? = ANY(approval_ids)", user_id) }

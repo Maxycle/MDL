@@ -28,6 +28,8 @@ Rails.application.routes.draw do
 			member do
 				post 'accept_candidate'
 				post 'refuse_candidate'
+				post 'ban_candidate'
+				post 'banned_to_refused_update'
 				get '/validate_email/:token', to: 'account_creation_request#validate_email'
 			end
 		end

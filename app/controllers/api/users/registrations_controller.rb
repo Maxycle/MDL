@@ -52,7 +52,7 @@ module Api
 				if resource.save
 					# If we used a token, mark it as used
           if @account_request
-            @account_request.update(token_used_for_signup: true)
+            @account_request.update(token_used_for_signup: true, user: resource)
           end
 					register_success
 				else
@@ -116,11 +116,6 @@ module Api
 			def configure_permitted_parameters
 				devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :username, :first_name, :last_name, :intro])
 				devise_parameter_sanitizer.permit(:account_update, keys: [:username, :first_name, :last_name, :certification_is_public, :email, :intro, :current_password, :wantsToBecomePP])
-			end
-
-			def generate_validation_token
-				self.validation_token = SecureRandom.urlsafe_base64(32)
-				self.token_created_at = Time.current
 			end
 		end
 	end
