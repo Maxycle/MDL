@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_12_18_060611) do
+ActiveRecord::Schema[7.0].define(version: 2026_04_22_090538) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -25,12 +25,16 @@ ActiveRecord::Schema[7.0].define(version: 2025_12_18_060611) do
     t.datetime "updated_at", null: false
     t.boolean "email_sent", default: false
     t.datetime "email_sent_at"
-    t.boolean "refused", default: false
-    t.boolean "validated", default: false
     t.string "validation_token"
     t.datetime "token_created_at", precision: nil
     t.boolean "token_used_for_signup", default: false
+    t.integer "status", default: 0, null: false
+    t.bigint "user_id"
+    t.integer "refused_by"
+    t.integer "banned_by"
+    t.integer "banned_to_refused_by"
     t.index ["email"], name: "index_account_creation_requests_on_email", unique: true
+    t.index ["user_id"], name: "index_account_creation_requests_on_user_id"
     t.index ["validation_token"], name: "index_account_creation_requests_on_validation_token", unique: true
   end
 
@@ -148,6 +152,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_12_18_060611) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "account_creation_requests", "users"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "answers", "questions"

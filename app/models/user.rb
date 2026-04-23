@@ -14,6 +14,7 @@ class User < ApplicationRecord
 	has_many :scores, dependent: :destroy
   has_many :posts, dependent: :destroy
   has_many :resources, dependent: :destroy
+	has_one :account_creation_request
 	
 	# Validations given as a PP user
 

@@ -6,7 +6,8 @@
   <body>
     <h1>Cher <%= @account_creation_request.first_name %>!</h1>
     <p>
-      Malheureusement votre demande de création de compte a été refusée.
+      Vous avez à nouveau la possibilité d'essayer de joindre MDL.
     </p>
+		<p><%= link_to 'Faire une demande d\'ouverture de compte', @url %></p>
   </body>
 </html>
