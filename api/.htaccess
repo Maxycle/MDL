@@ -1,0 +1,6 @@
+# Every request under /api goes to index.php, including requests for files
+# that exist (lib/, routes/, schema/, config.php). Nothing here is reachable directly.
+Options -Indexes
+RewriteEngine On
+RewriteRule ^index\.php$ - [L]
+RewriteRule ^ index.php [L,QSA]

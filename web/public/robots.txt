@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /api/
+Disallow: /gestion/
+Disallow: /espace
+Disallow: /inscription/
+Disallow: /reinitialiser/

@@ -1,0 +1,6 @@
+web/node_modules/
+web/dist/
+deploy/
+api/storage/
+mdl-config.php
+mdl-secrets.php
