@@ -6,6 +6,7 @@ import { Button, Confirm, Empty, Field, LoadError, Modal, Notice, Skeleton, Spin
 import { Icon } from '../../components/Icon.jsx';
 import { AdminOnly, SectionHeader } from './AdminLayout.jsx';
 import { ImagePreview } from './ImagePreview.jsx';
+import { QuestionTester } from './QuestionTester.jsx';
 
 const DIFF_TONE = { LOW: 'pill-green', MID: 'pill-yellow', HIGH: 'pill-red' };
 const TRACKS = [['DN', 'BA'], ['DN', 'SA'], ['EA', 'BA'], ['EA', 'SA']];
@@ -162,6 +163,7 @@ function QuestionEditor({ question, onClose, onSaved }) {
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);
   const [askDelete, setAskDelete] = useState(false);
+  const [testing, setTesting] = useState(false);
   // The preview follows the address once the field loses focus, not on every keystroke.
   const [previewUrl, setPreviewUrl] = useState(question.image_url || '');
   const isNew = !question.id;
@@ -189,6 +191,7 @@ function QuestionEditor({ question, onClose, onSaved }) {
     <Modal open onClose={onClose} size="lg" title={isNew ? 'Nouvelle question' : 'Modifier la question'} footer={
       <>
         {!isNew && <Button variant="danger-soft" icon="trash" className="mr-auto" onClick={() => setAskDelete(true)}>Supprimer</Button>}
+        <Button variant="secondary" icon="eye" onClick={() => setTesting(true)}>Tester</Button>
         <Button variant="secondary" onClick={onClose}>Annuler</Button>
         <Button onClick={save} busy={busy}>Enregistrer</Button>
       </>
@@ -242,6 +245,7 @@ function QuestionEditor({ question, onClose, onSaved }) {
       <Confirm open={askDelete} onClose={() => setAskDelete(false)} onConfirm={remove} busy={busy} tone="danger" confirmLabel="Supprimer" title="Supprimer la question">
         <p>Cette question et ses réponses seront supprimées.</p>
       </Confirm>
+      {testing && <QuestionTester question={q} onClose={() => setTesting(false)} />}
     </Modal>
   );
 }

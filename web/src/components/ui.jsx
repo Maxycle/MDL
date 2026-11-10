@@ -119,12 +119,19 @@ export function Skeleton({ className = '' }) {
   return <div className={`skeleton ${className}`} aria-hidden="true" />;
 }
 
+// Open windows, innermost last: Escape closes only the top one, and the page scrolls again once all are closed.
+const openModals = [];
+
 export function Modal({ open, onClose, title, children, footer, size = 'md' }) {
   const ref = useRef(null);
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
   useEffect(() => {
     if (!open) return undefined;
+    const token = {};
+    openModals.push(token);
     const previous = document.activeElement;
-    const onKey = (e) => { if (e.key === 'Escape') onClose?.(); };
+    const onKey = (e) => { if (e.key === 'Escape' && openModals[openModals.length - 1] === token) closeRef.current?.(); };
     document.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
     const t = setTimeout(() => {
@@ -134,10 +141,11 @@ export function Modal({ open, onClose, title, children, footer, size = 'md' }) {
     return () => {
       clearTimeout(t);
       document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
+      openModals.splice(openModals.indexOf(token), 1);
+      if (!openModals.length) document.body.style.overflow = '';
       previous?.focus?.();
     };
-  }, [open, onClose]);
+  }, [open]);
   if (!open) return null;
   const width = { sm: 'sm:max-w-md', md: 'sm:max-w-xl', lg: 'sm:max-w-3xl' }[size];
   return createPortal(
