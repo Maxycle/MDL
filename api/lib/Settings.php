@@ -12,6 +12,9 @@ final class Settings
         'low_threshold' => [0, 1000],
         'mid_threshold' => [0, 1000],
         'high_threshold' => [0, 1000],
+        // Part of a question image hidden until the member validates an answer, in % of its height.
+        'image_blur_top' => [0, 99],
+        'image_blur_bottom' => [1, 100],
     ];
     public const TEXTS = ['intro' => 2000, 'welcome_start' => 120, 'welcome_end' => 120];
 

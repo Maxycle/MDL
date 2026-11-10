@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 $router->get('/admin/settings', static function (): array {
     Auth::requireAdmin();
-    return ['settings' => Settings::get()];
+    // An image from the question bank, to preview the blurred band.
+    $sample = Db::val('SELECT image_url FROM questions WHERE image_url IS NOT NULL AND image_url <> \'\' ORDER BY active DESC, id LIMIT 1');
+    return ['settings' => Settings::get(), 'sample_image' => $sample ?: null];
 });
 
 $router->put('/admin/settings', static function (): array {
@@ -23,6 +25,9 @@ $router->put('/admin/settings', static function (): array {
         $row[$key] = $key === 'intro' ? $v->str($key, 0, $max, false) : mb_substr(is_string($raw) ? $raw : '', 0, $max);
     }
     $row['sa_open'] = $v->bool('sa_open') ? 1 : 0;
+    if (isset($row['image_blur_top'], $row['image_blur_bottom']) && $row['image_blur_top'] >= $row['image_blur_bottom']) {
+        $v->error('image_blur_bottom', 'Doit être plus grand que le début de la zone.');
+    }
     $v->check();
     Db::update('settings', $row + ['updated_at' => Util::now()], 'id = 1');
     Settings::forget();
@@ -47,6 +52,7 @@ $questionsWithAnswers = static function (string $where = '', array $params = [])
         'level' => $q['level'],
         'difficulty' => $q['difficulty'],
         'content' => $q['content'],
+        'image_url' => $q['image_url'] ?: null,
         'active' => (bool) $q['active'],
         'answers' => $answers[(int) $q['id']] ?? [],
         'updated_at' => Util::iso($q['updated_at']),
@@ -68,6 +74,11 @@ $questionInput = static function (): array {
         'difficulty' => $v->in('difficulty', Quiz::DIFFICULTIES),
         'active' => $v->bool('active', true) ? 1 : 0,
     ];
+    $image = is_string($in['image_url'] ?? null) ? trim($in['image_url']) : '';
+    if ($image !== '' && !QuestionImages::isValidUrl($image)) {
+        $v->error('image_url', 'Adresse invalide : elle doit commencer par https://.');
+    }
+    $q['image_url'] = $image === '' ? null : $image;
     $answers = [];
     foreach (is_array($in['answers'] ?? null) ? $in['answers'] : [] as $i => $a) {
         $content = trim((string) ($a['content'] ?? ''));
@@ -127,6 +138,17 @@ $router->put('/admin/questions/{id}', static function (string $id) use ($questio
     return ['question' => $questionsWithAnswers('WHERE id = ?', [(int) $id])[0]];
 });
 
+// Preview of a question image as members see it: ?url=…&state=blurred|clear, optional &top=&bottom= (in %).
+$router->get('/admin/questions/image-preview', static function (): string {
+    Auth::requireAdmin();
+    $url = trim((string) ($_GET['url'] ?? ''));
+    if (!QuestionImages::isValidUrl($url)) {
+        throw new HttpError(422, 'Adresse d\'image invalide.');
+    }
+    $percent = static fn(string $k): ?int => isset($_GET[$k]) && is_numeric($_GET[$k]) ? (int) $_GET[$k] : null;
+    return QuestionImages::send($url, ($_GET['state'] ?? '') !== 'clear', $percent('top'), $percent('bottom'));
+});
+
 $router->delete('/admin/questions/{id}', static function (string $id): array {
     Auth::requireAdmin();
     Db::exec('DELETE FROM questions WHERE id = ?', [(int) $id]);
@@ -146,7 +168,7 @@ $router->delete('/admin/questions', static function (): array {
 /*
  * Spreadsheet import. Columns are found by their header name, in any order; all others are ignored:
  *   question_content | question_domain (DN/EA) | question_level (BA/SA) | LMH (LOW/MID/HIGH)
- *   | answer1_content | answer1_value | ... answerN_* | status (optional)
+ *   | answer1_content | answer1_value | ... answerN_* | status (optional) | Image (optional, an https:// address)
  * The admin first gets a preview (mode=preview), then chooses which status values make a question active.
  * Rows with any other status are stored as inactive: visible in Gestion, never served to members.
  */
@@ -181,6 +203,7 @@ $parseQuestionFile = static function (string $path): array {
         $domain = strtoupper($get($row, 'question_domain'));
         $level = strtoupper($get($row, 'question_level'));
         $difficulty = $difficultyMap[strtoupper($get($row, 'lmh'))] ?? null;
+        $image = $get($row, 'image') ?: $get($row, 'image_url');
         $answers = [];
         for ($n = 1; isset($cols["answer{$n}_content"]); $n++) {
             $text = $get($row, "answer{$n}_content");
@@ -194,6 +217,7 @@ $parseQuestionFile = static function (string $path): array {
             !in_array($level, ['BA', 'SA', 'SE'], true) => "niveau « $level » inconnu (BA ou SA)",
             $difficulty === null => 'difficulté (colonne LMH) manquante : LOW, MID ou HIGH',
             count($answers) < 2 => 'moins de deux réponses avec des points',
+            $image !== '' && !QuestionImages::isValidUrl($image) => 'adresse de l\'image invalide (elle doit commencer par https://)',
             default => null,
         };
         if ($problem) {
@@ -202,6 +226,7 @@ $parseQuestionFile = static function (string $path): array {
         }
         $valid[] = [
             'content' => $content, 'domain' => $domain, 'level' => $level, 'difficulty' => $difficulty,
+            'image_url' => $image === '' ? null : $image,
             'status' => isset($cols['status']) ? $get($row, 'status') : '', 'answers' => $answers,
         ];
     }
@@ -241,6 +266,7 @@ $router->post('/admin/questions/import', static function () use ($parseQuestionF
         }
         return [
             'total' => count($valid), 'has_status' => $hasStatus, 'statuses' => $hasStatus ? $list : [],
+            'with_image' => count(array_filter($valid, static fn(array $q): bool => $q['image_url'] !== null)),
             'breakdown' => array_values($breakdown), 'duplicates' => $duplicates,
             'errors' => $errorList, 'error_count' => count($errors),
         ];
@@ -266,7 +292,7 @@ $router->post('/admin/questions/import', static function () use ($parseQuestionF
             $isActive = !$hasStatus || in_array($q['status'], $activeStatuses, true);
             $qid = Db::insert('questions', [
                 'content' => $q['content'], 'domain' => $q['domain'], 'level' => $q['level'], 'difficulty' => $q['difficulty'],
-                'active' => $isActive ? 1 : 0, 'created_at' => Util::now(), 'updated_at' => Util::now(),
+                'image_url' => $q['image_url'], 'active' => $isActive ? 1 : 0, 'created_at' => Util::now(), 'updated_at' => Util::now(),
             ]);
             foreach ($q['answers'] as $a) {
                 Db::insert('answers', $a + ['question_id' => $qid]);
@@ -289,12 +315,16 @@ $router->get('/admin/questions/export', static function () use ($questionsWithAn
     for ($n = 1; $n <= $max; $n++) {
         array_push($header, "answer{$n}_content", "answer{$n}_value");
     }
+    $header[] = 'Image';
     $sheet = [$header];
     foreach ($questions as $q) {
         $row = [$q['active'] ? 'inProdOn' : 'off', $q['domain'], $q['level'], $q['difficulty'], $q['content']];
         foreach ($q['answers'] as $a) {
             array_push($row, $a['content'], $a['points']);
         }
+        // Pad the missing answers so the image always lands in the "Image" column.
+        $row = array_pad($row, count($header) - 1, '');
+        $row[] = $q['image_url'] ?? '';
         $sheet[] = $row;
     }
     return Http::download(Xlsx::write($sheet, 'Questions'), 'questions-' . gmdate('Y-m-d') . '.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

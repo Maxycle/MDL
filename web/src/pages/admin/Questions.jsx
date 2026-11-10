@@ -5,6 +5,7 @@ import { DIFFICULTIES, DOMAINS, LEVELS, plural, searchKey } from '../../lib/form
 import { Button, Confirm, Empty, Field, LoadError, Modal, Notice, Skeleton, Spinner, Switch, useToast } from '../../components/ui.jsx';
 import { Icon } from '../../components/Icon.jsx';
 import { AdminOnly, SectionHeader } from './AdminLayout.jsx';
+import { ImagePreview } from './ImagePreview.jsx';
 
 const DIFF_TONE = { LOW: 'pill-green', MID: 'pill-yellow', HIGH: 'pill-red' };
 const TRACKS = [['DN', 'BA'], ['DN', 'SA'], ['EA', 'BA'], ['EA', 'SA']];
@@ -52,7 +53,7 @@ function QuestionsPage() {
     <div>
       <SectionHeader title="Questions" actions={
         <>
-          <Button icon="plus" onClick={() => setEditing({ content: '', domain: 'DN', level: 'BA', difficulty: 'LOW', active: true, answers: [{ content: '', points: 100 }, { content: '', points: 0 }] })}>Nouvelle question</Button>
+          <Button icon="plus" onClick={() => setEditing({ content: '', image_url: '', domain: 'DN', level: 'BA', difficulty: 'LOW', active: true, answers: [{ content: '', points: 100 }, { content: '', points: 0 }] })}>Nouvelle question</Button>
           <Button variant="secondary" icon="upload" onClick={() => setImporting(true)}>Importer</Button>
           <Button variant="secondary" icon="download" busy={exporting} onClick={exportXlsx}>Exporter</Button>
         </>
@@ -120,6 +121,7 @@ function QuestionsPage() {
                   <span className="flex flex-wrap items-center gap-1.5">
                     <span className="pill pill-blue">{q.domain} · {q.level}</span>
                     <span className={`pill ${DIFF_TONE[q.difficulty]}`}>{DIFFICULTIES[q.difficulty]}</span>
+                    {q.image_url && <span className="pill pill-neutral"><Icon name="image" size={13} />Image</span>}
                     {!q.active && <span className="pill pill-neutral">Inactive</span>}
                     <span className="ml-auto text-xs text-muted">{plural(q.answers.length, 'réponse', 'réponses')} · max {Math.max(...q.answers.map((a) => a.points))} pts</span>
                   </span>
@@ -160,6 +162,8 @@ function QuestionEditor({ question, onClose, onSaved }) {
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);
   const [askDelete, setAskDelete] = useState(false);
+  // The preview follows the address once the field loses focus, not on every keystroke.
+  const [previewUrl, setPreviewUrl] = useState(question.image_url || '');
   const isNew = !question.id;
   const setAnswer = (i, k, v) => setQ((s) => ({ ...s, answers: s.answers.map((a, j) => (j === i ? { ...a, [k]: v } : a)) }));
 
@@ -194,6 +198,12 @@ function QuestionEditor({ question, onClose, onSaved }) {
         <Field label="Question" error={errors.content} htmlFor="q-content">
           <textarea id="q-content" className="input" value={q.content} onChange={(e) => setQ({ ...q, content: e.target.value })} />
         </Field>
+        <Field label="Image (facultative)" error={errors.image_url} htmlFor="q-image"
+          hint="Adresse https:// d'une image. Le membre la voit avec une zone floutée jusqu'à ce qu'il valide sa réponse ; cette zone se règle dans Paramètres.">
+          <input id="q-image" type="url" inputMode="url" className="input" placeholder="https://…" value={q.image_url || ''}
+            onChange={(e) => setQ({ ...q, image_url: e.target.value })} onBlur={() => setPreviewUrl((q.image_url || '').trim())} />
+        </Field>
+        {/^https?:\/\/\S+$/i.test(previewUrl) && <ImagePreview url={previewUrl} />}
         <div className="grid gap-4 sm:grid-cols-3">
           <Field label="Domaine" htmlFor="q-edit-domain">
             <select id="q-edit-domain" className="input" value={q.domain} onChange={(e) => setQ({ ...q, domain: e.target.value })}>
@@ -320,7 +330,10 @@ function ImportModal({ existing, onClose, onDone }) {
           {preview && (
             <>
               <div>
-                <p className="font-semibold">{plural(preview.total, 'question reconnue', 'questions reconnues')}</p>
+                <p className="font-semibold">
+                  {plural(preview.total, 'question reconnue', 'questions reconnues')}
+                  {preview.with_image > 0 && <span className="font-normal text-muted">, dont {preview.with_image} avec une image</span>}
+                </p>
                 <div className="mt-2 overflow-x-auto rounded-xl border border-line">
                   <table className="w-full min-w-[32rem]">
                     <thead>
@@ -380,7 +393,7 @@ function ImportModal({ existing, onClose, onDone }) {
 
           <div className="rounded-xl bg-sunken p-4 text-muted">
             <p className="font-semibold text-ink">Colonnes reconnues (première feuille, dans n'importe quel ordre)</p>
-            <p className="mt-1"><code>question_content</code>, <code>question_domain</code> (DN ou EA), <code>question_level</code> (BA ou SA), <code>LMH</code> (LOW, MID ou HIGH), <code>status</code>, puis <code>answer1_content</code>, <code>answer1_value</code>, <code>answer2_content</code>… Les autres colonnes sont ignorées.</p>
+            <p className="mt-1"><code>question_content</code>, <code>question_domain</code> (DN ou EA), <code>question_level</code> (BA ou SA), <code>LMH</code> (LOW, MID ou HIGH), <code>status</code>, <code>Image</code> (adresse https://, facultative), puis <code>answer1_content</code>, <code>answer1_value</code>, <code>answer2_content</code>… Les autres colonnes sont ignorées.</p>
           </div>
         </div>
       )}

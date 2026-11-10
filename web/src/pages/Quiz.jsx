@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { api } from '../lib/api.js';
+import { BASE, api } from '../lib/api.js';
 import { useLoad, useTitle } from '../lib/hooks.js';
 import { useSession } from '../lib/session.jsx';
 import { DIFFICULTIES, DOMAINS, LEVELS, fmtDate, plural } from '../lib/format.js';
@@ -149,6 +149,9 @@ function AttemptView({ attempt, onFinished }) {
   useTitle('Questionnaire en cours');
   const questions = attempt.questions;
   const [answers, setAnswers] = useState(() => ({ ...attempt.answers }));
+  // Image questions whose answer is validated: final, and the image is shown without blur.
+  const [revealed, setRevealed] = useState(() => new Set(attempt.revealed || []));
+  const [validating, setValidating] = useState(false);
   const [index, setIndex] = useState(() => Math.max(0, questions.findIndex((q) => !attempt.answers[q.id])));
   const [error, setError] = useState('');
   const [askFinish, setAskFinish] = useState(false);
@@ -167,11 +170,26 @@ function AttemptView({ attempt, onFinished }) {
   const remaining = Math.max(0, deadline - now);
 
   const choose = (questionId, answerId) => {
+    if (revealed.has(questionId)) return;
     setAnswers((a) => ({ ...a, [questionId]: answerId }));
     queue.current = queue.current
       .then(() => api(`/quiz/attempts/${attempt.id}/answers`, { method: 'PUT', body: { question_id: questionId, answer_id: answerId } }))
       .then(() => setError(''))
       .catch((e) => setError(e.message));
+  };
+
+  const validate = async (questionId) => {
+    setValidating(true);
+    try {
+      await queue.current; // the chosen answer must be saved first
+      await api(`/quiz/attempts/${attempt.id}/reveal`, { method: 'POST', body: { question_id: questionId } });
+      setRevealed((s) => new Set(s).add(questionId));
+      setError('');
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setValidating(false);
+    }
   };
 
   const finish = useCallback(async () => {
@@ -192,6 +210,7 @@ function AttemptView({ attempt, onFinished }) {
   useEffect(() => { if (timeUp) finish(); }, [timeUp, finish]);
 
   const q = questions[index];
+  const locked = q ? revealed.has(q.id) : false;
   const answered = questions.filter((x) => answers[x.id]).length;
   const unanswered = questions.length - answered;
   const last = index === questions.length - 1;
@@ -234,18 +253,32 @@ function AttemptView({ attempt, onFinished }) {
           <section key={q.id} className="rise" aria-labelledby={`q-${q.id}`}>
             <p className="eyebrow">Question {index + 1} sur {questions.length}</p>
             <h1 id={`q-${q.id}`} className="mt-3 text-2xl font-semibold leading-snug sm:text-[1.9rem]">{q.content}</h1>
+            {q.image && <QuestionImage attemptId={attempt.id} question={q} revealed={locked} />}
             <div className="mt-8 space-y-3" role="radiogroup" aria-labelledby={`q-${q.id}`}>
               {q.answers.map((a, i) => {
                 const selected = answers[q.id] === a.id;
                 return (
-                  <button key={a.id} role="radio" aria-checked={selected} onClick={() => choose(q.id, a.id)}
-                    className={`flex w-full items-start gap-4 rounded-xl border p-4 text-left transition-colors ${selected ? 'border-primary bg-primary-soft' : 'border-line bg-surface hover:border-line-strong'}`}>
+                  <button key={a.id} role="radio" aria-checked={selected} aria-disabled={locked || undefined} onClick={() => choose(q.id, a.id)}
+                    className={`flex w-full items-start gap-4 rounded-xl border p-4 text-left transition-colors ${selected ? 'border-primary bg-primary-soft' : `border-line bg-surface ${locked ? 'cursor-default opacity-60' : 'hover:border-line-strong'}`}`}>
                     <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-sm font-bold ${selected ? 'bg-primary text-primary-fg' : 'bg-sunken text-muted'}`}>{String.fromCharCode(65 + i)}</span>
                     <span className="pt-1 leading-relaxed">{a.content}</span>
                   </button>
                 );
               })}
             </div>
+            {q.image && !locked && (
+              <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-sunken p-4">
+                <p className="min-w-0 flex-1 basis-60 text-sm text-muted">
+                  {answers[q.id]
+                    ? 'Validez votre réponse pour afficher le texte de l\'image. Elle ne pourra plus être modifiée.'
+                    : 'Le texte de l\'image s\'affichera une fois votre réponse choisie et validée.'}
+                </p>
+                <Button size="sm" icon="eye" onClick={() => validate(q.id)} busy={validating} disabled={!answers[q.id]}>Valider ma réponse</Button>
+              </div>
+            )}
+            {q.image && locked && (
+              <p className="mt-4 flex items-center gap-1.5 text-sm text-muted"><Icon name="lock" size={15} />Réponse validée : elle ne peut plus être modifiée.</p>
+            )}
           </section>
         )}
 
@@ -276,6 +309,31 @@ function AttemptView({ attempt, onFinished }) {
         <p className="text-muted">Il vous reste {formatClock(remaining)}.</p>
       </Confirm>
     </div>
+  );
+}
+
+/**
+ * The image comes from the API: blurred until the answer is validated, then clear.
+ * The clear copy fades in over the blurred one once it has loaded.
+ */
+function QuestionImage({ attemptId, question, revealed }) {
+  const src = (state) => `${BASE}api/quiz/attempts/${attemptId}/questions/${question.id}/image?state=${state}&v=${question.image}`;
+  const [loaded, setLoaded] = useState(false);
+  const [clearLoaded, setClearLoaded] = useState(false);
+  const [failed, setFailed] = useState(false);
+  if (failed) return <Notice tone="warning" className="mt-6">L'image de cette question n'a pas pu être chargée.</Notice>;
+  const img = 'block max-h-[65vh] w-full object-contain';
+  return (
+    <figure className={`relative mt-6 overflow-hidden rounded-xl border border-line bg-sunken ${loaded ? '' : 'min-h-48 animate-pulse'}`}>
+      <img src={src('blurred')} alt="Illustration de la question, texte masqué" className={img}
+        onLoad={() => setLoaded(true)} onError={() => setFailed(true)} />
+      {revealed && (
+        <a href={src('clear')} target="_blank" rel="noopener" aria-label="Ouvrir l'image en grand"
+          className={`absolute inset-0 transition-opacity duration-700 ${clearLoaded ? 'opacity-100' : 'opacity-0'}`}>
+          <img src={src('clear')} alt="Illustration de la question" className={`${img} h-full`} onLoad={() => setClearLoaded(true)} />
+        </a>
+      )}
+    </figure>
   );
 }
 

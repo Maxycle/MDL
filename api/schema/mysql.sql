@@ -54,6 +54,8 @@ CREATE TABLE settings (
   mid_threshold INT NOT NULL DEFAULT 80,
   high_threshold INT NOT NULL DEFAULT 70,
   sa_open TINYINT(1) NOT NULL DEFAULT 0,
+  image_blur_top INT NOT NULL DEFAULT 55,
+  image_blur_bottom INT NOT NULL DEFAULT 100,
   intro TEXT NULL,
   welcome_start VARCHAR(120) NULL,
   welcome_end VARCHAR(120) NULL,
@@ -66,6 +68,7 @@ CREATE TABLE questions (
   level CHAR(2) NOT NULL,
   difficulty VARCHAR(4) NOT NULL,
   content TEXT NOT NULL,
+  image_url VARCHAR(2048) NULL,
   active TINYINT(1) NOT NULL DEFAULT 1,
   created_at DATETIME NOT NULL,
   updated_at DATETIME NOT NULL,
@@ -103,6 +106,7 @@ CREATE TABLE attempt_answers (
   attempt_id INT UNSIGNED NOT NULL,
   question_id INT UNSIGNED NOT NULL,
   answer_id INT UNSIGNED NOT NULL,
+  revealed TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (attempt_id, question_id),
   CONSTRAINT attempt_answers_attempt_fk FOREIGN KEY (attempt_id) REFERENCES attempts(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

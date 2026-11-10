@@ -46,6 +46,8 @@ CREATE TABLE settings (
   mid_threshold INTEGER NOT NULL DEFAULT 80,
   high_threshold INTEGER NOT NULL DEFAULT 70,
   sa_open INTEGER NOT NULL DEFAULT 0,
+  image_blur_top INTEGER NOT NULL DEFAULT 55,
+  image_blur_bottom INTEGER NOT NULL DEFAULT 100,
   intro TEXT NULL,
   welcome_start TEXT NULL,
   welcome_end TEXT NULL,
@@ -58,6 +60,7 @@ CREATE TABLE questions (
   level TEXT NOT NULL,
   difficulty TEXT NOT NULL,
   content TEXT NOT NULL,
+  image_url TEXT NULL,
   active INTEGER NOT NULL DEFAULT 1,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL
@@ -93,6 +96,7 @@ CREATE TABLE attempt_answers (
   attempt_id INTEGER NOT NULL REFERENCES attempts(id) ON DELETE CASCADE,
   question_id INTEGER NOT NULL,
   answer_id INTEGER NOT NULL,
+  revealed INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (attempt_id, question_id)
 );
 

@@ -113,6 +113,7 @@ The script does four things:
 - It uploads the build.
 - It saves the previous version to `~/mdl-backups/<folder>-<date>.tar.gz`.
 - It swaps in the new files.
+- It adds any new database columns (`api/cli/migrate.php`, which never deletes anything).
 
 Your database, `uploads/`, `mdl-config.php` and `mdl-secrets.php` are left untouched. Run the same command for every later update.
 
@@ -149,7 +150,8 @@ Once you're logged in, everything is managed from **Gestion**:
 
 ## Notes
 
-- **Spreadsheet format**: the importer reads the first sheet and finds these columns by name, in any order: `question_content`, `question_domain`, `question_level`, `LMH`, `status`, `answer1_content`, `answer1_value`, `answer2_…`. All other columns (`ID`, `theme`, `date`, reviewers…) are ignored.
+- **Spreadsheet format**: the importer reads the first sheet and finds these columns by name, in any order: `question_content`, `question_domain`, `question_level`, `LMH`, `status`, `Image`, `answer1_content`, `answer1_value`, `answer2_…`. All other columns (`ID`, `theme`, `date`, reviewers…) are ignored.
+- **Question images**: a question with an `Image` address (https://) shows that image with a band blurred (by default the bottom 45 %, set in Paramètres). Once the member validates an answer, the image appears in full and that answer can no longer change. The server downloads the image once, blurs it itself and serves it: the browser never gets the original address before the answer, so the hidden text can't be read from the page. Copies are kept in `mdl-storage/question-images/`.
 - **Import statuses**: the import screen analyses the file first and shows which `status` values it contains. You tick which ones become active (`inProdOn` and `reviewedOn` are pre-ticked). Rows with other statuses are stored as inactive and never shown to members. To bring your bank in line with an updated master file, use **Remplacer**; **Ajouter** ignores questions that already exist.
 - **Rule changes from the old app**:
   - An unanswered question counts 0 points (before, it was ignored, so skipping hard questions raised the average).

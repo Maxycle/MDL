@@ -193,14 +193,18 @@ final class Quiz
         return $attempt;
     }
 
-    /** What the browser gets: questions and answer texts, never points. */
+    /**
+     * What the browser gets: questions and answer texts, never points.
+     * Image questions only carry a version token: the picture comes from imageUrl() through the API.
+     */
     public static function payload(array $attempt): array
     {
         $ids = json_decode($attempt['question_ids'], true) ?: [];
         $questions = [];
         if ($ids) {
             $in = Db::placeholders($ids);
-            $rows = Db::all("SELECT id, content FROM questions WHERE id IN ($in)", $ids);
+            $rows = Db::all("SELECT id, content, image_url FROM questions WHERE id IN ($in)", $ids);
+            $images = array_column($rows, 'image_url', 'id');
             $answers = Db::all("SELECT id, question_id, content FROM answers WHERE question_id IN ($in)", $ids);
             $byQuestion = [];
             foreach ($answers as $a) {
@@ -215,12 +219,17 @@ final class Quiz
                 // Stable shuffle: same order on every reload of this attempt.
                 usort($list, static fn(array $a, array $b): int =>
                     strcmp(sha1($attempt['id'] . ':' . $a['id']), sha1($attempt['id'] . ':' . $b['id'])));
-                $questions[] = ['id' => (int) $qid, 'content' => $text[$qid], 'answers' => $list];
+                $image = $images[$qid] ?? null;
+                $questions[] = ['id' => (int) $qid, 'content' => $text[$qid], 'image' => $image ? QuestionImages::version($image) : null, 'answers' => $list];
             }
         }
         $chosen = [];
-        foreach (Db::all('SELECT question_id, answer_id FROM attempt_answers WHERE attempt_id = ?', [$attempt['id']]) as $r) {
+        $revealed = [];
+        foreach (Db::all('SELECT question_id, answer_id, revealed FROM attempt_answers WHERE attempt_id = ?', [$attempt['id']]) as $r) {
             $chosen[(string) $r['question_id']] = (int) $r['answer_id'];
+            if ((int) $r['revealed']) {
+                $revealed[] = (int) $r['question_id'];
+            }
         }
         return [
             'id' => (int) $attempt['id'],
@@ -231,10 +240,11 @@ final class Quiz
             'server_now' => Util::isoTs(time()),
             'questions' => $questions,
             'answers' => (object) $chosen,
+            'revealed' => $revealed,
         ];
     }
 
-    public static function saveAnswer(array $attempt, int $questionId, ?int $answerId): void
+    private static function assertOpen(array $attempt, int $questionId): void
     {
         if ($attempt['finished_at']) {
             throw HttpError::conflict('Ce questionnaire est terminé.');
@@ -243,12 +253,30 @@ final class Quiz
             self::finish($attempt);
             throw HttpError::conflict('Le temps est écoulé : le questionnaire a été clôturé.');
         }
-        $ids = json_decode($attempt['question_ids'], true) ?: [];
-        if (!in_array($questionId, $ids, true)) {
+        self::assertInAttempt($attempt, $questionId);
+    }
+
+    private static function assertInAttempt(array $attempt, int $questionId): void
+    {
+        if (!in_array($questionId, json_decode($attempt['question_ids'], true) ?: [], true)) {
             throw new HttpError(422, 'Cette question ne fait pas partie du questionnaire.');
         }
+    }
+
+    private static function isRevealed(array $attempt, int $questionId): bool
+    {
+        return (bool) Db::val('SELECT revealed FROM attempt_answers WHERE attempt_id = ? AND question_id = ?', [$attempt['id'], $questionId]);
+    }
+
+    public static function saveAnswer(array $attempt, int $questionId, ?int $answerId): void
+    {
+        self::assertOpen($attempt, $questionId);
         if ($answerId !== null && !Db::val('SELECT id FROM answers WHERE id = ? AND question_id = ?', [$answerId, $questionId])) {
             throw new HttpError(422, 'Réponse invalide.');
+        }
+        // Once the hidden part of an image has been shown, the answer is final.
+        if (self::isRevealed($attempt, $questionId)) {
+            throw HttpError::conflict('Réponse déjà validée : elle ne peut plus être modifiée.');
         }
         Db::tx(static function () use ($attempt, $questionId, $answerId): void {
             Db::exec('DELETE FROM attempt_answers WHERE attempt_id = ? AND question_id = ?', [$attempt['id'], $questionId]);
@@ -256,6 +284,36 @@ final class Quiz
                 Db::insert('attempt_answers', ['attempt_id' => $attempt['id'], 'question_id' => $questionId, 'answer_id' => $answerId]);
             }
         });
+    }
+
+    /** Validates the saved answer to an image question: it becomes final and the image can be shown clear. */
+    public static function reveal(array $attempt, int $questionId): void
+    {
+        self::assertOpen($attempt, $questionId);
+        if (!Db::val('SELECT image_url FROM questions WHERE id = ?', [$questionId])) {
+            throw new HttpError(422, 'Cette question n\'a pas d\'image.');
+        }
+        if (!Db::val('SELECT 1 FROM attempt_answers WHERE attempt_id = ? AND question_id = ?', [$attempt['id'], $questionId])) {
+            throw HttpError::conflict('Choisissez d\'abord une réponse.');
+        }
+        Db::exec('UPDATE attempt_answers SET revealed = 1 WHERE attempt_id = ? AND question_id = ?', [$attempt['id'], $questionId]);
+    }
+
+    /**
+     * Address of the image of a question in this attempt, checked for the member who owns it.
+     * The clear version needs a validated answer (or a finished questionnaire).
+     */
+    public static function imageUrl(array $attempt, int $questionId, bool $clear): string
+    {
+        self::assertInAttempt($attempt, $questionId);
+        $url = (string) Db::val('SELECT image_url FROM questions WHERE id = ?', [$questionId]);
+        if ($url === '') {
+            throw HttpError::notFound('Cette question n\'a pas d\'image.');
+        }
+        if ($clear && !$attempt['finished_at'] && !self::isRevealed($attempt, $questionId)) {
+            throw new HttpError(403, 'Validez d\'abord votre réponse.');
+        }
+        return $url;
     }
 
     /** Grades with the answers saved so far. Unanswered questions score 0. */

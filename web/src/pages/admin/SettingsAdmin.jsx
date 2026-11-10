@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { api } from '../../lib/api.js';
 import { useForm, useLoad, useTitle } from '../../lib/hooks.js';
 import { useSession } from '../../lib/session.jsx';
 import { Button, Field, LoadError, Notice, Skeleton, Switch, useToast } from '../../components/ui.jsx';
 import { AdminOnly, SectionHeader } from './AdminLayout.jsx';
+import { ImagePreview } from './ImagePreview.jsx';
 
 export default function SettingsAdmin() {
   useTitle('Paramètres');
@@ -24,9 +25,9 @@ function NumberField({ form, name, label, hint, suffix }) {
 function SettingsPage() {
   const toast = useToast();
   const { refresh } = useSession();
-  const { data, error, loading, reload } = useLoad(() => api('/admin/settings').then((d) => d.settings), []);
+  const { data, error, loading, reload } = useLoad(() => api('/admin/settings'), []);
   const form = useForm(null);
-  useEffect(() => { if (data) form.setValues(data); }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (data) form.setValues(data.settings); }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const save = form.submit(async (values) => {
     const { settings } = await api('/admin/settings', { method: 'PUT', body: values });
@@ -86,7 +87,48 @@ function SettingsPage() {
           <p className="-mt-2 text-sm text-muted">Aperçu : « {`${v.welcome_start || ''} pseudo${v.welcome_end || ''}`.trim()} »</p>
           <Field label="Texte d'introduction de « Mon espace »" error={form.errors.intro} htmlFor="intro"><textarea className="input" {...form.field('intro')} /></Field>
         </section>
+
+        <section className="card space-y-5 p-6 lg:col-span-2">
+          <h2 className="text-lg font-semibold">Images des questions</h2>
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-5">
+              <div className="grid gap-5 sm:grid-cols-2">
+                <NumberField form={form} name="image_blur_top" label="Zone floutée : début" suffix="%" />
+                <NumberField form={form} name="image_blur_bottom" label="Zone floutée : fin" suffix="%" />
+              </div>
+              <p className="text-sm text-muted">
+                En pourcentage de la hauteur de l'image : 0 % en haut, 100 % en bas. Cette bande reste floutée jusqu'à ce que le membre valide sa réponse ; ensuite l'image s'affiche en entier et sa réponse ne peut plus changer.
+              </p>
+            </div>
+            <BlurPreview sample={data?.sample_image} top={v.image_blur_top} bottom={v.image_blur_bottom} />
+          </div>
+        </section>
       </div>
     </form>
+  );
+}
+
+/** Shows the band on a real question image when there is one, otherwise on a plain diagram. */
+function BlurPreview({ sample, top, bottom }) {
+  const t = Number(top);
+  const b = Number(bottom);
+  const valid = Number.isInteger(t) && Number.isInteger(b) && t >= 0 && b <= 100 && t < b;
+  // Wait for typing to pause before asking the server for a new preview.
+  const [band, setBand] = useState(valid ? [t, b] : null);
+  useEffect(() => {
+    if (!valid) return undefined;
+    const timer = setTimeout(() => setBand([t, b]), 500);
+    return () => clearTimeout(timer);
+  }, [t, b, valid]);
+
+  if (!band) return null;
+  if (sample) return <ImagePreview url={sample} top={band[0]} bottom={band[1]} blurredOnly />;
+  return (
+    <figure>
+      <div className="relative aspect-[3/2] w-full max-w-sm overflow-hidden rounded-lg border border-line bg-sunken">
+        <div className="absolute inset-x-0 bg-[var(--c-primary)] opacity-30" style={{ top: `${band[0]}%`, height: `${band[1] - band[0]}%` }} />
+      </div>
+      <figcaption className="mt-1 text-xs text-muted">Zone floutée. Un aperçu réel s'affichera ici dès qu'une question aura une image.</figcaption>
+    </figure>
   );
 }

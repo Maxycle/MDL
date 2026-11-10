@@ -4,3 +4,5 @@ deploy/
 api/storage/
 mdl-config.php
 mdl-secrets.php
+# Database exports saved next to the project (they contain member data)
+/*.sql

@@ -11,7 +11,8 @@
 # On the server it:
 #   1. saves the current site folder (without uploads/) to ~/mdl-backups/<folder>-<date>.tar.gz
 #   2. replaces assets/ and api/ with the new build and updates the other files
-#   3. never touches uploads/, mdl-config.php or mdl-secrets.php
+#   3. brings the database structure up to date (api/cli/migrate.php adds missing columns, nothing else)
+#   4. never touches uploads/, mdl-config.php or mdl-secrets.php
 param(
     [Parameter(Mandatory = $true)] [string]$SshHost,
     [Parameter(Mandatory = $true)] [string]$SshUser,
@@ -48,6 +49,7 @@ rm -rf assets api
 tar -xzf ~/mdl-release.tar.gz -C .
 rm -f ~/mdl-release.tar.gz ~/mdl-deploy.sh
 mkdir -p uploads
+if [ -f mdl-config.php ] || [ -f ../mdl-config.php ]; then php api/cli/migrate.php; fi
 echo "Published to ~/$RemoteDir (previous version saved in ~/mdl-backups/$name-`$stamp.tar.gz)"
 if [ ! -f mdl-config.php ] && [ ! -f ../mdl-config.php ]; then echo "Reminder: mdl-config.php is missing."; fi
 if [ ! -f mdl-secrets.php ] && [ ! -f ../mdl-secrets.php ]; then echo "Reminder: mdl-secrets.php is missing."; fi
