@@ -5,6 +5,7 @@ import { CERTS, CERT_TONE, DOMAINS, LEVELS, fmtDate, searchKey } from '../lib/fo
 import { Empty, LoadError, Modal, PageHeader, Skeleton, Tabs } from '../components/ui.jsx';
 import { Mark } from '../components/Mark.jsx';
 import { Icon } from '../components/Icon.jsx';
+import { Linkify } from '../components/Linkify.jsx';
 
 export function LevelLine({ levels, compact }) {
   return (
@@ -88,7 +89,7 @@ export default function Members() {
               </div>
             </div>
             <div className="mt-6 rounded-xl bg-sunken p-4"><LevelLine levels={selected.levels} /></div>
-            {selected.intro && <p className="mt-6 whitespace-pre-line leading-relaxed">{selected.intro}</p>}
+            {selected.intro && <p className="mt-6 whitespace-pre-line leading-relaxed"><Linkify text={selected.intro} /></p>}
           </div>
         )}
       </Modal>

@@ -6,6 +6,7 @@ import { CERTS, CERT_TONE, DOMAINS, LEVELS, fmtShort, searchKey } from '../../li
 import { Button, Confirm, Empty, LoadError, Modal, Skeleton, Switch, useToast } from '../../components/ui.jsx';
 import { Icon } from '../../components/Icon.jsx';
 import { Mark } from '../../components/Mark.jsx';
+import { Linkify } from '../../components/Linkify.jsx';
 import { SectionHeader } from './AdminLayout.jsx';
 
 export default function MembersAdmin() {
@@ -135,7 +136,7 @@ function MemberModal({ member, onClose, onChanged, onDeleted }) {
           <dt className="text-muted">Inscrit le</dt><dd>{fmtShort(member.member_since)}</dd>
           <dt className="text-muted">Profil</dt><dd>{member.profile_public ? 'Public' : 'Privé'}</dd>
           {member.wants_pp && <><dt className="text-muted">Demande</dt><dd>Souhaite devenir porte-parole</dd></>}
-          {member.intro && <><dt className="text-muted">Présentation</dt><dd className="whitespace-pre-line">{member.intro}</dd></>}
+          {member.intro && <><dt className="text-muted">Présentation</dt><dd className="whitespace-pre-line"><Linkify text={member.intro} /></dd></>}
         </dl>
       </div>
 
