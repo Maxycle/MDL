@@ -24,7 +24,7 @@ export default function Home() {
       <section className="relative overflow-hidden bg-brand text-white">
         <div className="page grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-[1.2fr_.8fr] lg:py-24">
           <div>
-            <p className="eyebrow !text-white/55">Mouvement des Libertariens · relancé en 2025</p>
+            <p className="eyebrow !text-white/55">Mouvement des Libertariens · relancé en 2026</p>
             <h1 className="mt-5 text-[2.6rem] font-bold leading-[1.02] sm:text-6xl lg:text-[4.25rem]">
               Le phare des libertariens <span className="bg-gradient-to-r from-flame-1 via-flame-2 to-flame-3 bg-clip-text text-transparent">francophones.</span>
             </h1>
@@ -53,7 +53,7 @@ export default function Home() {
         </div>
         <div className="prose-mdl">
           <p>En 2012 renaissait une première fois le Mouvement des Libertariens en France, plus de dix ans après sa création par de célèbres pionniers tels que Bertrand Lemennicier. Hélas, il se perdit avec la création du Parti Libertarien.</p>
-          <p>En 2025, nous relançons le Mouvement des Libertariens pour contribuer à donner un cadre clair et de référence à la doctrine de la Liberté héritée de ses grands auteurs : Murray Rothbard, <a href="https://bit.ly/hhh-democratie" target="_blank" rel="noopener noreferrer">Hans-Hermann Hoppe</a> et bien d'autres.</p>
+          <p>En 2026, nous relançons le Mouvement des Libertariens pour contribuer à donner un cadre clair et de référence à la doctrine de la Liberté héritée de ses grands auteurs : Murray Rothbard, <a href="https://bit.ly/hhh-democratie" target="_blank" rel="noopener noreferrer">Hans-Hermann Hoppe</a> et bien d'autres.</p>
           <h3>Motivations</h3>
           <p>La doctrine libertarienne est la seule pensée permettant à tout individu, homme, femme, occidental ou d'autre origine, d'envisager un avenir de Liberté, de Paix et de Prospérité pleines et entières, un réel avenir de Civilisation, sinon pour l'année qui vient, au moins pour ses enfants.</p>
           <p>Malgré des temps qui se troublent, parce que les sombres idées ayant signé le XXᵉ siècle ressurgissent, cette doctrine se développe un peu partout dans le monde. En 2023, l'élection jusqu'alors inimaginable d'un Président de la République se disant libertarien en Argentine a donné un puissant élan de visibilité à notre étiquette. Être « libertarien » est soudain devenu un objet de convoitise, d'étonnement, et de haine, aussi.</p>
